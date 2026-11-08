@@ -2,26 +2,113 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --surface: #f8f8fa;
+  --paper: #f4f4f6;
+  --sky: #00aaff;
+  --sky-light: #7ccbff;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-sky: var(--sky);
+  --color-sky-light: var(--sky-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-newsreader);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--sky);
+  color: #fff;
+}
+
+/* Page gutter: 88px on wide screens, matching a 1264px content column at 1440px. */
+.wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1440px;
+  padding-inline: 16px;
+}
+@media (min-width: 640px) {
+  .wrap {
+    padding-inline: 40px;
+  }
+}
+@media (min-width: 1024px) {
+  .wrap {
+    padding-inline: 88px;
+  }
+}
+
+/* Huge italic serif used for the hero line. */
+.display {
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(3.1rem, 9.2vw, 8.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+/* Big sans section headings ("Field notes", "Small talk"…). */
+.section-title {
+  font-weight: 500;
+  font-size: clamp(3.25rem, 7.3vw, 6.55rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+/* Postage stamp: perforated edge cut out of the paper colour. */
+.stamp {
+  --r: 7px;
+  padding: calc(2.4 * var(--r));
+  background:
+    radial-gradient(var(--r), #0000 97%, var(--paper) 100%) round calc(-1.5 * var(--r))
+      calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)),
+    linear-gradient(var(--paper) 0 0) no-repeat 50% / calc(100% - 3 * var(--r))
+      calc(100% - 3 * var(--r));
+  transition: rotate 400ms ease, translate 400ms ease;
+}
+.stamp:hover {
+  rotate: 0deg !important;
+  translate: 0 -6px;
+}
+
+.perforation {
+  height: 16px;
+  background: radial-gradient(circle 5px, #fff 95%, #0000) repeat-x center / 18px 16px;
+}
+
+/* Native <details> accordion: hide the default marker. */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-plus {
+  rotate: 45deg;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

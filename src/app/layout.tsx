@@ -16,11 +16,12 @@ const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
   style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
   title: "p*wr studios",
-  description: "Portfolio of p*wr studios",
+  description: "p*wr studios is a creative studio making bold brands, websites and launch campaigns.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
