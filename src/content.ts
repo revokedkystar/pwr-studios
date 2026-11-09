@@ -8,10 +8,10 @@ export const site = {
 };
 
 export const nav = [
-  { label: "Work", href: "#work" },
-  { label: "Graphics", href: "#graphics" },
-  { label: "Certificates", href: "#certificates" },
-  { label: "Writing", href: "#writing" },
+  { label: "Work", href: "/#work" },
+  { label: "Graphics", href: "/#graphics" },
+  { label: "Certificates", href: "/#certificates" },
+  { label: "Writing", href: "/#writing" },
 ];
 
 export const socials = [
@@ -178,7 +178,7 @@ export const faqs = [
   },
   {
     q: "How can I get in touch?",
-    a: "Use the contact form at the bottom of the page, email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
+    a: "Use the contact form on this page, email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
   },
 ];
 
