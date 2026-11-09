@@ -209,24 +209,43 @@ body {
 }
 
 /*
- * Sticky development stack. StackShowcase sets --tp (0 → 1); each tile has
- * a --d delay and a --sx/--sy/--sr scatter. --e is that tile's eased
- * "landed" amount, from scattered (0) to in place (1).
+ * Sticky development stack. StackShowcase sets --tp (0 → 1). Each tile has a
+ * --k slot on the ring, a --d delay and a --sx/--sy/--sr scatter. --e is that
+ * tile's eased "landed" amount: scattered (0) → in place on the ring (1).
+ * The ring is a size container, so cqmin units scale with it.
  */
+.stack-ring {
+  container-type: size;
+}
+.stack-title {
+  font-size: 8.4cqmin;
+  line-height: 0.95;
+}
+.stack-meta {
+  font-size: max(12px, 2.3cqmin);
+  line-height: 1.5;
+}
 .stack-tile {
+  --size: clamp(48px, 12.5cqmin, 100px);
+  --radius: 39cqmin;
   --e0: clamp(0, calc((var(--tp, 1) - var(--d)) / var(--flight)), 1);
   --e: calc(var(--e0) * var(--e0) * (3 - 2 * var(--e0)));
-  translate: calc(var(--sx) * (1 - var(--e))) calc(var(--sy) * (1 - var(--e)));
+  /* The ring sweeps round by 120deg as it forms, ending with the first tool at the top. */
+  --ang: calc(var(--k) * var(--step) - 90deg - (1 - var(--tp, 1)) * 120deg);
+  width: var(--size);
+  height: var(--size);
+  translate:
+    calc(-50% + cos(var(--ang)) * var(--radius) * var(--e) + var(--sx) * (1 - var(--e)))
+    calc(-50% + sin(var(--ang)) * var(--radius) * var(--e) + var(--sy) * (1 - var(--e)));
   rotate: calc(var(--sr) * (1 - var(--e)));
-  scale: calc(0.55 + 0.45 * var(--e));
+  scale: calc(0.5 + 0.5 * var(--e));
   opacity: calc(0.2 + 0.8 * var(--e));
 }
 .stack-icon {
   filter: grayscale(calc(1 - var(--e)));
 }
 .stack-label {
-  opacity: clamp(0, calc((var(--tp, 1) - 0.55) / 0.2), 1);
-  translate: 0 calc((1 - clamp(0, calc((var(--tp, 1) - 0.55) / 0.2), 1)) * 12px);
+  opacity: clamp(0, calc((var(--tp, 1) - 0.6) / 0.2), 1);
 }
 .stack-ticker {
   translate: calc(30vw - var(--tp, 0.5) * 100%) -50%;
