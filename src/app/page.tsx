@@ -49,13 +49,17 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="top" className="relative z-10 flex bg-white h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
-      <div data-scroll className="fx-parallax absolute inset-x-0 -top-40 bottom-0 [--speed:420px]">
-        <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} dissolveOn={HERO_DISSOLVE} className="size-full" />
-      </div>
-      <div data-scroll className="fx-hero-out wrap relative pt-10">
-        <HeroHeadline />
-        <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
+    // Tall section with a sticky panel: the hero stays pinned while scrolling
+    // through it, and HeroHeadline scrubs the intro from that scroll.
+    <section id="top" data-hero className="relative z-10 h-[220svh] bg-white">
+      <div className="sticky top-0 flex h-svh min-h-[600px] items-center overflow-hidden">
+        <div className="absolute inset-x-0 -top-40 bottom-0">
+          <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} dissolveOn={HERO_DISSOLVE} className="size-full" />
+        </div>
+        <div className="wrap relative pt-10">
+          <HeroHeadline />
+          <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
+        </div>
       </div>
     </section>
   );

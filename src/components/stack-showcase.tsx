@@ -118,8 +118,27 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
                 "--sr": `${((i * 29) % 7) * 30 - 90}deg`,
               } as CSSProperties;
               return (
-                <li key={t.name} style={style} className="stack-tile absolute top-1/2 left-1/2" title={`${t.name} · ${t.area}`}>
-                  <Image src={t.src} alt={t.name} width={64} height={64} className="stack-icon size-full object-contain" />
+                <li
+                  key={t.name}
+                  style={style}
+                  tabIndex={0}
+                  aria-label={`${t.name}, ${t.area}`}
+                  className="stack-tile group absolute top-1/2 left-1/2 cursor-default rounded-xl outline-none hover:z-10 focus:z-10 focus-visible:ring-2 focus-visible:ring-white/60"
+                >
+                  <Image
+                    src={t.src}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="stack-icon size-full object-contain transition-transform duration-300 group-hover:scale-115 group-focus:scale-115"
+                  />
+                  {/* Name label, shown on hover (or tap / keyboard focus). */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 rounded-full bg-white px-3 py-1.5 text-xs whitespace-nowrap text-black opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
+                  >
+                    <span className="font-medium">{t.name}</span> <span className="text-black/45">{t.area}</span>
+                  </span>
                 </li>
               );
             })}
