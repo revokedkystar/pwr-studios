@@ -43,14 +43,15 @@ function Header() {
   return (
     // A black notch hanging from the top edge of the screen, centred.
     <header className="fixed top-0 left-1/2 z-50 -translate-x-1/2">
-      <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-8 rounded-b-[18px] bg-black pr-7 pl-3 text-white">
+      <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-6 rounded-b-[18px] bg-black pr-2.5 pl-3 text-white sm:gap-8">
         <NotchEar side="left" />
         <NotchEar side="right" />
-        <a href="#top" aria-label="Joshua Hatfield, home" className="flex shrink-0 items-center gap-2.5">
-          <span className="grid size-[30px] place-items-center rounded-[8px] bg-white/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]">
-            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[18px]" />
+        <a href="#top" aria-label="p*wr, home" className="flex shrink-0 items-center gap-2.5">
+          {/* The mark sits straight on the black bar: no tile or border. */}
+          <span className="grid size-[30px] place-items-center">
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[22px]" />
           </span>
-          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Joshua Hatfield</span>
+          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">p*wr</span>
         </a>
         <ul className="flex items-center gap-7 max-md:hidden">
           {nav.map((n) => (
@@ -61,6 +62,17 @@ function Header() {
             </li>
           ))}
         </ul>
+        {/* Contact button, in the slot where the reference has its Download button. */}
+        <a
+          href={site.contact}
+          className="flex h-[33px] shrink-0 items-center gap-1.5 rounded-[8px] bg-white px-4 text-xs font-semibold text-black transition-colors hover:bg-white/85 md:ml-2"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <rect x="1.5" y="3" width="13" height="10" rx="2" />
+            <path d="m2 4 6 5 6-5" strokeLinejoin="round" />
+          </svg>
+          Contact
+        </a>
       </nav>
     </header>
   );
