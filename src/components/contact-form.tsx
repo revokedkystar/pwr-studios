@@ -5,10 +5,13 @@ import { useState, type FormEvent } from "react";
 type Status = "idle" | "sending" | "sent" | "error";
 
 /**
- * Contact form. Messages are posted to /api/contact, which forwards them to
- * the inbox from the server, so the address never appears on the page. The
- * sender's address is used as the reply-to, so replies go straight back.
+ * Contact form, delivered by Web3Forms (web3forms.com). The page only holds
+ * the Web3Forms access key, which is made to be public and doesn't reveal the
+ * inbox address. Set it as NEXT_PUBLIC_WEB3FORMS_KEY in the hosting
+ * environment. The sender's address is used as the reply-to.
  */
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
 
@@ -17,19 +20,29 @@ export function ContactForm() {
     const form = e.currentTarget;
     const data = new FormData(form);
     // Honeypot: real people never see or fill this field.
-    if (data.get("_honey")) return;
+    if (data.get("botcheck")) return;
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
+      if (!ACCESS_KEY) throw new Error("NEXT_PUBLIC_WEB3FORMS_KEY is not set");
+      const name = String(data.get("name") ?? "");
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(Object.fromEntries(data)),
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          name,
+          email: data.get("email"),
+          message: data.get("message"),
+          subject: `New message from ${name} via your portfolio`,
+          from_name: "xanti studios portfolio",
+        }),
       });
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
-      if (!res.ok || !json.ok) throw new Error("Not sent");
+      const json = (await res.json().catch(() => ({}))) as { success?: boolean; message?: string };
+      if (!res.ok || !json.success) throw new Error(json.message || `Not sent (${res.status})`);
       setStatus("sent");
       form.reset();
-    } catch {
+    } catch (err) {
+      console.error("Contact form:", err);
       setStatus("error");
     }
   };
@@ -85,7 +98,7 @@ export function ContactForm() {
         />
       </label>
       {/* Spam trap, hidden from people and screen readers. */}
-      <input type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
+      <input type="text" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
       <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-3">
         <button
