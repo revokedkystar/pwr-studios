@@ -48,12 +48,12 @@ function Header() {
       <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-6 rounded-b-[18px] bg-black pr-2.5 pl-3 text-white sm:gap-8">
         <NotchEar side="left" />
         <NotchEar side="right" />
-        <a href="#top" aria-label="p*wr, home" className="flex shrink-0 items-center gap-2.5">
+        <a href="#top" aria-label="xanti studios, home" className="flex shrink-0 items-center gap-2.5">
           {/* The mark sits straight on the black bar: no tile or border. */}
           <span className="grid size-[30px] place-items-center">
             <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[22px]" />
           </span>
-          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">p*wr</span>
+          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">xanti</span>
         </a>
         <ul className="flex items-center gap-7 max-md:hidden">
           {nav.map((n) => (
