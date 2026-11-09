@@ -3,7 +3,6 @@
 export const site = {
   name: "Joshua Hatfield",
   email: "hatfij08@gmail.com",
-  contact: "mailto:hatfij08@gmail.com?subject=Hello%20Joshua",
   intro:
     "I'm Joshua, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
 };
@@ -179,7 +178,7 @@ export const faqs = [
   },
   {
     q: "How can I get in touch?",
-    a: "Email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
+    a: "Use the contact form at the bottom of the page, email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
   },
 ];
 

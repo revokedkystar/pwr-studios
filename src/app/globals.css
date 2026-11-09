@@ -279,3 +279,29 @@ body {
   background: repeating-linear-gradient(45deg, #0a0a0a 0 6px, #0000 6px 15px);
   mask: url("/websiteicon.png") center / contain no-repeat;
 }
+
+/*
+ * "Experience with" deck. LogoDeck sets --dp (0 → 1); each card has a --d
+ * delay and a --tilt. --e is that card's eased progress: 0 is below the
+ * screen, tilted and face down; 1 is in place, straight and face up.
+ */
+.deck-card {
+  --e0: clamp(0, calc((var(--dp, 1) - var(--d)) / var(--deal)), 1);
+  --e: calc(var(--e0) * var(--e0) * (3 - 2 * var(--e0)));
+  translate: 0 calc((1 - var(--e)) * 75vh);
+  rotate: calc((1 - var(--e)) * var(--tilt));
+  perspective: 1000px;
+}
+.deck-flip {
+  transform-style: preserve-3d;
+  transform: rotateY(calc((1 - var(--e)) * 180deg));
+}
+.deck-face {
+  backface-visibility: hidden;
+}
+.deck-back {
+  transform: rotateY(180deg);
+}
+.deck-logo {
+  filter: grayscale(calc(1 - var(--e)));
+}

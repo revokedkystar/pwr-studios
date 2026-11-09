@@ -4,9 +4,11 @@ import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
+import { LogoDeck } from "@/components/logo-deck";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
+import { ContactForm } from "@/components/contact-form";
 import { ArrowIcon, PillLink, Tag } from "@/components/ui";
 import {
   caseStudies,
@@ -62,9 +64,9 @@ function Header() {
             </li>
           ))}
         </ul>
-        {/* Contact button, in the slot where the reference has its Download button. */}
+        {/* Contact button (jumps to the contact form), where the reference has its Download button. */}
         <a
-          href={site.contact}
+          href="#contact"
           className="flex h-[33px] shrink-0 items-center gap-1.5 rounded-[8px] bg-white px-4 text-xs font-semibold text-black transition-colors hover:bg-white/85 md:ml-2"
         >
           <svg viewBox="0 0 16 16" aria-hidden className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -174,7 +176,7 @@ function Graphics() {
             to bring them into colour.
           </p>
           <div className="mt-7">
-            <PillLink href={site.contact}>Say hello</PillLink>
+            <PillLink href="#contact">Say hello</PillLink>
           </div>
         </div>
 
@@ -248,15 +250,9 @@ function Certificates() {
         ))}
       </ul>
 
-      <div data-scroll className="fx-rise wrap mt-20 sm:mt-28">
-        <p className="text-sm text-black/50">Experience with</p>
-        <ul className="mt-6 flex flex-wrap items-center gap-x-14 gap-y-8">
-          {logos.map((l) => (
-            <li key={l.name}>
-              <Image src={l.src} alt={l.name} width={140} height={40} className="mono h-10 w-auto sm:h-12" />
-            </li>
-          ))}
-        </ul>
+      {/* Company logos dealt in as cards that flip face up. */}
+      <div className="mt-10 sm:mt-16">
+        <LogoDeck logos={logos} />
       </div>
     </section>
   );
@@ -356,6 +352,27 @@ function SmallTalk() {
   );
 }
 
+function Contact() {
+  return (
+    <section id="contact" aria-labelledby="contact-title" className="scroll-mt-20 bg-white pt-8 pb-24 sm:pb-36">
+      <div className="wrap grid gap-10 lg:grid-cols-2 lg:gap-4">
+        <div>
+          <h2 id="contact-title" data-scroll className="fx-slide section-title">
+            Get in touch
+          </h2>
+          <p data-scroll data-lag={0.1} className="fx-rise mt-6 max-w-[352px] text-[17px] leading-[1.42] text-black/62">
+            Got a project, an opportunity or just a question? Send me a message and it&apos;ll land straight in my
+            inbox.
+          </p>
+        </div>
+        <div data-scroll data-lag={0.15} className="fx-rise">
+          <ContactForm email={site.email} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="overflow-hidden bg-white pt-10">
@@ -418,6 +435,7 @@ export default function Home() {
         <Certificates />
         <Writing />
         <SmallTalk />
+        <Contact />
       </main>
       <Footer />
       <ScrollFx />
