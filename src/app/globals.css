@@ -231,3 +231,24 @@ body {
 .stack-ticker {
   translate: calc(30vw - var(--tp, 0.5) * 100%) -50%;
 }
+
+/*
+ * Pinned work showcase. PinnedWork sets --pos (0 → n-1) on the section;
+ * each slide has --i, giving --t from -1 (next) through 0 (showing) to 1 (past).
+ */
+.pin-card,
+.pin-text {
+  --t: clamp(-1, calc(var(--pos, 0) - var(--i)), 1);
+  --a: max(var(--t), calc(var(--t) * -1));
+}
+.pin-card {
+  translate: 0 calc(max(0, calc(var(--t) * -1)) * 102%);
+  scale: calc(1 - max(0, var(--t)) * 0.08);
+  filter: brightness(calc(1 - max(0, var(--t)) * 0.4));
+  /* The screenshot inside comes into colour as its card arrives. */
+  --in: calc(1 - var(--a));
+}
+.pin-text {
+  opacity: calc(1 - var(--a) * 1.8);
+  translate: 0 calc(var(--t) * -28px);
+}
