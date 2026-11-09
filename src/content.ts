@@ -1,10 +1,10 @@
-// Content for Joshua Hatfield's portfolio. The writing cards are still placeholders.
+// Content for the xanti studios portfolio, by @h4tfi3ld. The writing cards are still placeholders.
 
 export const site = {
-  name: "Joshua Hatfield",
+  name: "@h4tfi3ld",
   email: "hatfij08@gmail.com",
   intro:
-    "I'm Joshua, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
+    "I'm @h4tfi3ld, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
 };
 
 export const nav = [
@@ -162,7 +162,7 @@ export const notes = [
 export const faqs = [
   {
     q: "Who are you?",
-    a: "I'm Joshua Hatfield, a developer and designer who loves the point where computing meets creativity. This site is where I keep my best work.",
+    a: "I'm @h4tfi3ld, a developer and designer who loves the point where computing meets creativity. This site is where I keep my best work.",
   },
   {
     q: "What do you build?",
