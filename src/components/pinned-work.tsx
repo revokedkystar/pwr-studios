@@ -28,11 +28,7 @@ export type CaseStudy = {
  * project has been shown the section ends and the page scrolls on normally.
  *
  * Progress is written to a `--pos` CSS variable (0 → n-1, with a short pause
- * on each project); each slide works out its own offset from `--pos` in CSS:
- * the full-screen backdrops crossfade and slowly zoom, the text crossfades,
- * and each new screenshot wipes up inside the same frame. `--vis` (0 → 1)
- * fades the dark stage in as the section arrives and back out as it leaves,
- * so it blends into the sections around it with no hard edge.
+ * on each project); each slide works out its own offset from `--pos` in CSS.
  */
 export function PinnedWork({ items }: { items: CaseStudy[] }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -57,11 +53,6 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       const f = Math.min(1, Math.max(0, (raw - i - 0.2) / 0.6));
       const pos = i + f * f * (3 - 2 * f);
       section.style.setProperty("--pos", pos.toFixed(4));
-      // Fade the stage in as the section arrives and out as it leaves.
-      const vh = window.innerHeight;
-      const enter = Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.6)));
-      const exit = Math.min(1, Math.max(0, (rect.bottom - vh * 0.15) / (vh * 0.6)));
-      section.style.setProperty("--vis", Math.min(enter, exit).toFixed(4));
 
       const now = Math.round(pos);
       if (now !== active) {
@@ -94,28 +85,18 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       id="work"
       ref={sectionRef}
       aria-label="Selected work"
-      className="pinned relative z-0 -mt-20 sm:-mt-24"
+      className="pinned relative z-0 -mt-20 bg-white sm:-mt-24"
       style={{ height: `${items.length * 100}svh` }}
     >
-      <div className="sticky top-0 flex h-svh flex-col overflow-hidden text-white">
-        {/* Full-screen backdrops, one per project, crossfading as you scroll. */}
-        <div aria-hidden className="pin-stage absolute inset-0 bg-[#0a0a0a]">
-          {items.map((c, i) => (
-            <div key={c.title} className="pin-bg absolute inset-0" style={{ "--i": i } as CSSProperties}>
-              <Image src={c.image} alt="" fill sizes="100vw" className="object-cover" />
-            </div>
-          ))}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(10,10,10,0.35),rgba(10,10,10,0.85))]" />
-        </div>
-
-        <div className="pin-content wrap relative grid flex-1 grid-rows-[auto_1fr] gap-6 pt-24 pb-6 sm:pt-28 sm:pb-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:grid-rows-1 lg:gap-12">
+      <div className="sticky top-0 flex h-svh flex-col overflow-hidden">
+        <div className="wrap grid flex-1 grid-rows-[auto_1fr] gap-6 pt-24 pb-6 sm:pt-28 sm:pb-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:grid-rows-1 lg:gap-12">
           {/* Project text, cross-fading in step with the images. */}
           <div className="lg:self-center">
-            <p className="flex items-baseline gap-3 text-sm text-white/55">
+            <p className="flex items-baseline gap-3 text-sm text-black/50">
               Selected work
-              <span className="tabular-nums text-white">
+              <span className="tabular-nums text-black">
                 <span data-counter>01</span>
-                <span className="text-white/40"> / {String(items.length).padStart(2, "0")}</span>
+                <span className="text-black/35"> / {String(items.length).padStart(2, "0")}</span>
               </span>
             </p>
             <div className="mt-4 grid sm:mt-6">
@@ -123,28 +104,24 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                 <div key={c.title} data-slide={i} className="pin-text [grid-area:1/1]" style={{ "--i": i } as CSSProperties}>
                   <div className="flex flex-wrap gap-1.5">
                     {c.tags.map((t) => (
-                      <Tag key={t} dark>
-                        {t}
-                      </Tag>
+                      <Tag key={t}>{t}</Tag>
                     ))}
                   </div>
                   <h2 className="mt-3 text-[26px] leading-[1.12] font-medium tracking-[-0.01em] sm:text-[34px] lg:text-[40px]">
                     {c.title}
                   </h2>
-                  <p className="mt-3 text-base text-white/60">{c.client}</p>
+                  <p className="mt-3 text-base text-black/55">{c.client}</p>
                   <div className="mt-6 max-sm:hidden">
-                    <PillLink href={c.href} invert>
-                      View project
-                    </PillLink>
+                    <PillLink href={c.href}>View project</PillLink>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* One frame; each new project's screenshot wipes up inside it. */}
+          {/* Stacked project frames: the next one slides up over the last. */}
           <div className="relative flex min-h-0 items-center justify-center">
-            <div className="relative aspect-[16/10] w-full max-w-[720px] overflow-hidden rounded-[28px] shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+            <div className="relative aspect-[16/10] w-full max-w-[720px] overflow-hidden rounded-[28px]">
               {items.map((c, i) => (
                 <a
                   key={c.title}
@@ -158,7 +135,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                 >
                   <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
                   {/* The whole screenshot, uncropped, framed by the pixel pattern. */}
-                  <div className="pin-shot absolute inset-[7%] flex items-center justify-center">
+                  <div className="absolute inset-[7%] flex items-center justify-center">
                     <Image
                       src={c.image}
                       alt={c.alt}
