@@ -233,8 +233,9 @@ function Writing() {
                 className="stamp block w-[260px] sm:w-[300px]"
                 style={{ rotate: `${[-1.5, 1, -0.8, 1.4][i % 4]}deg` }}
               >
-                <div className="aspect-square overflow-hidden">
-                  <PixelField palette={n.palette} seed={100 + i * 13} cell={12} dither={1.5} scale={0.14} className="size-full" />
+                <div className="relative aspect-square overflow-hidden">
+                  {/* Comes into colour as the stamp drops into view (fx-colour). */}
+                  <Image src={n.image} alt={n.alt} fill sizes="300px" className="fx-colour object-cover" />
                 </div>
                 <div className="perforation -mx-1 my-2" />
                 <div className="flex items-end justify-between px-1 pb-1" style={{ color: n.color }}>
