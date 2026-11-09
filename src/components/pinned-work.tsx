@@ -83,13 +83,13 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       id="work"
       ref={sectionRef}
       aria-label="Selected work"
-      className="pinned relative bg-white"
+      className="pinned relative z-0 -mt-20 bg-white sm:-mt-24"
       style={{ height: `${items.length * 100}svh` }}
     >
       <div className="sticky top-0 flex h-svh flex-col overflow-hidden">
-        <div className="wrap grid flex-1 grid-rows-[auto_1fr] gap-6 pt-24 pb-6 sm:pt-28 sm:pb-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:grid-rows-1 lg:items-center lg:gap-12">
+        <div className="wrap grid flex-1 grid-rows-[auto_1fr] gap-6 pt-24 pb-6 sm:pt-28 sm:pb-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:grid-rows-1 lg:gap-12">
           {/* Project text, cross-fading in step with the images. */}
-          <div>
+          <div className="lg:self-center">
             <p className="flex items-baseline gap-3 text-sm text-black/50">
               Selected work
               <span className="tabular-nums text-black">
@@ -119,7 +119,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
 
           {/* Stacked project frames: the next one slides up over the last. */}
           <div className="relative min-h-0">
-            <div className="absolute inset-0 overflow-hidden rounded-[28px] lg:relative lg:inset-auto lg:aspect-[16/10] lg:max-h-[72svh] lg:w-full">
+            <div className="absolute inset-0 overflow-hidden rounded-[28px]">
               {items.map((c, i) => (
                 <a
                   key={c.title}
