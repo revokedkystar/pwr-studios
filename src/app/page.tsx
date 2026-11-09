@@ -46,7 +46,7 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="top" className="relative z-10 flex bg-white h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
+    <section id="top" className="relative flex h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
       <div data-scroll className="fx-parallax absolute inset-x-0 -top-40 bottom-0 [--speed:420px]">
         <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} className="size-full" />
       </div>
