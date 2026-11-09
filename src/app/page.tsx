@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
+import { ProcessGlobe } from "@/components/process-globe";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
@@ -16,7 +17,7 @@ import {
   graphics,
   logos,
   notes,
-  process,
+  places,
   site,
   cloud,
   ink,
@@ -45,38 +46,8 @@ function Momentum() {
   return (
     <section aria-labelledby="momentum" className="relative overflow-x-clip">
       <PixelField palette={ink} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
-      <div className="bg-ink pt-10 pb-16 text-white sm:pb-20">
-        <div data-scroll className="fx-grow relative mx-auto aspect-square w-[min(520px,82vw)]">
-          <div className="fx-spin absolute inset-0 overflow-hidden rounded-full [--turn:140deg]">
-            <PixelField
-              palette={["#0a0a0a", "#4a4a4a", "#d4d4d4"]}
-              cell={14}
-              scale={0.13}
-              seed={5}
-              speed={0.01}
-              className="size-full"
-            />
-          </div>
-          <Image
-            src="/websiteicon.png"
-            alt=""
-            width={156}
-            height={154}
-            className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 fx-spin [--turn:-360deg] drop-shadow-[0_2px_0_rgba(0,0,0,0.25)]"
-          />
-          {process.map((p, i) => (
-            <span
-              key={p.label}
-              data-scroll
-              data-lag={0.2 + i * 0.15}
-              className="fx-rise absolute flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-sm whitespace-nowrap text-black shadow-sm"
-              style={{ left: p.x, top: p.y }}
-            >
-              <span className="size-3 rounded-sm" style={{ background: p.color }} />
-              {p.label}
-            </span>
-          ))}
-        </div>
+      <div className="bg-ink pb-16 text-white sm:pb-20">
+        <ProcessGlobe places={places} />
 
         <div className="wrap mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-4">
           <h2 id="momentum" data-scroll className="fx-slide text-[44px] leading-none font-medium tracking-[-0.01em] sm:text-6xl">
