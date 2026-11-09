@@ -5,7 +5,6 @@ import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
 import { ScrollFx } from "@/components/scroll-fx";
-import { SiteHeader } from "@/components/site-header";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
 import { ArrowIcon, PillLink, Tag } from "@/components/ui";
@@ -26,6 +25,27 @@ import {
   socials,
   stack,
 } from "@/content";
+
+function Header() {
+  return (
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div className="wrap flex items-center justify-between pt-4 sm:pt-[30px]">
+        <nav className="flex h-12 items-center gap-6 rounded-full bg-white px-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+          <a href="#top" aria-label="Joshua Hatfield, home" className="mr-1 sm:mr-4">
+            {/* websiteicon.png is a white mark; invert shows it black on the white bar. */}
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-6 invert" />
+          </a>
+          {nav.map((n) => (
+            <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-black/50 sm:inline">
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <PillLink href={site.contact}>Get in touch</PillLink>
+      </div>
+    </header>
+  );
+}
 
 function Hero() {
   return (
@@ -358,7 +378,7 @@ function Footer() {
 export default function Home() {
   return (
     <>
-      <SiteHeader nav={nav} email={site.email} contact={site.contact} />
+      <Header />
       <main className="flex-1">
         <Hero />
         <PinnedWork items={caseStudies} />
