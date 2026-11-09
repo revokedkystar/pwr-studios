@@ -15,14 +15,14 @@ function Tile() {
 
 const lines = [
   <>
-    Creative <Tile /> studio
+    Computing <Tile /> meets
     <br />
-    with real p*wr
+    creativity
   </>,
   <>
-    Brands that move
+    Developer
     <br />
-    people to act
+    &amp; designer
   </>,
 ];
 
@@ -38,7 +38,7 @@ export function RotatingHeadline() {
 
   return (
     <h1 className="display grid text-center">
-      <span className="sr-only">Creative studio with real p*wr</span>
+      <span className="sr-only">Joshua Hatfield: computing meets creativity. Developer and designer.</span>
       {lines.map((line, n) => (
         <span
           key={n}

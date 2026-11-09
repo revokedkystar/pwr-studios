@@ -33,7 +33,7 @@ function Moon() {
   );
 }
 
-/** Local time in each studio city. Time is read only on the client, after mount. */
+/** Local time in each listed place. Time is read only on the client, after mount. */
 export function WorldClocks({ clocks }: { clocks: Clock[] }) {
   const [now, setNow] = useState<Date | null>(null);
 

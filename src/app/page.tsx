@@ -30,7 +30,7 @@ function Header() {
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="wrap flex items-center justify-between pt-4 sm:pt-[30px]">
         <nav className="flex h-12 items-center gap-6 rounded-full bg-white px-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-          <a href="#top" aria-label="p*wr studios, home" className="mr-1 sm:mr-4">
+          <a href="#top" aria-label="Joshua Hatfield, home" className="mr-1 sm:mr-4">
             <Asterisk className="size-6" />
           </a>
           {nav.map((n) => (
@@ -39,7 +39,7 @@ function Header() {
             </a>
           ))}
         </nav>
-        <PillLink href={site.bookCall}>Book a call</PillLink>
+        <PillLink href={site.contact}>Get in touch</PillLink>
       </div>
     </header>
   );
@@ -92,16 +92,16 @@ function Momentum() {
 
         <div className="wrap mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-4">
           <h2 id="momentum" data-scroll className="fx-slide text-[44px] leading-none font-medium tracking-[-0.01em] sm:text-6xl">
-            Built for momentum
+            How I work
           </h2>
           <div data-scroll data-lag={0.15} className="fx-rise max-w-[480px]">
             <p className="text-lg leading-[1.3] sm:text-xl">
-              Good ideas lose energy in hand-offs. We keep strategy, design and build in one small team, so your project
-              keeps moving from the first workshop to launch day. Here&apos;s how that works.
+              I like taking an idea from the first sketch to something real: planning it out, designing how it should
+              look and feel, then building it in code. Here&apos;s the stack I use to get there.
             </p>
             <div className="mt-7">
-              <PillLink href="#" invert>
-                How we work
+              <PillLink href="#stack" invert>
+                See my stack
               </PillLink>
             </div>
           </div>
@@ -127,11 +127,11 @@ function Graphics() {
             design
           </h2>
           <p data-scroll data-lag={0.1} className="fx-rise mx-auto mt-6 max-w-[380px] text-[17px] leading-[1.42] text-black/65">
-            Posters, campaigns and social graphics for fashion, sport and community organisations. Scroll to bring
-            them into colour.
+            Posters, campaigns and social graphics I&apos;ve designed for fashion, sport and community projects. Scroll
+            to bring them into colour.
           </p>
           <div className="mt-7">
-            <PillLink href={site.bookCall}>Commission a graphic</PillLink>
+            <PillLink href={site.contact}>Say hello</PillLink>
           </div>
         </div>
 
@@ -176,8 +176,8 @@ function Certificates() {
       <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-start">
         <h2 data-scroll className="fx-slide section-title">Certificates</h2>
         <p data-scroll data-lag={0.1} className="fx-rise text-[17px] leading-[1.42] text-black/65">
-          Industry experiences completed with {certificateMeta.issuer}, working through real briefs set by Barclays,
-          Amazon Web Services and Drax.
+          Industry experiences I&apos;ve completed with {certificateMeta.issuer}, working through real briefs set by
+          Barclays, Amazon Web Services and Drax.
         </p>
       </header>
 
@@ -226,7 +226,7 @@ function Writing() {
         <h2 data-scroll className="fx-slide section-title">Field notes</h2>
         <div data-scroll data-lag={0.1} className="fx-rise">
           <p className="text-[17px] leading-[1.42] text-black/65">
-            Writing on design, brands, and what we learn shipping both.
+            Writing on design, code, and what I learn building both.
           </p>
           <div className="mt-6">
             <PillLink href="#">More writing</PillLink>
@@ -302,7 +302,7 @@ function SmallTalk() {
             <span className="size-7 overflow-hidden rounded-sm">
               <PixelField palette={ink} cell={4} dither={1} scale={0.4} seed={9} className="size-full" />
             </span>
-            <span className="flex-1">Ask us anything else</span>
+            <span className="flex-1">Ask me anything else</span>
             <span className="grid size-8 place-items-center rounded-full bg-black/15 text-white transition-colors group-hover:bg-black">
               <ArrowIcon className="size-3.5 -rotate-45" />
             </span>
@@ -319,9 +319,9 @@ function Footer() {
       <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-4">
         <div data-scroll className="fx-rise">
           <p className="font-serif text-[52px] leading-none tracking-[-0.01em] italic sm:text-6xl">
-            p*wr
+            Joshua
             <br />
-            studios
+            Hatfield
           </p>
           <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-base">
             {socials.map((s) => (
