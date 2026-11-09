@@ -51,7 +51,7 @@ const newsreader = Newsreader({
 
 const TITLE = "xanti studios by @h4tfi3ld";
 const DESCRIPTION =
-  "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and certificates.";
+  "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and more.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pwr-studios.vercel.app"),

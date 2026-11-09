@@ -5,7 +5,7 @@ import { ScrollFx } from "@/components/scroll-fx";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ArrowIcon } from "@/components/ui";
-import { faqs, ink, site, socials } from "@/content";
+import { faqs, ink, socials } from "@/content";
 
 export const metadata: Metadata = {
   title: "Contact · xanti studios by @h4tfi3ld",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 function Contact() {
   return (
-    <section aria-labelledby="contact-title" className="bg-white pt-36 pb-24 sm:pt-44 sm:pb-32">
+    <section id="message" aria-labelledby="contact-title" className="bg-white pt-36 pb-24 sm:pt-44 sm:pb-32">
       <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-4">
         <div>
           <h1 id="contact-title" data-scroll className="fx-slide section-title">
@@ -38,14 +38,6 @@ function Contact() {
             inbox.
           </p>
           <dl data-scroll data-lag={0.2} className="fx-rise mt-10 grid max-w-[380px] gap-5 text-base">
-            <div>
-              <dt className="text-sm text-black/45">Email</dt>
-              <dd className="mt-1">
-                <a href={`mailto:${site.email}`} className="underline-offset-4 hover:underline">
-                  {site.email}
-                </a>
-              </dd>
-            </div>
             <div>
               <dt className="text-sm text-black/45">Elsewhere</dt>
               <dd className="mt-1 flex flex-wrap gap-x-5 gap-y-1">
@@ -59,7 +51,7 @@ function Contact() {
           </dl>
         </div>
         <div data-scroll data-lag={0.15} className="fx-rise">
-          <ContactForm email={site.email} />
+          <ContactForm />
         </div>
       </div>
     </section>
@@ -91,7 +83,7 @@ function SmallTalk() {
             </details>
           ))}
           <a
-            href={`mailto:${site.email}`}
+            href="#message"
             data-scroll
             data-lag={0.4}
             className="fx-rise group flex items-center gap-3 rounded-2xl bg-surface py-3 pr-3 pl-5 text-[17px] text-black/35 transition-colors hover:text-black/60"

@@ -10,11 +10,9 @@ import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { PillLink, Tag } from "@/components/ui";
+import { PillLink } from "@/components/ui";
 import {
   caseStudies,
-  certificateMeta,
-  certificates,
   graphics,
   logos,
   notes,
@@ -160,45 +158,11 @@ function Graphics() {
   );
 }
 
-function Certificates() {
+function Experience() {
   return (
-    <section id="certificates" className="bg-white pt-24 pb-10 sm:pt-28">
-      <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-start">
-        <h2 data-scroll className="fx-slide section-title">Certificates</h2>
-        <p data-scroll data-lag={0.1} className="fx-rise text-[17px] leading-[1.42] text-black/65">
-          Industry experiences I&apos;ve completed with {certificateMeta.issuer}, working through real briefs set by
-          Barclays, Amazon Web Services and Drax.
-        </p>
-      </header>
-
-      <ul className="wrap mt-14 grid gap-4 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
-        {certificates.map((c, i) => (
-          <li key={c.image} data-scroll data-lag={i * 0.1} className="fx-rise">
-            <a href={c.image} target="_blank" rel="noreferrer" className="group block">
-              <div className="relative aspect-[3508/2483] overflow-hidden rounded-[20px] bg-surface shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-                <Image
-                  src={c.image}
-                  alt={`${certificateMeta.issuer} certificate: ${c.title} with ${c.partner}`}
-                  fill
-                  sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
-                  className="fx-colour object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                <Tag>{c.partner}</Tag>
-                <Tag>{certificateMeta.issuer}</Tag>
-              </div>
-              <h3 className="mt-2 text-lg leading-snug font-medium">{c.title}</h3>
-              <p className="mt-1 text-sm text-black/50">Issued {certificateMeta.issued}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      {/* "Experience with": company logos lift onto a scroll-driven 3D sphere. */}
-      <div className="mt-10 sm:mt-16">
-        <LogoSphere companies={logos} />
-      </div>
+    // "Experience with": company logos lift onto a scroll-driven 3D sphere.
+    <section id="experience" className="bg-white pt-24 pb-10 sm:pt-28">
+      <LogoSphere companies={logos} />
     </section>
   );
 }
@@ -263,7 +227,7 @@ export default function Home() {
         <PinnedWork items={caseStudies} />
         <Momentum />
         <Graphics />
-        <Certificates />
+        <Experience />
         <Writing />
       </main>
       <SiteFooter />

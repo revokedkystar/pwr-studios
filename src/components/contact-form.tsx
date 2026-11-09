@@ -5,15 +5,11 @@ import { useState, type FormEvent } from "react";
 type Status = "idle" | "sending" | "sent" | "error";
 
 /**
- * Contact form. Submissions are forwarded to `email` by FormSubmit
- * (formsubmit.co), so the site needs no mail server or API key. The sender's
- * address is used as the reply-to, so replies go straight back to them.
- *
- * FormSubmit asks the inbox owner to confirm once: the first submission
- * triggers an activation email to `email`, and forwarding starts after the
- * link in it is clicked.
+ * Contact form. Messages are posted to /api/contact, which forwards them to
+ * the inbox from the server, so the address never appears on the page. The
+ * sender's address is used as the reply-to, so replies go straight back.
  */
-export function ContactForm({ email }: { email: string }) {
+export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,20 +20,13 @@ export function ContactForm({ email }: { email: string }) {
     if (data.get("_honey")) return;
     setStatus("sending");
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${email}`, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          message: data.get("message"),
-          _subject: `New message from ${data.get("name")} via your portfolio`,
-          _template: "table",
-          _captcha: "false",
-        }),
+        body: JSON.stringify(Object.fromEntries(data)),
       });
-      const json = (await res.json().catch(() => ({}))) as { success?: string | boolean };
-      if (!res.ok || String(json.success) !== "true") throw new Error("Not sent");
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      if (!res.ok || !json.ok) throw new Error("Not sent");
       setStatus("sent");
       form.reset();
     } catch {
@@ -108,11 +97,7 @@ export function ContactForm({ email }: { email: string }) {
         </button>
         {status === "error" ? (
           <p role="alert" className="text-sm text-black/70">
-            That didn&apos;t send. Please try again, or email{" "}
-            <a href={`mailto:${email}`} className="underline underline-offset-4">
-              {email}
-            </a>
-            .
+            That didn&apos;t send. Please try again in a moment, or message me on any of the links on this page.
           </p>
         ) : (
           <p className="text-sm text-black/45">Goes straight to my inbox.</p>
