@@ -13,7 +13,8 @@ import {
   playTiles,
   process,
   site,
-  sky,
+  cloud,
+  ink,
   socials,
 } from "@/content";
 
@@ -26,7 +27,7 @@ function Header() {
             <Asterisk className="size-6" />
           </a>
           {nav.map((n) => (
-            <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-sky sm:inline">
+            <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-black/50 sm:inline">
               {n.label}
             </a>
           ))}
@@ -40,7 +41,7 @@ function Header() {
 function Hero() {
   return (
     <section id="top" className="relative flex h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
-      <PixelField palette={sky} mode="clouds" speed={0.012} seed={7} className="absolute inset-0 size-full" />
+      <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} className="absolute inset-0 size-full" />
       <div className="wrap relative pt-10">
         <RotatingHeadline />
         <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
@@ -50,7 +51,7 @@ function Hero() {
 }
 
 function BrowserMock({ dark }: { dark: boolean }) {
-  const frame = dark ? "bg-[#151816] text-white/50" : "bg-white text-black/40";
+  const frame = dark ? "bg-[#141414] text-white/50" : "bg-white text-black/40";
   const block = dark ? "bg-white/[0.07]" : "bg-black/[0.05]";
   return (
     <div className={`absolute inset-0 top-[12%] left-[7%] flex overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.04)] ${frame}`}>
@@ -130,12 +131,12 @@ function Work() {
 function Momentum() {
   return (
     <section aria-labelledby="momentum" className="relative">
-      <PixelField palette={sky} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
-      <div className="bg-sky pt-10 pb-16 text-white sm:pb-20">
+      <PixelField palette={ink} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
+      <div className="bg-ink pt-10 pb-16 text-white sm:pb-20">
         <div className="relative mx-auto aspect-square w-[min(520px,82vw)]">
           <div className="absolute inset-0 overflow-hidden rounded-full">
             <PixelField
-              palette={["#00aaff", "#7ccbff", "#ffffff"]}
+              palette={["#0a0a0a", "#4a4a4a", "#d4d4d4"]}
               cell={14}
               scale={0.13}
               seed={5}
@@ -166,12 +167,14 @@ function Momentum() {
               keeps moving from the first workshop to launch day. Here&apos;s how that works.
             </p>
             <div className="mt-7">
-              <PillLink href="#">How we work</PillLink>
+              <PillLink href="#" invert>
+                How we work
+              </PillLink>
             </div>
           </div>
         </div>
       </div>
-      <PixelField palette={sky} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
+      <PixelField palette={ink} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
     </section>
   );
 }
@@ -295,7 +298,7 @@ function SmallTalk() {
             className="group flex items-center gap-3 rounded-2xl bg-surface py-3 pr-3 pl-5 text-[17px] text-black/35 transition-colors hover:text-black/60"
           >
             <span className="size-7 overflow-hidden rounded-sm">
-              <PixelField palette={sky} cell={4} dither={1} scale={0.4} seed={9} className="size-full" />
+              <PixelField palette={ink} cell={4} dither={1} scale={0.4} seed={9} className="size-full" />
             </span>
             <span className="flex-1">Ask us anything else</span>
             <span className="grid size-8 place-items-center rounded-full bg-black/15 text-white transition-colors group-hover:bg-black">
@@ -321,13 +324,13 @@ function Footer() {
           <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-base">
             {socials.map((s) => (
               <li key={s.label}>
-                <a href={s.href} className="hover:text-sky">
+                <a href={s.href} className="hover:text-black/50">
                   {s.label}
                 </a>
               </li>
             ))}
             <li>
-              <a href={`mailto:${site.email}`} className="hover:text-sky">
+              <a href={`mailto:${site.email}`} className="hover:text-black/50">
                 {site.email}
               </a>
             </li>
@@ -336,7 +339,7 @@ function Footer() {
         <div className="flex flex-wrap justify-between gap-10">
           <nav className="flex flex-col gap-1.5 text-base">
             {nav.map((n) => (
-              <a key={n.label} href={n.href} className="hover:text-sky">
+              <a key={n.label} href={n.href} className="hover:text-black/50">
                 {n.label}
               </a>
             ))}
@@ -351,7 +354,7 @@ function Footer() {
         <svg viewBox="0 0 100 100" className="absolute top-0 left-1/2 w-[min(92vw,1100px)] -translate-x-1/2">
           <defs>
             <pattern id="stripes" width="1.4" height="1.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <rect width="0.55" height="1.4" fill="#00aaff" />
+              <rect width="0.55" height="1.4" fill="#0a0a0a" />
             </pattern>
             <mask id="asterisk">
               {[0, 60, 120].map((r) => (

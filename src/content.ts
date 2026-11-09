@@ -22,7 +22,9 @@ export const socials = [
   { label: "Instagram", href: "#" },
 ];
 
-export const sky = ["#ffffff", "#7ccbff", "#00aaff"];
+// Monochrome pixel palettes, from "empty" to "full".
+export const cloud = ["#ffffff", "#dcdcdc", "#a3a3a3"];
+export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 
 export const caseStudies = [
   {
@@ -30,7 +32,7 @@ export const caseStudies = [
     client: "Client name, the context",
     tags: ["Brand identity", "Web design", "Launch"],
     href: "#",
-    palette: sky,
+    palette: cloud,
     seed: 11,
     dark: false,
   },
@@ -39,7 +41,7 @@ export const caseStudies = [
     client: "Client name, the context",
     tags: ["Product design", "Motion", "Campaign"],
     href: "#",
-    palette: ["#0b1410", "#14301f", "#1f6b3f"],
+    palette: ["#0a0a0a", "#1c1c1c", "#3a3a3a"],
     seed: 23,
     dark: true,
   },
@@ -47,44 +49,44 @@ export const caseStudies = [
 
 // Small experiments shown beside the case studies.
 export const playTiles = [
-  { title: "Radial menu", bg: "#e6f1fa", fg: "#1f4f7a", glyph: "◎" },
+  { title: "Radial menu", bg: "#ededed", fg: "#1a1a1a", glyph: "◎" },
   { title: "Wordmark sphere", bg: "#000000", fg: "#ffffff", glyph: "p*" },
-  { title: "Colour wheel", bg: "#2c2c33", fg: "#ff7ad9", glyph: "&" },
-  { title: "Glow switch", bg: "#2a2321", fg: "#ffcf8a", glyph: "✺" },
-  { title: "Grid study", bg: "#0d0d0f", fg: "#5d5d66", glyph: "#" },
-  { title: "Idea map", bg: "#d48a7c", fg: "#fff4ef", glyph: "✳" },
-  { title: "Type specimen", bg: "#eeeae2", fg: "#e2552c", glyph: "Aa" },
-  { title: "Pixel clock", bg: "#dedcd4", fg: "#1a1a1a", glyph: "7:01" },
-  { title: "Piano toy", bg: "#f3f0e8", fg: "#111111", glyph: "♪" },
-  { title: "Soft buttons", bg: "#cfe6f7", fg: "#1b6ef5", glyph: "ok" },
-  { title: "Voxel type", bg: "#232120", fg: "#f2f2f2", glyph: "3D" },
-  { title: "Waveform", bg: "#e4e2df", fg: "#3a3a3a", glyph: "∿" },
+  { title: "Colour wheel", bg: "#2b2b2b", fg: "#d9d9d9", glyph: "&" },
+  { title: "Glow switch", bg: "#1a1a1a", fg: "#f2f2f2", glyph: "✺" },
+  { title: "Grid study", bg: "#0d0d0d", fg: "#5c5c5c", glyph: "#" },
+  { title: "Idea map", bg: "#8a8a8a", fg: "#ffffff", glyph: "✳" },
+  { title: "Type specimen", bg: "#f2f2f2", fg: "#111111", glyph: "Aa" },
+  { title: "Pixel clock", bg: "#dadada", fg: "#1a1a1a", glyph: "7:01" },
+  { title: "Piano toy", bg: "#f6f6f6", fg: "#111111", glyph: "♪" },
+  { title: "Soft buttons", bg: "#c9c9c9", fg: "#1a1a1a", glyph: "ok" },
+  { title: "Voxel type", bg: "#222222", fg: "#f2f2f2", glyph: "3D" },
+  { title: "Waveform", bg: "#e3e3e3", fg: "#3a3a3a", glyph: "∿" },
 ];
 
 export const process = [
-  { label: "Strategy", color: "#ff3e8a", x: "18%", y: "30%" },
-  { label: "Design", color: "#ff9a00", x: "62%", y: "14%" },
-  { label: "Build", color: "#1fbf6a", x: "68%", y: "66%" },
+  { label: "Strategy", color: "#0a0a0a", x: "18%", y: "30%" },
+  { label: "Design", color: "#8f8f8f", x: "62%", y: "14%" },
+  { label: "Build", color: "#d0d0d0", x: "68%", y: "66%" },
 ];
 
 export const moments = [
-  { caption: "Studio day, laptops out", tint: "#e8e2d8", w: 150, h: 200, x: "2%", y: "12%", r: -3 },
-  { caption: "Workshop with a founding team", tint: "#d9e4ee", w: 170, h: 120, x: "14%", y: "2%", r: 2 },
-  { caption: "Launch night", tint: "#2a2a2e", w: 150, h: 210, x: "10%", y: "44%", r: 1 },
-  { caption: "Sketching the system", tint: "#efe6c8", w: 190, h: 130, x: "19%", y: "74%", r: 3 },
-  { caption: "Talk at a design meetup", tint: "#e3d6cf", w: 180, h: 130, x: "38%", y: "84%", r: -2 },
-  { caption: "Team photo, everyone squinting", tint: "#cfd8c8", w: 170, h: 220, x: "61%", y: "68%", r: 2 },
-  { caption: "Crit wall", tint: "#f2dccb", w: 160, h: 110, x: "72%", y: "0%", r: -2 },
-  { caption: "Award evening", tint: "#7a1d24", w: 170, h: 125, x: "76%", y: "48%", r: 0 },
-  { caption: "Coffee and moodboards", tint: "#f0e3a8", w: 130, h: 95, x: "89%", y: "26%", r: 3 },
-  { caption: "Off-site, out in the sun", tint: "#cfe0ea", w: 150, h: 200, x: "86%", y: "70%", r: -3 },
+  { caption: "Studio day, laptops out", tint: "#e6e6e6", w: 150, h: 200, x: "2%", y: "12%", r: -3 },
+  { caption: "Workshop with a founding team", tint: "#d6d6d6", w: 170, h: 120, x: "14%", y: "2%", r: 2 },
+  { caption: "Launch night", tint: "#2a2a2a", w: 150, h: 210, x: "10%", y: "44%", r: 1 },
+  { caption: "Sketching the system", tint: "#ececec", w: 190, h: 130, x: "19%", y: "74%", r: 3 },
+  { caption: "Talk at a design meetup", tint: "#dcdcdc", w: 180, h: 130, x: "38%", y: "84%", r: -2 },
+  { caption: "Team photo, everyone squinting", tint: "#cfcfcf", w: 170, h: 220, x: "61%", y: "68%", r: 2 },
+  { caption: "Crit wall", tint: "#efefef", w: 160, h: 110, x: "72%", y: "0%", r: -2 },
+  { caption: "Award evening", tint: "#5a5a5a", w: 170, h: 125, x: "76%", y: "48%", r: 0 },
+  { caption: "Coffee and moodboards", tint: "#e0e0e0", w: 130, h: 95, x: "89%", y: "26%", r: 3 },
+  { caption: "Off-site, out in the sun", tint: "#c4c4c4", w: 150, h: 200, x: "86%", y: "70%", r: -3 },
 ];
 
 export const notes = [
-  { date: "2026-11", title: "The quiet launch", number: "04", color: "#ff3fa4", palette: ["#f7f7f9", "#ffc6e4", "#ff3fa4"], href: "#" },
-  { date: "2026-10", title: "Nouns, then verbs", number: "03", color: "#ff9a00", palette: ["#f7f7f9", "#ffdca6", "#ff9a00"], href: "#" },
-  { date: "2026-09", title: "Why taste scales", number: "02", color: "#00aaff", palette: ["#f7f7f9", "#b5e3ff", "#00aaff"], href: "#" },
-  { date: "2026-08", title: "Small brands, big rooms", number: "01", color: "#2ec27e", palette: ["#f7f7f9", "#bfeed4", "#2ec27e"], href: "#" },
+  { date: "2026-11", title: "The quiet launch", number: "04", color: "#0a0a0a", palette: ["#f7f7f7", "#c8c8c8", "#0a0a0a"], href: "#" },
+  { date: "2026-10", title: "Nouns, then verbs", number: "03", color: "#5c5c5c", palette: ["#f7f7f7", "#dddddd", "#5c5c5c"], href: "#" },
+  { date: "2026-09", title: "Why taste scales", number: "02", color: "#0a0a0a", palette: ["#f7f7f7", "#9a9a9a", "#2a2a2a"], href: "#" },
+  { date: "2026-08", title: "Small brands, big rooms", number: "01", color: "#7a7a7a", palette: ["#f7f7f7", "#e6e6e6", "#8a8a8a"], href: "#" },
 ];
 
 export const faqs = [

@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { PixelField } from "./pixel-field";
 
-const SKY = ["#ffffff", "#7ccbff", "#00aaff"];
+const INK = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 
 function Tile() {
   return (
     <span className="relative mx-[0.12em] inline-block size-[0.72em] translate-y-[0.06em] overflow-hidden align-baseline">
-      <PixelField palette={SKY} cell={10} seed={3} scale={0.25} speed={0.02} className="absolute inset-0 size-full" />
+      <PixelField palette={INK} cell={10} seed={3} scale={0.25} speed={0.02} className="absolute inset-0 size-full" />
     </span>
   );
 }
