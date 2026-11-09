@@ -279,3 +279,10 @@ body {
   background: repeating-linear-gradient(45deg, #0a0a0a 0 6px, #0000 6px 15px);
   mask: url("/websiteicon.png") center / contain no-repeat;
 }
+
+/* Leave room under the taller vertical menu when jumping to a section. */
+#graphics,
+#certificates,
+#writing {
+  scroll-margin-top: 140px;
+}
