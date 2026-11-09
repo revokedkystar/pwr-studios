@@ -16,19 +16,21 @@ const STAGGER = 0.028;
  *
  * The section is a few screens tall and its panel is sticky, so it stays
  * locked on screen while you scroll through it. Scroll progress is written
- * to `--tp` (0 → 1). Each tool tile starts scattered and rotated, then flies
- * into its place in the grid on its own staggered schedule (worked out in
- * CSS from --tp and its --d delay), turning from grey to colour as it lands.
- * A counter tracks how many have landed, and the area labels fade in at the
- * end. The last stretch of the section holds everything assembled before
- * the page scrolls on.
+ * to `--tp` (0 → 1). Each tool starts scattered and rotated, then flies into
+ * its place on a ring (worked out in CSS from --tp, its --d delay and its
+ * --k position on the ring), turning from grey to colour as it lands. The
+ * whole ring turns as it forms, so the tools sweep round into a circle, with
+ * each area taking its own arc. The title and a counter of how many tools
+ * have landed sit in the middle. The last stretch holds the finished circle
+ * before the page scrolls on.
  *
  * Without JavaScript or with reduced motion, --tp is never set and the CSS
- * fallback (1) shows the finished, assembled grid.
+ * fallback (1) shows the finished circle.
  */
 export function StackShowcase({ areas }: { areas: Area[] }) {
   const ref = useRef<HTMLDivElement>(null);
-  const total = areas.reduce((n, a) => n + a.tools.length, 0);
+  const tools = areas.flatMap((a) => a.tools.map((t) => ({ ...t, area: a.area })));
+  const total = tools.length;
 
   useEffect(() => {
     const el = ref.current;
@@ -43,7 +45,7 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
       const rect = el.getBoundingClientRect();
       const travel = rect.height - window.innerHeight;
       const progress = travel > 0 ? Math.min(1, Math.max(0, -rect.top / travel)) : 1;
-      // Finish assembling at 80% of the way through, then hold.
+      // Finish forming the circle at 80% of the way through, then hold.
       const tp = Math.min(1, progress / 0.8);
       el.style.setProperty("--tp", tp.toFixed(4));
       let landed = 0;
@@ -67,64 +69,66 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
     };
   }, [total]);
 
-  let index = 0;
-  const names = areas.flatMap((a) => a.tools.map((t) => t.name));
-
   return (
-    <div ref={ref} className="stack relative h-[260svh]" style={{ "--flight": FLIGHT } as CSSProperties}>
-      <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden">
-        {/* Giant tool names sliding across behind the grid. */}
+    <div
+      ref={ref}
+      className="stack relative h-[280svh]"
+      style={{ "--flight": FLIGHT, "--step": `${360 / total}deg` } as CSSProperties}
+    >
+      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
+        {/* Giant tool names sliding across behind the circle. */}
         <p
           aria-hidden
           className="stack-ticker pointer-events-none absolute top-1/2 left-0 w-max text-[22vw] leading-none font-medium tracking-[-0.03em] whitespace-nowrap text-white/[0.045] lg:text-[15vw]"
         >
-          {names.join(" · ")}
+          {tools.map((t) => t.name).join(" · ")}
         </p>
 
-        <div className="wrap relative">
-          <header className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-            <h2 id="stack" className="text-[44px] leading-[0.95] font-medium tracking-[-0.01em] sm:text-6xl lg:text-7xl">
-              Development stack
+        <div className="stack-ring relative aspect-square w-[min(78svh,92vw,760px)]">
+          {/* Centre: title, counter and the three areas. */}
+          <div className="absolute inset-0 grid place-content-center text-center">
+            <h2 id="stack" className="stack-title font-medium tracking-[-0.01em]">
+              Development
+              <br />
+              stack
             </h2>
-            <p className="text-sm text-white/55 tabular-nums">
+            <p className="stack-meta mt-[2.5cqmin] text-white/55 tabular-nums">
               <span data-count className="text-white">
                 {String(total).padStart(2, "0")}
               </span>{" "}
-              / {String(total).padStart(2, "0")} tools assembled
+              / {String(total).padStart(2, "0")} tools
             </p>
-          </header>
-
-          <div className="mt-8 grid gap-6 sm:mt-12 lg:grid-cols-3 lg:gap-4">
-            {areas.map((a) => (
-              <section key={a.area} aria-label={a.area}>
-                <h3 className="stack-label text-sm text-white/55">{a.area}</h3>
-                <ul className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
-                  {a.tools.map((t) => {
-                    const i = index++;
-                    // Deterministic scatter: spread across the screen, rotated.
-                    const style = {
-                      "--d": (i * STAGGER).toFixed(3),
-                      "--sx": `${((i * 37) % 11) * 8 - 40}vw`,
-                      "--sy": `${((i * 53) % 9) * 11 - 44}vh`,
-                      "--sr": `${((i * 29) % 7) * 30 - 90}deg`,
-                    } as CSSProperties;
-                    return (
-                      <li
-                        key={t.name}
-                        style={style}
-                        className="stack-tile flex h-[84px] flex-col items-center justify-center gap-2 rounded-2xl bg-white/[0.06] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] sm:h-auto sm:aspect-square sm:gap-3"
-                      >
-                        <span className="grid size-10 place-items-center rounded-xl bg-white sm:size-14 sm:rounded-2xl">
-                          <Image src={t.src} alt="" width={32} height={32} className="stack-icon size-6 object-contain sm:size-8" />
-                        </span>
-                        <span className="text-xs text-white/75 sm:text-sm">{t.name}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
+            <ul className="stack-label stack-meta mt-[2cqmin] text-white/45 max-sm:hidden">
+              {areas.map((a) => (
+                <li key={a.area}>
+                  {a.area} <span className="text-white/30">{a.tools.length}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+
+          <ul aria-label="Development stack">
+            {tools.map((t, i) => {
+              // Deterministic scatter: spread across the screen, rotated.
+              const style = {
+                "--k": i,
+                "--d": (i * STAGGER).toFixed(3),
+                "--sx": `${((i * 37) % 11) * 8 - 40}vw`,
+                "--sy": `${((i * 53) % 9) * 11 - 44}vh`,
+                "--sr": `${((i * 29) % 7) * 30 - 90}deg`,
+              } as CSSProperties;
+              return (
+                <li key={t.name} style={style} className="stack-tile absolute top-1/2 left-1/2" title={`${t.name} · ${t.area}`}>
+                  <span className="grid size-full place-items-center rounded-[28%] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+                    <Image src={t.src} alt={t.name} width={48} height={48} className="stack-icon size-[58%] object-contain" />
+                  </span>
+                  <span className="absolute top-full left-1/2 mt-2 -translate-x-1/2 text-xs whitespace-nowrap text-white/70 max-sm:hidden">
+                    {t.name}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </div>
