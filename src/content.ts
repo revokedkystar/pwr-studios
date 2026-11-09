@@ -1,9 +1,9 @@
-// Content for Joshua Hatfield's portfolio. Email, socials and writing are still placeholders.
+// Content for Joshua Hatfield's portfolio. The writing cards are still placeholders.
 
 export const site = {
   name: "Joshua Hatfield",
-  email: "hello@example.com",
-  contact: "mailto:hello@example.com?subject=Hello%20Joshua",
+  email: "hatfij08@gmail.com",
+  contact: "mailto:hatfij08@gmail.com?subject=Hello%20Joshua",
   intro:
     "I'm Joshua, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
 };
@@ -16,10 +16,10 @@ export const nav = [
 ];
 
 export const socials = [
-  { label: "LinkedIn", href: "#" },
-  { label: "X", href: "#" },
-  { label: "GitHub", href: "#" },
-  { label: "Instagram", href: "#" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/h4tfi3ld" },
+  { label: "X", href: "https://x.com/h4tfi3ld" },
+  { label: "GitHub", href: "https://github.com/revokedkystar" },
+  { label: "Instagram", href: "https://www.instagram.com/h4tfi3ld" },
 ];
 
 // Monochrome pixel palettes, from "empty" to "full".
@@ -28,14 +28,14 @@ export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 
 export const caseStudies = [
   {
-    title: "Unit Pal: tracking a BTEC Level 3 IT diploma, unit by unit",
-    client: "Web app, grade tracking and data visualisation",
-    tags: ["Web app", "Data visualisation", "Education"],
-    href: "https://github.com/revokedkystar/unit-pal-progress",
-    image: "/websitepreview/preview1.png",
-    width: 1853,
-    height: 886,
-    alt: "Unit Pal dashboard showing diploma progress, a grade chart and a unit inventory",
+    title: "OJR Trades FX: a transparent forex signals site built to convert",
+    client: "OJR Trades FX, scalp trading signals",
+    tags: ["Web design", "Finance", "Conversion"],
+    href: "https://github.com/revokedkystar/ojrfx",
+    image: "/websitepreview/ojrfx.webp",
+    width: 1691,
+    height: 973,
+    alt: "OJR Trades FX homepage: 'Grow your capital alongside an active, transparent signals trader', with test account and trade evidence buttons",
     palette: cloud,
     seed: 11,
     dark: false,
@@ -167,7 +167,7 @@ export const faqs = [
   },
   {
     q: "What do you build?",
-    a: "Websites and web apps, like Unit Pal, Artisan Catering and Leisure Vehicle Auto Repairs, plus posters, campaigns and social graphics.",
+    a: "Websites and web apps, like OJR Trades FX, Artisan Catering and Leisure Vehicle Auto Repairs, plus posters, campaigns and social graphics.",
   },
   {
     q: "What's in your stack?",
@@ -179,7 +179,7 @@ export const faqs = [
   },
   {
     q: "How can I get in touch?",
-    a: "Email hello@example.com, or find me on the socials at the bottom of the page.",
+    a: "Email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
   },
 ];
 
