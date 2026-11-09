@@ -27,32 +27,8 @@ const STAGGER = 0.028;
  * Without JavaScript or with reduced motion, --tp is never set and the CSS
  * fallback (1) shows the finished circle.
  */
-type Props = {
-  areas: Area[];
-  /** Two-line title in the middle of the ring. */
-  title?: [string, string];
-  /** What the counter counts, e.g. "tools" or "companies". */
-  unit?: string;
-  /** id for the title, for anchors and aria-labelledby. */
-  id?: string;
-  /** "dark" for the black band, "light" for white sections. */
-  theme?: "dark" | "light";
-  /** Wide tiles, for wordmark logos rather than square icons. */
-  wide?: boolean;
-};
-
-export function StackShowcase({
-  areas,
-  title = ["Development", "stack"],
-  unit = "tools",
-  id = "stack",
-  theme = "dark",
-  wide = false,
-}: Props) {
+export function StackShowcase({ areas }: { areas: Area[] }) {
   const ref = useRef<HTMLDivElement>(null);
-  const light = theme === "light";
-  // Only show area names when there is more than one area.
-  const grouped = areas.length > 1;
   const tools = areas.flatMap((a) => a.tools.map((t) => ({ ...t, area: a.area })));
   const total = tools.length;
 
@@ -96,14 +72,14 @@ export function StackShowcase({
   return (
     <div
       ref={ref}
-      className={`stack relative h-[280svh] ${light ? "stack-light text-black" : ""}`}
+      className="stack relative h-[280svh]"
       style={{ "--flight": FLIGHT, "--step": `${360 / total}deg` } as CSSProperties}
     >
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
         {/* Giant tool names sliding across behind the circle. */}
         <p
           aria-hidden
-          className={`stack-ticker pointer-events-none absolute top-1/2 left-0 w-max text-[22vw] leading-none font-medium tracking-[-0.03em] whitespace-nowrap lg:text-[15vw] ${light ? "text-black/[0.04]" : "text-white/[0.045]"}`}
+          className="stack-ticker pointer-events-none absolute top-1/2 left-0 w-max text-[22vw] leading-none font-medium tracking-[-0.03em] whitespace-nowrap text-white/[0.045] lg:text-[15vw]"
         >
           {tools.map((t) => t.name).join(" · ")}
         </p>
@@ -111,29 +87,27 @@ export function StackShowcase({
         <div className="stack-ring relative aspect-square w-[min(78svh,92vw,760px)]">
           {/* Centre: title, counter and the three areas. */}
           <div className="absolute inset-0 grid place-content-center text-center">
-            <h2 id={id} className="stack-title font-medium tracking-[-0.01em]">
-              {title[0]}
+            <h2 id="stack" className="stack-title font-medium tracking-[-0.01em]">
+              Development
               <br />
-              {title[1]}
+              stack
             </h2>
-            <p className={`stack-meta mt-[2.5cqmin] tabular-nums ${light ? "text-black/50" : "text-white/55"}`}>
-              <span data-count className={light ? "text-black" : "text-white"}>
+            <p className="stack-meta mt-[2.5cqmin] text-white/55 tabular-nums">
+              <span data-count className="text-white">
                 {String(total).padStart(2, "0")}
               </span>{" "}
-              / {String(total).padStart(2, "0")} {unit}
+              / {String(total).padStart(2, "0")} tools
             </p>
-            {grouped && (
-              <ul className={`stack-label stack-meta mt-[2cqmin] max-sm:hidden ${light ? "text-black/45" : "text-white/45"}`}>
-                {areas.map((a) => (
-                  <li key={a.area}>
-                    {a.area} <span className={light ? "text-black/30" : "text-white/30"}>{a.tools.length}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul className="stack-label stack-meta mt-[2cqmin] text-white/45 max-sm:hidden">
+              {areas.map((a) => (
+                <li key={a.area}>
+                  {a.area} <span className="text-white/30">{a.tools.length}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <ul aria-labelledby={id}>
+          <ul aria-label="Development stack">
             {tools.map((t, i) => {
               // Deterministic scatter: spread across the screen, rotated.
               const style = {
@@ -148,27 +122,22 @@ export function StackShowcase({
                   key={t.name}
                   style={style}
                   tabIndex={0}
-                  aria-label={grouped ? `${t.name}, ${t.area}` : t.name}
-                  className={`stack-tile group absolute top-1/2 left-1/2 cursor-default rounded-xl outline-none hover:z-10 focus:z-10 focus-visible:ring-2 ${
-                    wide ? "stack-tile-wide" : ""
-                  } ${light ? "focus-visible:ring-black/40" : "focus-visible:ring-white/60"}`}
+                  aria-label={`${t.name}, ${t.area}`}
+                  className="stack-tile group absolute top-1/2 left-1/2 cursor-default rounded-xl outline-none hover:z-10 focus:z-10 focus-visible:ring-2 focus-visible:ring-white/60"
                 >
                   <Image
                     src={t.src}
                     alt=""
-                    width={wide ? 160 : 64}
+                    width={64}
                     height={64}
                     className="stack-icon size-full object-contain transition-transform duration-300 group-hover:scale-115 group-focus:scale-115"
                   />
                   {/* Name label, shown on hover (or tap / keyboard focus). */}
                   <span
                     aria-hidden
-                    className={`pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 rounded-full px-3 py-1.5 text-xs whitespace-nowrap opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100 ${
-                      light ? "bg-black text-white" : "bg-white text-black"
-                    }`}
+                    className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 translate-y-1 rounded-full bg-white px-3 py-1.5 text-xs whitespace-nowrap text-black opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
                   >
-                    <span className="font-medium">{t.name}</span>
-                    {grouped && <span className={light ? "text-white/50" : "text-black/45"}> {t.area}</span>}
+                    <span className="font-medium">{t.name}</span> <span className="text-black/45">{t.area}</span>
                   </span>
                 </li>
               );

@@ -4,6 +4,7 @@ import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
+import { LogoDeck } from "@/components/logo-deck";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
@@ -249,16 +250,9 @@ function Certificates() {
         ))}
       </ul>
 
-      {/* Company logos fly into a ring, like the development stack. */}
+      {/* Company logos dealt in as cards that flip face up. */}
       <div className="mt-10 sm:mt-16">
-        <StackShowcase
-          areas={[{ area: "Experience", tools: logos }]}
-          title={["Experience", "with"]}
-          unit="companies"
-          id="experience"
-          theme="light"
-          wide
-        />
+        <LogoDeck logos={logos} />
       </div>
     </section>
   );
