@@ -17,7 +17,8 @@ const STAGGER = 0.12;
  * locked while you scroll through it. Scroll progress is written to `--dp`
  * (0 → 1). Each company is a card that rises from below the screen at a tilt
  * and flips over as it arrives: the back is black with the p*wr mark, the
- * front is the company logo, which comes into colour as it lands. A counter
+ * front is just the company logo (no card behind it), which comes into
+ * colour as it lands. A counter
  * tracks how many cards are face up. The last stretch holds the finished row.
  *
  * Without JavaScript or with reduced motion, --dp is never set and the CSS
@@ -92,10 +93,10 @@ export function LogoDeck({ logos }: { logos: Logo[] }) {
                 className={`deck-card ${spans ? "max-lg:col-span-2" : ""}`}
                 style={{ "--d": (i * STAGGER).toFixed(3), "--tilt": `${[-14, 9, -6, 12, -10][i % 5]}deg` } as CSSProperties}
               >
-                <div className={`deck-flip relative aspect-[4/3] ${spans ? "max-lg:aspect-[32/9]" : "max-lg:aspect-[16/9]"}`}>
-                  {/* Front: the company logo. */}
-                  <div className="deck-face absolute inset-0 grid place-items-center rounded-2xl bg-surface shadow-[0_0_0_1px_rgba(0,0,0,0.05)]">
-                    <span className="absolute inset-x-[12%] inset-y-[30%]">
+                <div className={`deck-flip relative aspect-[5/2] ${spans ? "max-lg:aspect-[5/1]" : ""}`}>
+                  {/* Front: the company logo on its own, no card behind it. */}
+                  <div className="deck-face absolute inset-0">
+                    <span className="absolute inset-x-[8%] inset-y-[18%]">
                         <Image src={l.src} alt={l.name} fill sizes="200px" className="deck-logo object-contain" />
                       </span>
                   </div>
@@ -104,7 +105,7 @@ export function LogoDeck({ logos }: { logos: Logo[] }) {
                     <Image src="/websiteicon.png" alt="" width={156} height={154} className="h-[30%] w-auto opacity-90" />
                   </div>
                 </div>
-                <p className="deck-name mt-3 text-sm text-black/60">{l.name}</p>
+                <p className="deck-name mt-2 text-center text-sm text-black/60">{l.name}</p>
               </li>
               );
             })}
