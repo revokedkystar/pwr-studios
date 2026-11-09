@@ -152,11 +152,44 @@ export const stack = [
   },
 ];
 
+// Field notes stamps, in display order. Swap the photos in public/fieldnotes/.
 export const notes = [
-  { date: "2026-11", title: "The quiet launch", number: "04", color: "#0a0a0a", palette: ["#f7f7f7", "#c8c8c8", "#0a0a0a"], href: "#" },
-  { date: "2026-10", title: "Nouns, then verbs", number: "03", color: "#5c5c5c", palette: ["#f7f7f7", "#dddddd", "#5c5c5c"], href: "#" },
-  { date: "2026-09", title: "Why taste scales", number: "02", color: "#0a0a0a", palette: ["#f7f7f7", "#9a9a9a", "#2a2a2a"], href: "#" },
-  { date: "2026-08", title: "Small brands, big rooms", number: "01", color: "#7a7a7a", palette: ["#f7f7f7", "#e6e6e6", "#8a8a8a"], href: "#" },
+  {
+    date: "2026-11",
+    title: "The quiet launch",
+    number: "04",
+    color: "#0a0a0a",
+    image: "/fieldnotes/note1.jpg",
+    alt: "A busy tech expo hall lit by glowing screens and displays",
+    href: "#",
+  },
+  {
+    date: "2026-10",
+    title: "Nouns, then verbs",
+    number: "03",
+    color: "#5c5c5c",
+    image: "/fieldnotes/note2.jpg",
+    alt: "A warehouse floor stacked with boxes and production equipment",
+    href: "#",
+  },
+  {
+    date: "2026-09",
+    title: "Why taste scales",
+    number: "02",
+    color: "#0a0a0a",
+    image: "/fieldnotes/note3.jpg",
+    alt: "A design team working around a table covered in trainers and samples",
+    href: "#",
+  },
+  {
+    date: "2026-08",
+    title: "Small brands, big rooms",
+    number: "01",
+    color: "#7a7a7a",
+    image: "/fieldnotes/note4.jpg",
+    alt: "Silhouetted people in front of a wall of screens in a dark control room",
+    href: "#",
+  },
 ];
 
 export const faqs = [
