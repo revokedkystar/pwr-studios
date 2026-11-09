@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { WorldClocks } from "@/components/world-clocks";
-import { clocks, nav, site, socials } from "@/content";
+import { clocks, nav, socials } from "@/content";
 
 export function SiteFooter() {
   return (
@@ -20,11 +20,6 @@ export function SiteFooter() {
                 </a>
               </li>
             ))}
-            <li>
-              <a href={`mailto:${site.email}`} className="hover:text-black/50">
-                {site.email}
-              </a>
-            </li>
           </ul>
         </div>
         <div className="flex flex-wrap justify-between gap-10">

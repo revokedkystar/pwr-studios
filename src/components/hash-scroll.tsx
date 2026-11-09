@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 /**
- * Scrolls to the section named in the address (e.g. /#certificates) once the
+ * Scrolls to the section named in the address (e.g. /#graphics) once the
  * page has mounted. Needed when arriving from another page via a menu link:
  * the default jump can happen before the pinned sections have finished
  * setting up, which then leaves the page at the top.

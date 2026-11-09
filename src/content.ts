@@ -2,7 +2,6 @@
 
 export const site = {
   name: "@h4tfi3ld",
-  email: "hatfij08@gmail.com",
   intro:
     "I'm @h4tfi3ld, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
 };
@@ -10,7 +9,6 @@ export const site = {
 export const nav = [
   { label: "Work", href: "/#work" },
   { label: "Graphics", href: "/#graphics" },
-  { label: "Certificates", href: "/#certificates" },
   { label: "Writing", href: "/#writing" },
 ];
 
@@ -87,31 +85,6 @@ export const graphics = [
   { src: "/graphics/gd6.png", alt: "NHS Torbay volunteer content creator recruitment poster", w: 125, h: 222, x: "89%", y: "14%", r: 3 },
   { src: "/graphics/gd9.png", alt: "'Broken Planet' streetwear drop poster", w: 128, h: 228, x: "87%", y: "62%", r: -3 },
 ];
-
-export const certificates = [
-  {
-    title: "Data Analytics",
-    partner: "Barclays",
-    image: "/certificates/analytics_award.jpg",
-  },
-  {
-    title: "Developer",
-    partner: "Barclays",
-    image: "/certificates/dev_award.png",
-  },
-  {
-    title: "AWS Career Tour: Cloud Computing",
-    partner: "Amazon Web Services",
-    image: "/certificates/cloud_award.png",
-  },
-  {
-    title: "Prevent a Data Breach: Cyber Security Sprint",
-    partner: "Drax",
-    image: "/certificates/drax_award.png",
-  },
-];
-
-export const certificateMeta = { issuer: "Springpod", issued: "02/04/2026" };
 
 export const logos = [
   { name: "Barclays", src: "/svg/barclays.svg" },
@@ -211,7 +184,7 @@ export const faqs = [
   },
   {
     q: "How can I get in touch?",
-    a: "Use the contact form on this page, email hatfij08@gmail.com, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
+    a: "Use the contact form on this page, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
   },
 ];
 
