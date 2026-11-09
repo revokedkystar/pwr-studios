@@ -4,34 +4,130 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { PixelField } from "@/components/pixel-field";
 
-type Step = { label: string; color: string; x: string; y: string };
+export type Place = {
+  label: string;
+  color: string;
+  /** Where the tag sits on the flat wheel, as a share of its size. */
+  x: string;
+  y: string;
+  /** Where the tag sits on the globe. */
+  lat: number;
+  lon: number;
+  /** Which side of its country the tag sits on the globe (default right). */
+  side?: "left" | "right";
+};
 
 /*
- * The "Strategy / Design / Build" wheel, pinned while it scrolls past.
+ * The pixel wheel, pinned while it scrolls past.
  *
  * Scrolling through the tall outer box keeps the wheel locked in the middle
  * of the screen and plays this through:
  *
  *   0.00 – 0.08  the wheel, as before
- *   0.08 – 0.40  the wheel melts into a 3D pixel globe that grows outwards
- *   0.40 – 0.60  the full-size globe spins with the scroll
- *   0.60 – 0.92  it shrinks back down and turns back into the wheel
+ *   0.08 – 0.40  the wheel turns into a 3D pixel globe that grows outwards,
+ *                and each tag slides onto its country
+ *   0.40 – 0.60  the full-size globe turns with the scroll
+ *   0.60 – 0.92  it shrinks back down into the wheel, tags back in place
  *
- * The globe is drawn as real pixels: each cell of a coarse grid is tested
- * against a sphere, shaded by a light and textured with seeded 3D noise, then
- * scaled up without smoothing. With reduced motion on, nothing is pinned and
- * the plain wheel is shown.
+ * The globe is drawn with the wheel's own pixel style: the same three greys,
+ * 14px cells and 2px checkerboard dithering between neighbouring greys. Land
+ * comes from rough continent outlines, so the tags sit on the right countries.
+ * With reduced motion on, nothing is pinned and the plain wheel is shown.
  */
 
-const GLOBE = ["#1c1c1c", "#333333", "#5c5c5c", "#8f8f8f", "#c4c4c4", "#ffffff"];
-const RGB = GLOBE.map((h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)));
-const SEED = 17;
-const TILT = 0.42;
+const PALETTE = ["#0a0a0a", "#4a4a4a", "#d4d4d4"];
+const CELL = 14;
+const DITHER = 2;
+const TILT = 0.42; // tips the north pole towards the viewer
 const LIGHT = (() => {
-  const v = [-0.55, -0.6, 0.6];
+  const v = [-0.5, -0.55, 0.67];
   const l = Math.hypot(v[0], v[1], v[2]);
   return v.map((n) => n / l);
 })();
+const DEG = Math.PI / 180;
+// The longitude facing the viewer: the Atlantic at the globe's biggest, so
+// all three tags are in view, swinging 70° either side as the scroll goes on.
+const centreLon = (t: number) => (-40 + (t - 0.5) * 140) * DEG;
+
+// Rough continent outlines as [longitude, latitude] points.
+const LAND: [number, number][][] = [
+  // North America
+  [[-168, 66], [-162, 70], [-140, 70], [-120, 74], [-95, 72], [-80, 73], [-62, 66], [-64, 60], [-56, 52], [-66, 45], [-70, 42], [-76, 35], [-81, 31], [-80, 25], [-83, 29], [-90, 30], [-97, 27], [-97, 22], [-92, 18], [-87, 21], [-88, 15], [-83, 9], [-79, 8], [-86, 12], [-92, 14], [-105, 20], [-110, 24], [-114, 31], [-117, 32], [-124, 40], [-124, 48], [-130, 55], [-140, 60], [-152, 58], [-165, 60]],
+  // Greenland
+  [[-55, 60], [-44, 60], [-20, 70], [-18, 80], [-35, 83], [-60, 82], [-72, 78], [-55, 68]],
+  // South America
+  [[-80, 9], [-72, 12], [-60, 10], [-50, 0], [-35, -5], [-39, -15], [-48, -26], [-58, -35], [-65, -42], [-68, -55], [-74, -50], [-72, -30], [-71, -18], [-77, -12], [-81, -5], [-78, 2]],
+  // Europe and Asia
+  [[-10, 36], [-9, 43], [-2, 44], [-4, 48], [2, 51], [8, 54], [10, 57], [5, 62], [15, 69], [28, 71], [40, 67], [60, 69], [80, 73], [105, 78], [140, 72], [180, 69], [180, 65], [160, 60], [155, 51], [142, 47], [135, 43], [128, 35], [122, 40], [121, 31], [110, 21], [106, 11], [100, 13], [103, 1], [98, 8], [92, 22], [80, 15], [77, 8], [73, 20], [66, 25], [57, 26], [52, 30], [48, 30], [56, 25], [59, 22], [52, 16], [43, 13], [39, 21], [34, 28], [35, 36], [27, 37], [26, 41], [23, 37], [20, 40], [13, 46], [16, 41], [12, 38], [8, 44], [3, 43], [-1, 38], [-6, 36]],
+  // Africa
+  [[-17, 21], [-10, 30], [-6, 36], [10, 37], [20, 31], [32, 31], [35, 28], [43, 12], [51, 12], [40, -15], [35, -25], [20, -35], [18, -30], [12, -17], [13, -5], [9, 4], [-8, 5], [-17, 14]],
+  // Great Britain and Ireland
+  [[-5, 50], [1, 51], [2, 53], [-1, 55], [-2, 58], [-5, 59], [-6, 56], [-3, 54], [-5, 52]],
+  [[-10, 52], [-6, 52], [-6, 55], [-10, 55]],
+  // Australia, Japan, the larger islands
+  [[114, -22], [122, -18], [130, -12], [137, -12], [142, -11], [146, -19], [153, -26], [150, -37], [140, -38], [130, -32], [115, -34]],
+  [[130, 31], [140, 35], [142, 40], [141, 45], [139, 38], [132, 34]],
+  [[109, 1], [118, 7], [119, -1], [115, -4], [110, -3]],
+  [[95, 5], [106, -6], [101, -3]],
+  [[44, -25], [50, -15], [49, -12], [44, -17]],
+  [[166, -46], [174, -41], [178, -38], [172, -34], [168, -44]],
+];
+
+// Land mask on a 2° grid, built the first time the globe is drawn.
+let mask: Uint8Array | null = null;
+function landMask() {
+  if (mask) return mask;
+  mask = new Uint8Array(180 * 90);
+  for (let j = 0; j < 90; j++) {
+    const lat = 89 - j * 2;
+    for (let i = 0; i < 180; i++) {
+      const lon = -179 + i * 2;
+      let inside = lat < -68; // Antarctica
+      for (const poly of LAND) {
+        if (inside) break;
+        for (let a = 0, b = poly.length - 1; a < poly.length; b = a++) {
+          const [xa, ya] = poly[a];
+          const [xb, yb] = poly[b];
+          if (ya > lat !== yb > lat && lon < ((xb - xa) * (lat - ya)) / (yb - ya) + xa) inside = !inside;
+        }
+      }
+      mask[j * 180 + i] = inside ? 1 : 0;
+    }
+  }
+  return mask;
+}
+
+function isLand(lat: number, lon: number) {
+  const m = landMask();
+  const j = Math.min(89, Math.max(0, Math.floor((90 - lat / DEG) / 2)));
+  let i = Math.floor((lon / DEG + 180) / 2) % 180;
+  if (i < 0) i += 180;
+  return m[j * 180 + i] === 1;
+}
+
+function hash(x: number, y: number) {
+  let h = (x * 374761393 + y * 668265263 + 5 * 2147483647) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+
+/** Smooth noise over latitude/longitude, for the wheel's mottled texture. */
+function mottle(lat: number, lon: number) {
+  const x = lon * 2.2;
+  const y = lat * 2.2;
+  const ix = Math.floor(x);
+  const iy = Math.floor(y);
+  const fx = x - ix;
+  const fy = y - iy;
+  const u = fx * fx * (3 - 2 * fx);
+  const v = fy * fy * (3 - 2 * fy);
+  const a = hash(ix, iy);
+  const b = hash(ix + 1, iy);
+  const c = hash(ix, iy + 1);
+  const d = hash(ix + 1, iy + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
 
 const clamp = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 const smoothstep = (a: number, b: number, n: number) => {
@@ -39,47 +135,27 @@ const smoothstep = (a: number, b: number, n: number) => {
   return t * t * (3 - 2 * t);
 };
 
-function hash3(x: number, y: number, z: number) {
-  let h = (x * 374761393 + y * 668265263 + z * 1440662683 + SEED * 2147483647) | 0;
-  h = Math.imul(h ^ (h >>> 13), 1274126177);
-  h ^= h >>> 16;
-  return (h >>> 0) / 4294967296;
+/** A point on the globe, in screen units: x right, y down, z towards the viewer. */
+function project(lat: number, lon: number, spin: number) {
+  const wx = Math.cos(lat) * Math.sin(lon);
+  const wy = -Math.sin(lat);
+  const wz = Math.cos(lat) * Math.cos(lon);
+  // Undo the spin, then the tilt (the inverse of drawGlobe's turn).
+  const x1 = wx * Math.cos(spin) - wz * Math.sin(spin);
+  const z1 = wx * Math.sin(spin) + wz * Math.cos(spin);
+  return {
+    x: x1,
+    y: wy * Math.cos(TILT) + z1 * Math.sin(TILT),
+    z: -wy * Math.sin(TILT) + z1 * Math.cos(TILT),
+  };
 }
 
-function noise3(x: number, y: number, z: number) {
-  const ix = Math.floor(x);
-  const iy = Math.floor(y);
-  const iz = Math.floor(z);
-  const fx = x - ix;
-  const fy = y - iy;
-  const fz = z - iz;
-  const u = fx * fx * (3 - 2 * fx);
-  const v = fy * fy * (3 - 2 * fy);
-  const w = fz * fz * (3 - 2 * fz);
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-  const c = (dx: number, dy: number, dz: number) => hash3(ix + dx, iy + dy, iz + dz);
-  return lerp(
-    lerp(lerp(c(0, 0, 0), c(1, 0, 0), u), lerp(c(0, 1, 0), c(1, 1, 0), u), v),
-    lerp(lerp(c(0, 0, 1), c(1, 0, 1), u), lerp(c(0, 1, 1), c(1, 1, 1), u), v),
-    w,
-  );
-}
-
-/** "Continents": a few octaves of noise sampled on the sphere's surface. */
-function terrain(x: number, y: number, z: number) {
-  return (
-    noise3(x * 1.6 + 7, y * 1.6, z * 1.6) * 0.6 +
-    noise3(x * 3.4, y * 3.4 + 3, z * 3.4) * 0.28 +
-    noise3(x * 7, y * 7, z * 7 + 11) * 0.12
-  );
-}
-
-export function ProcessGlobe({ steps }: { steps: Step[] }) {
+export function ProcessGlobe({ places }: { places: Place[] }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
   const discRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
-  const labelsRef = useRef<HTMLDivElement>(null);
+  const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -87,109 +163,131 @@ export function ProcessGlobe({ steps }: { steps: Step[] }) {
     const wheel = wheelRef.current;
     const disc = discRef.current;
     const logo = logoRef.current;
-    const labels = labelsRef.current;
     const canvas = canvasRef.current;
-    if (!outer || !wheel || !disc || !logo || !labels || !canvas) return;
+    const tags = tagRefs.current;
+    if (!outer || !wheel || !disc || !logo || !canvas) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const off = document.createElement("canvas");
-    const offCtx = off.getContext("2d");
-    if (!offCtx) return;
-    let image: ImageData | null = null;
-
+    let dpr = 1;
     let raf = 0;
     let visible = false;
+    const patterns = new Map<string, CanvasPattern>();
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(canvas.clientWidth * dpr);
-      canvas.height = Math.round(canvas.clientHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // The same 2px checkerboard the wheel uses between two greys.
+    const checker = (a: string, b: string) => {
+      const key = `${a}|${b}|${dpr}`;
+      const hit = patterns.get(key);
+      if (hit) return hit;
+      const s = Math.max(1, Math.round(DITHER * dpr));
+      const tile = document.createElement("canvas");
+      tile.width = tile.height = s * 2;
+      const tc = tile.getContext("2d")!;
+      tc.fillStyle = a;
+      tc.fillRect(0, 0, s * 2, s * 2);
+      tc.fillStyle = b;
+      tc.fillRect(s, 0, s, s);
+      tc.fillRect(0, s, s, s);
+      const p = ctx.createPattern(tile, "repeat")!;
+      patterns.set(key, p);
+      return p;
     };
 
-    const drawGlobe = (cx: number, cy: number, radius: number, spin: number, alpha: number) => {
-      // About 110 pixels across, whatever the globe's size on screen.
-      const cell = Math.max(4, radius / 55);
-      const n = Math.ceil((2 * radius) / cell);
-      if (off.width !== n) {
-        off.width = n;
-        off.height = n;
-        image = offCtx.createImageData(n, n);
-      }
-      if (!image) return;
-      const data = image.data;
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      patterns.clear();
+    };
+
+    const drawGlobe = (cx: number, cy: number, radius: number, spin: number) => {
       const cosT = Math.cos(TILT);
       const sinT = Math.sin(TILT);
       const cosL = Math.cos(spin);
       const sinL = Math.sin(spin);
-      const scale = (n * cell) / (2 * radius);
+      const steps = PALETTE.length * 2 - 1;
+      const half = Math.ceil(radius / CELL);
+      const px = CELL * dpr;
+      // Cells are lined up on the globe's centre, so it grows evenly.
+      const ox = cx * dpr - half * px;
+      const oy = cy * dpr - half * px;
 
-      for (let j = 0; j < n; j++) {
-        const py = ((j + 0.5) / n) * 2 * scale - scale;
-        for (let i = 0; i < n; i++) {
-          const k = (j * n + i) * 4;
-          const px = ((i + 0.5) / n) * 2 * scale - scale;
-          const d = px * px + py * py;
-          if (d > 1) {
-            data[k + 3] = 0;
-            continue;
-          }
-          const pz = Math.sqrt(1 - d);
+      for (let j = 0; j < half * 2; j++) {
+        const sy = ((j - half + 0.5) * CELL) / radius;
+        for (let i = 0; i < half * 2; i++) {
+          const sx = ((i - half + 0.5) * CELL) / radius;
+          const d = sx * sx + sy * sy;
+          if (d > 1) continue;
+          const sz = Math.sqrt(1 - d);
           // Tip the globe towards the viewer, then spin it about its axis.
-          const y1 = py * cosT - pz * sinT;
-          const z1 = py * sinT + pz * cosT;
-          const x2 = px * cosL + z1 * sinL;
-          const z2 = -px * sinL + z1 * cosL;
-          const land = terrain(x2, y1, z2) > 0.47;
-          const lit = clamp(px * LIGHT[0] + py * LIGHT[1] + pz * LIGHT[2]);
-          const level = land ? 1.9 + 3.4 * lit : 0.1 + 1.3 * lit;
-          // Checkerboard dithering between neighbouring greys.
-          const idx = Math.min(GLOBE.length - 1, Math.max(0, Math.floor(level + ((i + j) & 1) * 0.5)));
-          const c = RGB[idx];
-          data[k] = c[0];
-          data[k + 1] = c[1];
-          data[k + 2] = c[2];
-          data[k + 3] = 255;
+          const y1 = sy * cosT - sz * sinT;
+          const z1 = sy * sinT + sz * cosT;
+          const x2 = sx * cosL + z1 * sinL;
+          const z2 = -sx * sinL + z1 * cosL;
+          const lat = Math.asin(Math.max(-1, Math.min(1, -y1)));
+          const lon = Math.atan2(x2, z2);
+          const lit = clamp(sx * LIGHT[0] + sy * LIGHT[1] + sz * LIGHT[2]);
+          const n = mottle(lat, lon) - 0.5;
+          const value = isLand(lat, lon) ? 0.62 + 0.4 * lit + n * 0.3 : 0.16 + 0.34 * lit + n * 0.4;
+          const idx = Math.min(steps - 1, Math.max(0, Math.floor(value * steps)));
+          ctx.fillStyle =
+            idx % 2 === 0 ? PALETTE[idx / 2] : checker(PALETTE[(idx - 1) / 2], PALETTE[(idx + 1) / 2]);
+          ctx.fillRect(Math.round(ox + i * px), Math.round(oy + j * px), Math.ceil(px), Math.ceil(px));
         }
       }
-      offCtx.putImageData(image, 0, 0);
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.imageSmoothingEnabled = false;
-      const size = n * cell;
-      ctx.drawImage(off, cx - size / 2, cy - size / 2, size, size);
-      ctx.restore();
     };
 
-    const frame = (now: number) => {
+    const frame = () => {
       raf = visible ? requestAnimationFrame(frame) : 0;
       const vh = window.innerHeight;
       const box = outer.getBoundingClientRect();
       const t = clamp(-box.top / Math.max(1, box.height - vh));
       const morph = Math.min(smoothstep(0.08, 0.4, t), 1 - smoothstep(0.6, 0.92, t));
+      const spin = centreLon(t);
 
       disc.style.opacity = String(1 - smoothstep(0.05, 0.35, morph));
       disc.style.rotate = `${t * 140}deg`;
       logo.style.opacity = String(1 - smoothstep(0, 0.3, morph));
       logo.style.rotate = `${-t * 360}deg`;
-      labels.style.opacity = String(1 - smoothstep(0, 0.25, morph));
-      labels.style.scale = String(1 + morph * 0.25);
 
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      ctx.clearRect(0, 0, w, h);
-      const alpha = smoothstep(0.02, 0.3, morph);
-      if (alpha <= 0) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const c = canvas.getBoundingClientRect();
       const r = wheel.getBoundingClientRect();
       const r0 = r.width / 2;
-      const rMax = Math.min(Math.max(r0 * 1.55, Math.min(w, h) * 0.46), Math.max(w, h) * 0.6);
+      // Grows to most of the screen, but never taller than it.
+      const rMax = Math.max(Math.min(w, h) * 0.44, Math.min(r0 * 1.55, h * 0.44));
       const radius = r0 + (rMax - r0) * morph;
-      const spin = t * Math.PI * 3 + now * 0.00012;
-      drawGlobe(r.left + r0 - c.left, r.top + r.height / 2 - c.top, radius, spin, alpha);
+
+      // Tags: from their spot on the wheel to their country on the globe.
+      places.forEach((p, i) => {
+        const tag = tags[i];
+        if (!tag) return;
+        const at = project(p.lat * DEG, p.lon * DEG, spin);
+        const fromX = (parseFloat(p.x) / 100) * r.width;
+        const fromY = (parseFloat(p.y) / 100) * r.height;
+        const toX = r0 + at.x * radius;
+        const toY = r.height / 2 + at.y * radius;
+        tag.style.left = `${fromX + (toX - fromX) * morph}px`;
+        tag.style.top = `${fromY + (toY - fromY) * morph}px`;
+        // On the globe, the tag's coloured square marks the spot, with the
+        // label running off to one side so neighbouring tags don't collide.
+        const shift = p.side === "left" ? `calc(${-100 * morph}% + ${14 * morph}px)` : `${-14 * morph}px`;
+        tag.style.translate = `${shift} ${-50 * morph}%`;
+        // Fade out round the back of the globe.
+        const facing = smoothstep(-0.05, 0.2, at.z);
+        tag.style.setProperty("--face", String(1 - morph + morph * facing));
+      });
+
+      const alpha = smoothstep(0.02, 0.3, morph);
+      if (alpha <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      drawGlobe(r.left + r0 - c.left, r.top + r.height / 2 - c.top, radius, spin);
+      ctx.restore();
     };
 
     const io = new IntersectionObserver(([entry]) => {
@@ -205,21 +303,14 @@ export function ProcessGlobe({ steps }: { steps: Step[] }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [places]);
 
   return (
     <div ref={outerRef} className="relative h-[260svh] motion-reduce:h-auto">
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <div ref={wheelRef} className="relative aspect-square w-[min(520px,82vw,72svh)]">
           <div ref={discRef} className="absolute inset-0 overflow-hidden rounded-full">
-            <PixelField
-              palette={["#0a0a0a", "#4a4a4a", "#d4d4d4"]}
-              cell={14}
-              scale={0.13}
-              seed={5}
-              speed={0.01}
-              className="size-full"
-            />
+            <PixelField palette={PALETTE} cell={CELL} scale={0.13} seed={5} speed={0.01} className="size-full" />
           </div>
           <div ref={logoRef} className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2">
             <Image
@@ -230,22 +321,35 @@ export function ProcessGlobe({ steps }: { steps: Step[] }) {
               className="size-full drop-shadow-[0_2px_0_rgba(0,0,0,0.25)]"
             />
           </div>
-          <div ref={labelsRef} className="absolute inset-0">
-            {steps.map((p, i) => (
+          {/* Above the globe canvas, which comes later in the panel. */}
+          <div className="absolute inset-0 z-10">
+            {places.map((p, i) => (
               <span
                 key={p.label}
-                data-scroll
-                data-lag={0.2 + i * 0.15}
-                className="fx-rise absolute flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-sm whitespace-nowrap text-black shadow-sm"
-                style={{ left: p.x, top: p.y }}
+                ref={(el) => {
+                  tagRefs.current[i] = el;
+                }}
+                className="absolute"
+                style={{ left: p.x, top: p.y, opacity: "var(--face, 1)" }}
               >
-                <span className="size-3 rounded-sm" style={{ background: p.color }} />
-                {p.label}
+                <span
+                  data-scroll
+                  data-lag={0.2 + i * 0.15}
+                  className={`fx-rise flex items-center gap-1.5 rounded-md ${p.side === "left" ? "flex-row-reverse" : ""} bg-white px-2 py-1 text-sm whitespace-nowrap text-black shadow-sm`}
+                >
+                  <span className="size-3 rounded-sm" style={{ background: p.color }} />
+                  {p.label}
+                </span>
               </span>
             ))}
           </div>
         </div>
-        <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 size-full" />
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 size-full"
+          style={{ imageRendering: "pixelated" }}
+        />
       </div>
     </div>
   );
