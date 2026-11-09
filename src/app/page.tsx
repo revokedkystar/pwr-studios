@@ -47,8 +47,9 @@ function Header() {
         <NotchEar side="left" />
         <NotchEar side="right" />
         <a href="#top" aria-label="p*wr, home" className="flex shrink-0 items-center gap-2.5">
-          <span className="grid size-[30px] place-items-center rounded-[8px] bg-white/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]">
-            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[18px]" />
+          {/* The mark sits straight on the black bar: no tile or border. */}
+          <span className="grid size-[30px] place-items-center">
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[22px]" />
           </span>
           <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">p*wr</span>
         </a>
