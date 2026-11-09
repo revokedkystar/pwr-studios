@@ -3,6 +3,7 @@ import Image from "next/image";
 import { PixelField } from "@/components/pixel-field";
 import { RotatingHeadline } from "@/components/rotating-headline";
 import { ScrollFx } from "@/components/scroll-fx";
+import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
 import { ArrowIcon, Asterisk, PillLink, Tag } from "@/components/ui";
 import {
@@ -20,7 +21,7 @@ import {
   cloud,
   ink,
   socials,
-  toolkit,
+  stack,
 } from "@/content";
 
 function Header() {
@@ -162,24 +163,8 @@ function Momentum() {
           </div>
         </div>
 
-        <div data-scroll className="fx-rise mt-20 sm:mt-24">
-          <p className="wrap text-sm text-white/50">Toolkit</p>
-          <div className="marquee mt-4 overflow-hidden">
-            <ul className="marquee-track flex w-max gap-3">
-              {[...toolkit, ...toolkit].map((t, i) => (
-                <li
-                  key={`${t.name}-${i}`}
-                  aria-hidden={i >= toolkit.length}
-                  className="group flex h-16 items-center gap-3 rounded-2xl bg-white/[0.06] pr-5 pl-3 text-base whitespace-nowrap text-white/80"
-                >
-                  <span className="grid size-10 place-items-center rounded-xl bg-white">
-                    <Image src={t.src} alt="" width={26} height={26} className="mono mono-strong size-[26px] object-contain" />
-                  </span>
-                  {t.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="mt-16 sm:mt-24">
+          <StackShowcase areas={stack} />
         </div>
       </div>
       <PixelField palette={ink} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />

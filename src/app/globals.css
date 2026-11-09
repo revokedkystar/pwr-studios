@@ -182,29 +182,7 @@ html::-webkit-scrollbar {
   opacity: 1;
 }
 
-/* Endless toolkit ticker: the list is rendered twice and slides by half. */
-.marquee {
-  mask: linear-gradient(90deg, #0000, #000 8%, #000 92%, #0000);
-}
-.marquee-track {
-  animation: marquee 38s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-@keyframes marquee {
-  to {
-    translate: calc(-50% - 6px) 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-    flex-wrap: wrap;
-    width: auto;
-    padding-inline: 16px;
-  }
   .fx-colour {
     filter: none;
   }
@@ -228,4 +206,28 @@ html::-webkit-scrollbar {
 /* Keep sideways slide-ins from ever causing horizontal scroll. */
 body {
   overflow-x: clip;
+}
+
+/*
+ * Sticky development stack. StackShowcase sets --tp (0 → 1); each tile has
+ * a --d delay and a --sx/--sy/--sr scatter. --e is that tile's eased
+ * "landed" amount, from scattered (0) to in place (1).
+ */
+.stack-tile {
+  --e0: clamp(0, calc((var(--tp, 1) - var(--d)) / var(--flight)), 1);
+  --e: calc(var(--e0) * var(--e0) * (3 - 2 * var(--e0)));
+  translate: calc(var(--sx) * (1 - var(--e))) calc(var(--sy) * (1 - var(--e)));
+  rotate: calc(var(--sr) * (1 - var(--e)));
+  scale: calc(0.55 + 0.45 * var(--e));
+  opacity: calc(0.2 + 0.8 * var(--e));
+}
+.stack-icon {
+  filter: grayscale(calc(1 - var(--e)));
+}
+.stack-label {
+  opacity: clamp(0, calc((var(--tp, 1) - 0.55) / 0.2), 1);
+  translate: 0 calc((1 - clamp(0, calc((var(--tp, 1) - 0.55) / 0.2), 1)) * 12px);
+}
+.stack-ticker {
+  translate: calc(30vw - var(--tp, 0.5) * 100%) -50%;
 }

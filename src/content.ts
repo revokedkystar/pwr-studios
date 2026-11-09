@@ -116,19 +116,35 @@ export const logos = [
   { name: "NHS", src: "/svg/nhs.svg" },
 ];
 
-export const toolkit = [
-  { name: "HTML", src: "/icons/html.svg" },
-  { name: "CSS", src: "/icons/css.svg" },
-  { name: "TypeScript", src: "/icons/typescript.svg" },
-  { name: "React", src: "/icons/react.svg" },
-  { name: "Tailwind CSS", src: "/icons/tailwind-svgrepo-com.svg" },
-  { name: "Bootstrap", src: "/icons/bootstrap.svg" },
-  { name: "Python", src: "/icons/python.svg" },
-  { name: "MySQL", src: "/icons/mysql.svg" },
-  { name: "Git", src: "/icons/git.svg" },
-  { name: "AWS", src: "/icons/amazon.svg" },
-  { name: "Azure", src: "/icons/azure.svg" },
-  { name: "Cloudflare", src: "/icons/cloudflare.svg" },
+// Development stack, grouped for the sticky "Development stack" section.
+export const stack = [
+  {
+    area: "Frontend",
+    tools: [
+      { name: "HTML", src: "/icons/html.svg" },
+      { name: "CSS", src: "/icons/css.svg" },
+      { name: "TypeScript", src: "/icons/typescript.svg" },
+      { name: "React", src: "/icons/react.svg" },
+      { name: "Tailwind CSS", src: "/icons/tailwind-svgrepo-com.svg" },
+      { name: "Bootstrap", src: "/icons/bootstrap.svg" },
+    ],
+  },
+  {
+    area: "Backend & data",
+    tools: [
+      { name: "Python", src: "/icons/python.svg" },
+      { name: "MySQL", src: "/icons/mysql.svg" },
+      { name: "Git", src: "/icons/git.svg" },
+    ],
+  },
+  {
+    area: "Cloud & hosting",
+    tools: [
+      { name: "AWS", src: "/icons/amazon.svg" },
+      { name: "Azure", src: "/icons/azure.svg" },
+      { name: "Cloudflare", src: "/icons/cloudflare.svg" },
+    ],
+  },
 ];
 
 export const notes = [
