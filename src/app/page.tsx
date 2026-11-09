@@ -4,7 +4,7 @@ import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
-import { LogoDeck } from "@/components/logo-deck";
+import { LogoPixels } from "@/components/logo-pixels";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
@@ -250,9 +250,9 @@ function Certificates() {
         ))}
       </ul>
 
-      {/* Company logos dealt in as cards that flip face up. */}
+      {/* Company logos assembled from pixels as you scroll. */}
       <div className="mt-10 sm:mt-16">
-        <LogoDeck logos={logos} />
+        <LogoPixels logos={logos} />
       </div>
     </section>
   );
