@@ -180,10 +180,11 @@ export function PixelField({
     };
 
     const resize = () => {
-      const rect = canvas.getBoundingClientRect();
+      // Layout size (ignores CSS transforms, so a field that starts scaled
+      // to 0 and pops in still gets its full size).
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = rect.width;
-      height = rect.height;
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       patterns.clear();
