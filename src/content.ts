@@ -62,16 +62,6 @@ export const caseStudies = [
   },
 ];
 
-// Looping clips shown beside the case studies (converted from public/gifs/*.gif).
-export const playTiles = [
-  { title: "Cybercore", src: "/gifs/cybercore" },
-  { title: "DedSec", src: "/gifs/deadsec" },
-  { title: "Dunk", src: "/gifs/dunk" },
-  { title: "Terminal", src: "/gifs/love" },
-  { title: "Y2K punk", src: "/gifs/punk" },
-  { title: "Shadow", src: "/gifs/shadow" },
-];
-
 export const process = [
   { label: "Strategy", color: "#0a0a0a", x: "18%", y: "30%" },
   { label: "Design", color: "#8f8f8f", x: "62%", y: "14%" },
