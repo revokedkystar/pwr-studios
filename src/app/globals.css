@@ -242,7 +242,9 @@ body {
   opacity: calc(0.2 + 0.8 * var(--e));
 }
 .stack-icon {
-  filter: grayscale(calc(1 - var(--e)));
+  /* No tile behind the icons, so a faint light edge keeps dark logos (AWS, MySQL) readable on black. */
+  filter: grayscale(calc(1 - var(--e))) drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.12));
 }
 .stack-label {
   opacity: clamp(0, calc((var(--tp, 1) - 0.6) / 0.2), 1);
@@ -270,4 +272,10 @@ body {
 .pin-text {
   opacity: calc(1 - var(--a) * 1.8);
   translate: 0 calc(var(--t) * -28px);
+}
+
+/* Footer mark: websiteicon.png used as a mask over diagonal stripes. */
+.logo-stripes {
+  background: repeating-linear-gradient(45deg, #0a0a0a 0 6px, #0000 6px 15px);
+  mask: url("/websiteicon.png") center / contain no-repeat;
 }

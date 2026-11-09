@@ -119,12 +119,7 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
               } as CSSProperties;
               return (
                 <li key={t.name} style={style} className="stack-tile absolute top-1/2 left-1/2" title={`${t.name} · ${t.area}`}>
-                  <span className="grid size-full place-items-center rounded-[28%] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
-                    <Image src={t.src} alt={t.name} width={48} height={48} className="stack-icon size-[58%] object-contain" />
-                  </span>
-                  <span className="absolute top-full left-1/2 mt-2 -translate-x-1/2 text-xs whitespace-nowrap text-white/70 max-sm:hidden">
-                    {t.name}
-                  </span>
+                  <Image src={t.src} alt={t.name} width={64} height={64} className="stack-icon size-full object-contain" />
                 </li>
               );
             })}

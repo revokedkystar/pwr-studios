@@ -6,7 +6,7 @@ import { RotatingHeadline } from "@/components/rotating-headline";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
-import { ArrowIcon, Asterisk, PillLink, Tag } from "@/components/ui";
+import { ArrowIcon, PillLink, Tag } from "@/components/ui";
 import {
   caseStudies,
   certificateMeta,
@@ -31,7 +31,8 @@ function Header() {
       <div className="wrap flex items-center justify-between pt-4 sm:pt-[30px]">
         <nav className="flex h-12 items-center gap-6 rounded-full bg-white px-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
           <a href="#top" aria-label="Joshua Hatfield, home" className="mr-1 sm:mr-4">
-            <Asterisk className="size-6" />
+            {/* websiteicon.png is a white mark; invert shows it black on the white bar. */}
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-6 invert" />
           </a>
           {nav.map((n) => (
             <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-black/50 sm:inline">
@@ -75,7 +76,13 @@ function Momentum() {
               className="size-full"
             />
           </div>
-          <Asterisk className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 fx-spin [--turn:-360deg] drop-shadow-[0_2px_0_rgba(0,0,0,0.08)]" fill="#ffffff" />
+          <Image
+            src="/websiteicon.png"
+            alt=""
+            width={156}
+            height={154}
+            className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 fx-spin [--turn:-360deg] drop-shadow-[0_2px_0_rgba(0,0,0,0.25)]"
+          />
           {process.map((p, i) => (
             <span
               key={p.label}
@@ -353,19 +360,11 @@ function Footer() {
       </div>
 
       <div className="wrap relative mt-16 h-[46vw] max-h-[620px] sm:mt-24" aria-hidden>
-        <svg viewBox="0 0 100 100" data-scroll className="fx-spin absolute top-0 [--turn:240deg] left-1/2 w-[min(92vw,1100px)] -translate-x-1/2">
-          <defs>
-            <pattern id="stripes" width="1.4" height="1.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <rect width="0.55" height="1.4" fill="#0a0a0a" />
-            </pattern>
-            <mask id="asterisk">
-              {[0, 60, 120].map((r) => (
-                <rect key={r} x="41" y="4" width="18" height="92" rx="9" fill="#fff" transform={`rotate(${r} 50 50)`} />
-              ))}
-            </mask>
-          </defs>
-          <rect width="100" height="100" fill="url(#stripes)" mask="url(#asterisk)" />
-        </svg>
+        {/* The logo shape, cut out of diagonal stripes with a CSS mask. */}
+        <div
+          data-scroll
+          className="logo-stripes fx-spin absolute top-0 left-1/2 aspect-[156/154] w-[min(92vw,1100px)] -translate-x-1/2 [--turn:240deg]"
+        />
       </div>
     </footer>
   );

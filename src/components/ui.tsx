@@ -1,16 +1,5 @@
 import type { ReactNode } from "react";
 
-/** The p*wr asterisk mark. */
-export function Asterisk({ className, fill = "currentColor" }: { className?: string; fill?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden>
-      {[0, 60, 120].map((r) => (
-        <rect key={r} x="41" y="4" width="18" height="92" rx="9" fill={fill} transform={`rotate(${r} 50 50)`} />
-      ))}
-    </svg>
-  );
-}
-
 export function ArrowIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden>
