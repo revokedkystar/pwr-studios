@@ -5,14 +5,13 @@
  *
  *   HTML structure → this file
  *   CSS            → ./logo-sphere.css (colour, font and sphere-size variables)
- *   JS             → ./scene.ts (Three.js + GSAP ScrollTrigger + Lenis)
+ *   JS             → ./scene.ts (Three.js + GSAP ScrollTrigger; smooth scroll is site-wide)
  *
  * The section starts as a headline, a counter and a row of logos. Scrolling
  * pins it and lifts the logos onto a spinning sphere; see scene.ts.
  */
 import { useEffect, useRef } from "react";
 import { createLogoSphere } from "./scene";
-import "lenis/dist/lenis.css";
 import "./logo-sphere.css";
 
 export type Company = {
