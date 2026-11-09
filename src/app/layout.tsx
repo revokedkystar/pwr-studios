@@ -8,8 +8,11 @@ import "./globals.css";
  * On a refresh, always start at the very top of the page: stop the browser
  * restoring the old scroll position, drop any #section from the address so
  * it doesn't jump back there, and scroll to the top before the first paint
- * (and again once everything has loaded). Normal visits, including shared
- * links like /#contact, are left alone.
+ * (and again once everything has loaded). For the first few seconds, until
+ * the visitor scrolls themselves, any automatic scroll (the browser's own
+ * jump to the old #section, or a library restoring its saved position) is
+ * snapped back to the top. Normal visits, including shared links like
+ * /#graphics, are left alone.
  */
 const SCROLL_TO_TOP_ON_REFRESH = `(function(){try{
 var nav=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];
@@ -21,6 +24,12 @@ var top=function(){window.scrollTo(0,0)};
 top();
 document.addEventListener("DOMContentLoaded",top);
 window.addEventListener("load",function(){top();requestAnimationFrame(top)});
+var until=performance.now()+3000,user=false;
+["wheel","touchstart","keydown","pointerdown"].forEach(function(t){addEventListener(t,function(){user=true},{once:true,passive:true})});
+addEventListener("scroll",function guard(){
+if(user||performance.now()>until){removeEventListener("scroll",guard);return}
+if(window.scrollY!==0)top();
+},{passive:true});
 }catch(e){}})();`;
 
 const geistSans = Geist({

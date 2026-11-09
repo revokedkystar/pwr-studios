@@ -3,82 +3,27 @@ import Image from "next/image";
 import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
+import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
 import { LogoSphere } from "@/components/logo-sphere/logo-sphere";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
-import { WorldClocks } from "@/components/world-clocks";
-import { ContactForm } from "@/components/contact-form";
-import { ArrowIcon, PillLink, Tag } from "@/components/ui";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { PillLink, Tag } from "@/components/ui";
 import {
   caseStudies,
   certificateMeta,
   certificates,
-  clocks,
-  faqs,
   graphics,
   logos,
-  nav,
   notes,
   process,
   site,
   cloud,
   ink,
-  socials,
   stack,
 } from "@/content";
-
-/** Concave corner that flares the notch out into the top edge of the screen. */
-function NotchEar({ side }: { side: "left" | "right" }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      aria-hidden
-      className={`absolute top-0 size-5 ${side === "left" ? "-left-5" : "-right-5 -scale-x-100"}`}
-    >
-      <path d="M0 0H20V20A20 20 0 0 0 0 0Z" fill="#000" />
-    </svg>
-  );
-}
-
-function Header() {
-  return (
-    // A black notch hanging from the top edge of the screen, centred.
-    <header className="fixed top-0 left-1/2 z-50 -translate-x-1/2">
-      <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-6 rounded-b-[18px] bg-black pr-2.5 pl-3 text-white sm:gap-8">
-        <NotchEar side="left" />
-        <NotchEar side="right" />
-        <a href="#top" aria-label="xanti studios, home" className="flex shrink-0 items-center gap-2.5">
-          {/* The mark sits straight on the black bar: no tile or border. */}
-          <span className="grid size-[30px] place-items-center">
-            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[22px]" />
-          </span>
-          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">xanti</span>
-        </a>
-        <ul className="flex items-center gap-7 max-md:hidden">
-          {nav.map((n) => (
-            <li key={n.label}>
-              <a href={n.href} className="text-sm font-medium whitespace-nowrap text-white/60 transition-colors hover:text-white">
-                {n.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        {/* Contact button (jumps to the contact form), where the reference has its Download button. */}
-        <a
-          href="#contact"
-          className="flex h-[33px] shrink-0 items-center gap-1.5 rounded-[8px] bg-white px-4 text-xs font-semibold text-black transition-colors hover:bg-white/85 md:ml-2"
-        >
-          <svg viewBox="0 0 16 16" aria-hidden className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <rect x="1.5" y="3" width="13" height="10" rx="2" />
-            <path d="m2 4 6 5 6-5" strokeLinejoin="round" />
-          </svg>
-          Contact
-        </a>
-      </nav>
-    </header>
-  );
-}
 
 function Hero() {
   return (
@@ -176,7 +121,7 @@ function Graphics() {
             to bring them into colour.
           </p>
           <div className="mt-7">
-            <PillLink href="#contact">Say hello</PillLink>
+            <PillLink href="/contact">Say hello</PillLink>
           </div>
         </div>
 
@@ -308,125 +253,10 @@ function Writing() {
   );
 }
 
-function SmallTalk() {
-  return (
-    <section aria-labelledby="small-talk" className="bg-white pt-16 pb-24 sm:pb-36">
-      <div className="wrap grid gap-10 lg:grid-cols-2 lg:gap-4">
-        <div>
-          <h2 id="small-talk" data-scroll className="fx-slide section-title">
-            Small talk
-          </h2>
-          <p className="mt-6 max-w-[352px] text-[17px] leading-[1.42] text-black/62">
-            The quick answers are here. For anything else, just ask.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          {faqs.map((f, i) => (
-            <details key={f.q} data-scroll data-lag={i * 0.08} className="fx-rise group rounded-2xl bg-surface">
-              <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-5 text-[17px]">
-                {f.q}
-                <svg viewBox="0 0 16 16" className="faq-plus size-4 shrink-0 text-black/50 transition-[rotate] duration-300" aria-hidden>
-                  <path d="M8 1v14M1 8h14" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </summary>
-              <p className="px-5 pb-5 text-sm leading-normal text-black/62">{f.a}</p>
-            </details>
-          ))}
-          <a
-            href={`mailto:${site.email}`}
-            data-scroll
-            data-lag={0.4}
-            className="fx-rise group flex items-center gap-3 rounded-2xl bg-surface py-3 pr-3 pl-5 text-[17px] text-black/35 transition-colors hover:text-black/60"
-          >
-            <span className="size-7 overflow-hidden rounded-sm">
-              <PixelField palette={ink} cell={4} dither={1} scale={0.4} seed={9} className="size-full" />
-            </span>
-            <span className="flex-1">Ask me anything else</span>
-            <span className="grid size-8 place-items-center rounded-full bg-black/15 text-white transition-colors group-hover:bg-black">
-              <ArrowIcon className="size-3.5 -rotate-45" />
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Contact() {
-  return (
-    <section id="contact" aria-labelledby="contact-title" className="scroll-mt-20 bg-white pt-8 pb-24 sm:pb-36">
-      <div className="wrap grid gap-10 lg:grid-cols-2 lg:gap-4">
-        <div>
-          <h2 id="contact-title" data-scroll className="fx-slide section-title">
-            Get in touch
-          </h2>
-          <p data-scroll data-lag={0.1} className="fx-rise mt-6 max-w-[352px] text-[17px] leading-[1.42] text-black/62">
-            Got a project, an opportunity or just a question? Send me a message and it&apos;ll land straight in my
-            inbox.
-          </p>
-        </div>
-        <div data-scroll data-lag={0.15} className="fx-rise">
-          <ContactForm email={site.email} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="overflow-hidden bg-white pt-10">
-      <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-4">
-        <div data-scroll className="fx-rise">
-          <p className="font-serif text-[52px] leading-none tracking-[-0.01em] italic sm:text-6xl">
-            Joshua
-            <br />
-            Hatfield
-          </p>
-          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-base">
-            {socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} className="hover:text-black/50">
-                  {s.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a href={`mailto:${site.email}`} className="hover:text-black/50">
-                {site.email}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="flex flex-wrap justify-between gap-10">
-          <nav className="flex flex-col gap-1.5 text-base">
-            {nav.map((n) => (
-              <a key={n.label} href={n.href} className="hover:text-black/50">
-                {n.label}
-              </a>
-            ))}
-          </nav>
-          <div className="h-fit">
-            <WorldClocks clocks={clocks} />
-          </div>
-        </div>
-      </div>
-
-      <div className="wrap relative mt-16 h-[46vw] max-h-[620px] sm:mt-24" aria-hidden>
-        {/* The logo shape, cut out of diagonal stripes with a CSS mask. */}
-        <div
-          data-scroll
-          className="logo-stripes fx-spin absolute top-0 left-1/2 aspect-[156/154] w-[min(92vw,1100px)] -translate-x-1/2 [--turn:240deg]"
-        />
-      </div>
-    </footer>
-  );
-}
-
 export default function Home() {
   return (
     <>
-      <Header />
+      <SiteHeader />
       <main className="flex-1">
         <Hero />
         <PinnedWork items={caseStudies} />
@@ -434,10 +264,9 @@ export default function Home() {
         <Graphics />
         <Certificates />
         <Writing />
-        <SmallTalk />
-        <Contact />
       </main>
-      <Footer />
+      <SiteFooter />
+      <HashScroll />
       <ScrollFx />
     </>
   );
