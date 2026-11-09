@@ -10,9 +10,9 @@ export const site = {
 
 export const nav = [
   { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
+  { label: "Graphics", href: "#graphics" },
+  { label: "Certificates", href: "#certificates" },
   { label: "Writing", href: "#writing" },
-  { label: "Play", href: "#play" },
 ];
 
 export const socials = [
@@ -28,39 +28,48 @@ export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 
 export const caseStudies = [
   {
-    title: "Project One: the outcome it delivered, in one line",
-    client: "Client name, the context",
-    tags: ["Brand identity", "Web design", "Launch"],
-    href: "#",
+    title: "Unit Pal: tracking a BTEC Level 3 IT diploma, unit by unit",
+    client: "Web app, grade tracking and data visualisation",
+    tags: ["Web app", "Data visualisation", "Education"],
+    href: "https://github.com/revokedkystar/unit-pal-progress",
+    image: "/websitepreview/preview1.png",
+    alt: "Unit Pal dashboard showing diploma progress, a grade chart and a unit inventory",
     palette: cloud,
     seed: 11,
     dark: false,
   },
   {
-    title: "Project Two: the result you are proudest of",
-    client: "Client name, the context",
-    tags: ["Product design", "Motion", "Campaign"],
-    href: "#",
+    title: "Artisan Catering: a website for a Devon catering company",
+    client: "Artisan Catering, Devon",
+    tags: ["Web design", "Hospitality", "Gallery"],
+    href: "https://github.com/revokedkystar/artisan-web",
+    image: "/websitepreview/preview2.png",
+    alt: "Artisan Catering homepage with a candlelit banquet hall image slider",
+    palette: ["#ffffff", "#c9c9c9", "#6b6b6b"],
+    seed: 31,
+    dark: false,
+  },
+  {
+    title: "Leisure Vehicle Auto Repairs: garage and vehicle repairs in Newton Abbot",
+    client: "Leisure Vehicle Auto Repairs, Newton Abbot",
+    tags: ["Web design", "Local business", "Lead generation"],
+    href: "https://github.com/revokedkystar/lvar",
+    image: "/websitepreview/preview3.png",
+    alt: "Dark garage website hero reading 'Garage and vehicle repairs in Newton Abbot'",
     palette: ["#0a0a0a", "#1c1c1c", "#3a3a3a"],
     seed: 23,
     dark: true,
   },
 ];
 
-// Small experiments shown beside the case studies.
+// Looping clips shown beside the case studies (converted from public/gifs/*.gif).
 export const playTiles = [
-  { title: "Radial menu", bg: "#ededed", fg: "#1a1a1a", glyph: "◎" },
-  { title: "Wordmark sphere", bg: "#000000", fg: "#ffffff", glyph: "p*" },
-  { title: "Colour wheel", bg: "#2b2b2b", fg: "#d9d9d9", glyph: "&" },
-  { title: "Glow switch", bg: "#1a1a1a", fg: "#f2f2f2", glyph: "✺" },
-  { title: "Grid study", bg: "#0d0d0d", fg: "#5c5c5c", glyph: "#" },
-  { title: "Idea map", bg: "#8a8a8a", fg: "#ffffff", glyph: "✳" },
-  { title: "Type specimen", bg: "#f2f2f2", fg: "#111111", glyph: "Aa" },
-  { title: "Pixel clock", bg: "#dadada", fg: "#1a1a1a", glyph: "7:01" },
-  { title: "Piano toy", bg: "#f6f6f6", fg: "#111111", glyph: "♪" },
-  { title: "Soft buttons", bg: "#c9c9c9", fg: "#1a1a1a", glyph: "ok" },
-  { title: "Voxel type", bg: "#222222", fg: "#f2f2f2", glyph: "3D" },
-  { title: "Waveform", bg: "#e3e3e3", fg: "#3a3a3a", glyph: "∿" },
+  { title: "Cybercore", src: "/gifs/cybercore" },
+  { title: "DedSec", src: "/gifs/deadsec" },
+  { title: "Dunk", src: "/gifs/dunk" },
+  { title: "Terminal", src: "/gifs/love" },
+  { title: "Y2K punk", src: "/gifs/punk" },
+  { title: "Shadow", src: "/gifs/shadow" },
 ];
 
 export const process = [
@@ -69,17 +78,67 @@ export const process = [
   { label: "Build", color: "#d0d0d0", x: "68%", y: "66%" },
 ];
 
-export const moments = [
-  { caption: "Studio day, laptops out", tint: "#e6e6e6", w: 150, h: 200, x: "2%", y: "12%", r: -3 },
-  { caption: "Workshop with a founding team", tint: "#d6d6d6", w: 170, h: 120, x: "14%", y: "2%", r: 2 },
-  { caption: "Launch night", tint: "#2a2a2a", w: 150, h: 210, x: "10%", y: "44%", r: 1 },
-  { caption: "Sketching the system", tint: "#ececec", w: 190, h: 130, x: "19%", y: "74%", r: 3 },
-  { caption: "Talk at a design meetup", tint: "#dcdcdc", w: 180, h: 130, x: "38%", y: "84%", r: -2 },
-  { caption: "Team photo, everyone squinting", tint: "#cfcfcf", w: 170, h: 220, x: "61%", y: "68%", r: 2 },
-  { caption: "Crit wall", tint: "#efefef", w: 160, h: 110, x: "72%", y: "0%", r: -2 },
-  { caption: "Award evening", tint: "#5a5a5a", w: 170, h: 125, x: "76%", y: "48%", r: 0 },
-  { caption: "Coffee and moodboards", tint: "#e0e0e0", w: 130, h: 95, x: "89%", y: "26%", r: 3 },
-  { caption: "Off-site, out in the sun", tint: "#c4c4c4", w: 150, h: 200, x: "86%", y: "70%", r: -3 },
+// Poster and social graphics, scattered around the "Graphic design" heading.
+// w/h are the card size on wide screens; x/y place it inside the section.
+export const graphics = [
+  { src: "/graphics/gd0.png", alt: "Fresh Denim Arrivals fashion poster", w: 150, h: 188, x: "2%", y: "8%", r: -3 },
+  { src: "/graphics/gd1.png", alt: "KOVA 'Your Move' basketball campaign poster", w: 176, h: 218, x: "15%", y: "0%", r: 2 },
+  { src: "/graphics/gd4.png", alt: "'Art is my love language' sticker collage poster", w: 132, h: 235, x: "9%", y: "40%", r: 1 },
+  { src: "/graphics/gd2.png", alt: "'Odd One Out' outdoor clothing poster", w: 170, h: 212, x: "13%", y: "72%", r: 3 },
+  { src: "/graphics/gd7.png", alt: "Project 7even banner: Computing meets Creativity", w: 260, h: 86, x: "37%", y: "88%", r: -2 },
+  { src: "/graphics/gd8.png", alt: "'Coming Soon' streetwear launch poster", w: 132, h: 235, x: "67%", y: "66%", r: 2 },
+  { src: "/graphics/gd3.png", alt: "'Street Revolution' magazine cover", w: 160, h: 200, x: "72%", y: "0%", r: -2 },
+  { src: "/graphics/gd5.png", alt: "Prada Milano stamp-style poster", w: 120, h: 213, x: "77%", y: "36%", r: 0 },
+  { src: "/graphics/gd6.png", alt: "NHS Torbay volunteer content creator recruitment poster", w: 125, h: 222, x: "89%", y: "14%", r: 3 },
+  { src: "/graphics/gd9.png", alt: "'Broken Planet' streetwear drop poster", w: 128, h: 228, x: "87%", y: "62%", r: -3 },
+];
+
+export const certificates = [
+  {
+    title: "Data Analytics",
+    partner: "Barclays",
+    image: "/certificates/analytics_award.jpg",
+  },
+  {
+    title: "Developer",
+    partner: "Barclays",
+    image: "/certificates/dev_award.png",
+  },
+  {
+    title: "AWS Career Tour: Cloud Computing",
+    partner: "Amazon Web Services",
+    image: "/certificates/cloud_award.png",
+  },
+  {
+    title: "Prevent a Data Breach: Cyber Security Sprint",
+    partner: "Drax",
+    image: "/certificates/drax_award.png",
+  },
+];
+
+export const certificateMeta = { issuer: "Springpod", issued: "02/04/2026" };
+
+export const logos = [
+  { name: "Barclays", src: "/svg/barclays.svg" },
+  { name: "Amazon Web Services", src: "/svg/aws.svg" },
+  { name: "Drax", src: "/svg/drax.svg" },
+  { name: "Google", src: "/svg/google.svg" },
+  { name: "NHS", src: "/svg/nhs.svg" },
+];
+
+export const toolkit = [
+  { name: "HTML", src: "/icons/html.svg" },
+  { name: "CSS", src: "/icons/css.svg" },
+  { name: "TypeScript", src: "/icons/typescript.svg" },
+  { name: "React", src: "/icons/react.svg" },
+  { name: "Tailwind CSS", src: "/icons/tailwind-svgrepo-com.svg" },
+  { name: "Bootstrap", src: "/icons/bootstrap.svg" },
+  { name: "Python", src: "/icons/python.svg" },
+  { name: "MySQL", src: "/icons/mysql.svg" },
+  { name: "Git", src: "/icons/git.svg" },
+  { name: "AWS", src: "/icons/amazon.svg" },
+  { name: "Azure", src: "/icons/azure.svg" },
+  { name: "Cloudflare", src: "/icons/cloudflare.svg" },
 ];
 
 export const notes = [

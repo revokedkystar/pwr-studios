@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import { PixelField } from "@/components/pixel-field";
 import { RotatingHeadline } from "@/components/rotating-headline";
 import { ScrollFx } from "@/components/scroll-fx";
@@ -6,9 +7,12 @@ import { WorldClocks } from "@/components/world-clocks";
 import { ArrowIcon, Asterisk, PillLink, Tag } from "@/components/ui";
 import {
   caseStudies,
+  certificateMeta,
+  certificates,
   clocks,
   faqs,
-  moments,
+  graphics,
+  logos,
   nav,
   notes,
   playTiles,
@@ -17,6 +21,7 @@ import {
   cloud,
   ink,
   socials,
+  toolkit,
 } from "@/content";
 
 function Header() {
@@ -53,29 +58,18 @@ function Hero() {
   );
 }
 
-function BrowserMock({ dark }: { dark: boolean }) {
-  const frame = dark ? "bg-[#141414] text-white/50" : "bg-white text-black/40";
-  const block = dark ? "bg-white/[0.07]" : "bg-black/[0.05]";
+function Screenshot({ src, alt, dark }: { src: string; alt: string; dark: boolean }) {
   return (
-    <div className={`absolute inset-0 top-[12%] left-[7%] flex overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.04)] ${frame}`}>
-      <div className={`flex w-[7%] flex-col items-center gap-3 pt-4 ${block}`}>
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} className={`size-3 rounded ${block}`} />
-        ))}
-      </div>
-      <div className="flex-1 p-[4%]">
-        <p className="text-[11px]">Add a screenshot of the finished work here</p>
-        <div className="mt-4 grid grid-cols-4 gap-3">
-          {[0, 1, 2, 3].map((i) => (
-            <span key={i} className={`aspect-[4/5] rounded-lg ${block}`} />
-          ))}
-        </div>
-        <div className="mt-3 grid grid-cols-3 gap-3">
-          {[0, 1, 2].map((i) => (
-            <span key={i} className={`aspect-[4/3] rounded-lg ${block}`} />
-          ))}
-        </div>
-      </div>
+    <div
+      className={`absolute inset-0 top-[12%] left-[7%] overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${dark ? "bg-[#141414]" : "bg-white"}`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 680px, 92vw"
+        className="fx-colour object-cover object-left-top transition-transform duration-700 group-hover:scale-[1.03]"
+      />
     </div>
   );
 }
@@ -87,10 +81,10 @@ function Work() {
       <div className="wrap grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,530px)] lg:gap-4">
         <div className="flex flex-col gap-16 lg:gap-14">
           {caseStudies.map((c) => (
-            <a key={c.title} href={c.href} data-scroll className="fx-rise group block">
+            <a key={c.title} href={c.href} target="_blank" rel="noreferrer" data-scroll className="fx-rise group block">
               <div className="fx-scale relative aspect-[2/1] overflow-hidden rounded-[28px] max-sm:aspect-[4/3]">
                 <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
-                <BrowserMock dark={c.dark} />
+                <Screenshot src={c.image} alt={c.alt} dark={c.dark} />
                 <span className="absolute top-2 right-2 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
                   <ArrowIcon className="size-4" />
                 </span>
@@ -108,24 +102,30 @@ function Work() {
           ))}
         </div>
 
-        <div id="play" className="grid grid-cols-2 content-start gap-3 sm:gap-4">
+        <div id="play" className="grid grid-cols-2 content-start gap-3 self-start sm:gap-4 lg:sticky lg:top-28">
           <h3 className="sr-only">Play</h3>
           {playTiles.map((t, i) => (
-            <a
+            <figure
               key={t.title}
-              href="#"
               data-scroll
               data-lag={(i % 2) * 0.18}
-              className="fx-rise fx-scale group relative grid aspect-[3/2] place-items-center overflow-hidden rounded-[20px]"
-              style={{ background: t.bg, color: t.fg }}
+              className="fx-rise fx-scale group relative aspect-[3/2] overflow-hidden rounded-[20px] bg-black"
             >
-              <span className="font-serif text-4xl italic transition-transform duration-500 group-hover:scale-110 sm:text-5xl">
-                {t.glyph}
-              </span>
-              <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-xs text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+              <video
+                className="fx-colour size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src={`${t.src}.mp4`}
+                poster={`${t.src}.jpg`}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label={t.title}
+              />
+              <figcaption className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-xs text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {t.title}
-              </span>
-            </a>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
@@ -180,53 +180,127 @@ function Momentum() {
             </div>
           </div>
         </div>
+
+        <div data-scroll className="fx-rise mt-20 sm:mt-24">
+          <p className="wrap text-sm text-white/50">Toolkit</p>
+          <div className="marquee mt-4 overflow-hidden">
+            <ul className="marquee-track flex w-max gap-3">
+              {[...toolkit, ...toolkit].map((t, i) => (
+                <li
+                  key={`${t.name}-${i}`}
+                  aria-hidden={i >= toolkit.length}
+                  className="group flex h-16 items-center gap-3 rounded-2xl bg-white/[0.06] pr-5 pl-3 text-base whitespace-nowrap text-white/80"
+                >
+                  <span className="grid size-10 place-items-center rounded-xl bg-white">
+                    <Image src={t.src} alt="" width={26} height={26} className="mono mono-strong size-[26px] object-contain" />
+                  </span>
+                  {t.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
       <PixelField palette={ink} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
     </section>
   );
 }
 
-function About() {
+function Graphics() {
   return (
-    <section id="about" className="relative overflow-hidden bg-white py-24 lg:py-0">
-      <div className="wrap relative lg:h-[820px]">
+    <section id="graphics" className="relative overflow-hidden bg-white py-24 lg:py-0">
+      <div className="wrap relative lg:h-[860px]">
         <div className="relative z-10 mx-auto max-w-[480px] text-center lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
           <h2 data-scroll className="fx-rise fx-scale section-title">
-            Beyond
+            Graphic
             <br />
-            the brief
+            design
           </h2>
-          <p data-scroll data-lag={0.1} className="fx-rise mx-auto mt-6 max-w-[360px] text-[17px] leading-[1.42] text-black/65">
-            Always making, rarely alone. Running workshops, hosting design nights, and sharing plenty of laughs in
-            between.
+          <p data-scroll data-lag={0.1} className="fx-rise mx-auto mt-6 max-w-[380px] text-[17px] leading-[1.42] text-black/65">
+            Posters, campaigns and social graphics for fashion, sport and community organisations. Scroll to bring
+            them into colour.
           </p>
           <div className="mt-7">
-            <PillLink href="#">More about us</PillLink>
+            <PillLink href={site.bookCall}>Commission a graphic</PillLink>
           </div>
         </div>
 
         <ul className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:mt-0 lg:block">
-          {moments.map((m, i) => (
+          {graphics.map((g, i) => (
             <li
-              key={m.caption}
+              key={g.src}
               data-scroll
               data-lag={(i % 3) * 0.12}
-              className={`${i >= 6 ? "max-lg:hidden" : ""} fx-rise fx-parallax-lg group relative h-40 overflow-hidden rounded-[22px] lg:absolute lg:top-(--y) lg:left-(--x) lg:h-(--h) lg:w-(--w) lg:rotate-(--r)`}
+              className={`${g.w > g.h ? "col-span-2 aspect-[3/1]" : "aspect-[4/5]"} fx-rise fx-parallax-lg group relative overflow-hidden rounded-[22px] bg-surface lg:absolute lg:top-(--y) lg:left-(--x) lg:aspect-auto lg:h-(--h) lg:w-(--w) lg:rotate-(--r) lg:hover:z-20`}
               style={
                 {
-                  "--x": m.x,
-                  "--y": m.y,
-                  "--w": `${m.w}px`,
-                  "--h": `${m.h}px`,
-                  "--r": `${m.r}deg`,
+                  "--x": g.x,
+                  "--y": g.y,
+                  "--w": `${g.w}px`,
+                  "--h": `${g.h}px`,
+                  "--r": `${g.r}deg`,
                   "--speed": `${[-260, 180, -120, 240, -200, 140][i % 6]}px`,
-                  background: m.tint,
                 } as CSSProperties
               }
             >
-              <span className="absolute bottom-2 left-2 max-w-[calc(100%-16px)] rounded-full bg-white/85 px-2 py-0.5 text-[11px] text-black/70 transition-opacity lg:opacity-0 lg:group-hover:opacity-100">
-                {m.caption}
-              </span>
+              <a href={g.src} target="_blank" rel="noreferrer" className="block size-full">
+                <Image
+                  src={g.src}
+                  alt={g.alt}
+                  fill
+                  sizes="(min-width: 1024px) 260px, 45vw"
+                  className="fx-colour object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function Certificates() {
+  return (
+    <section id="certificates" className="bg-white pt-24 pb-10 sm:pt-28">
+      <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-start">
+        <h2 data-scroll className="fx-slide section-title">Certificates</h2>
+        <p data-scroll data-lag={0.1} className="fx-rise text-[17px] leading-[1.42] text-black/65">
+          Industry experiences completed with {certificateMeta.issuer}, working through real briefs set by Barclays,
+          Amazon Web Services and Drax.
+        </p>
+      </header>
+
+      <ul className="wrap mt-14 grid gap-4 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
+        {certificates.map((c, i) => (
+          <li key={c.image} data-scroll data-lag={i * 0.1} className="fx-rise">
+            <a href={c.image} target="_blank" rel="noreferrer" className="group block">
+              <div className="relative aspect-[3508/2483] overflow-hidden rounded-[20px] bg-surface shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
+                <Image
+                  src={c.image}
+                  alt={`${certificateMeta.issuer} certificate: ${c.title} with ${c.partner}`}
+                  fill
+                  sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 92vw"
+                  className="fx-colour object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <Tag>{c.partner}</Tag>
+                <Tag>{certificateMeta.issuer}</Tag>
+              </div>
+              <h3 className="mt-2 text-lg leading-snug font-medium">{c.title}</h3>
+              <p className="mt-1 text-sm text-black/50">Issued {certificateMeta.issued}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div data-scroll className="fx-rise wrap mt-20 sm:mt-28">
+        <p className="text-sm text-black/50">Experience with</p>
+        <ul className="mt-6 flex flex-wrap items-center gap-x-14 gap-y-8">
+          {logos.map((l) => (
+            <li key={l.name}>
+              <Image src={l.src} alt={l.name} width={140} height={40} className="mono h-10 w-auto sm:h-12" />
             </li>
           ))}
         </ul>
@@ -395,7 +469,8 @@ export default function Home() {
         <Hero />
         <Work />
         <Momentum />
-        <About />
+        <Graphics />
+        <Certificates />
         <Writing />
         <SmallTalk />
       </main>

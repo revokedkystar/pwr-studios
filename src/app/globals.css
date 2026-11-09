@@ -162,7 +162,52 @@ html::-webkit-scrollbar {
   filter: blur(calc(var(--out, 0) * 10px));
 }
 
+/* Images start greyscale and come into colour as they scroll into view. */
+.fx-colour {
+  filter: grayscale(calc(1 - var(--in, 1)));
+}
+
+/* Logos and tool icons stay monochrome until hovered. */
+.mono {
+  filter: grayscale(1) contrast(1.1);
+  opacity: 0.75;
+  transition: filter 300ms ease, opacity 300ms ease;
+}
+.mono-strong {
+  opacity: 1;
+}
+.mono:hover,
+.group:hover .mono {
+  filter: none;
+  opacity: 1;
+}
+
+/* Endless toolkit ticker: the list is rendered twice and slides by half. */
+.marquee {
+  mask: linear-gradient(90deg, #0000, #000 8%, #000 92%, #0000);
+}
+.marquee-track {
+  animation: marquee 38s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    translate: calc(-50% - 6px) 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+    padding-inline: 16px;
+  }
+  .fx-colour {
+    filter: none;
+  }
   .fx-rise,
   .fx-scale,
   .fx-slide,
