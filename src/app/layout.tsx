@@ -20,8 +20,8 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "p*wr studios",
-  description: "p*wr studios is a creative studio making bold brands, websites and launch campaigns.",
+  title: "Joshua Hatfield, developer and designer",
+  description: "The portfolio of Joshua Hatfield: websites, web apps, graphic design and certificates.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -1,11 +1,11 @@
-// Placeholder content for p*wr studios. Replace with real work, writing and links.
+// Content for Joshua Hatfield's portfolio. Email, socials and writing are still placeholders.
 
 export const site = {
-  name: "p*wr studios",
+  name: "Joshua Hatfield",
   email: "hello@example.com",
-  bookCall: "mailto:hello@example.com?subject=Let%27s%20talk",
+  contact: "mailto:hello@example.com?subject=Hello%20Joshua",
   intro:
-    "We're p*wr, a small creative studio making bold brands, websites and launch campaigns, from the first sketch to the final ship, so your idea lands and your business grows.",
+    "I'm Joshua, a developer and designer. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
 };
 
 export const nav = [
@@ -33,6 +33,8 @@ export const caseStudies = [
     tags: ["Web app", "Data visualisation", "Education"],
     href: "https://github.com/revokedkystar/unit-pal-progress",
     image: "/websitepreview/preview1.png",
+    width: 1853,
+    height: 886,
     alt: "Unit Pal dashboard showing diploma progress, a grade chart and a unit inventory",
     palette: cloud,
     seed: 11,
@@ -44,6 +46,8 @@ export const caseStudies = [
     tags: ["Web design", "Hospitality", "Gallery"],
     href: "https://github.com/revokedkystar/artisan-web",
     image: "/websitepreview/preview2.png",
+    width: 1857,
+    height: 919,
     alt: "Artisan Catering homepage with a candlelit banquet hall image slider",
     palette: ["#ffffff", "#c9c9c9", "#6b6b6b"],
     seed: 31,
@@ -55,6 +59,8 @@ export const caseStudies = [
     tags: ["Web design", "Local business", "Lead generation"],
     href: "https://github.com/revokedkystar/lvar",
     image: "/websitepreview/preview3.png",
+    width: 2172,
+    height: 1230,
     alt: "Dark garage website hero reading 'Garage and vehicle repairs in Newton Abbot'",
     palette: ["#0a0a0a", "#1c1c1c", "#3a3a3a"],
     seed: 23,
@@ -156,29 +162,25 @@ export const notes = [
 
 export const faqs = [
   {
-    q: "What does p*wr studios do?",
-    a: "Brand identities, websites and launch campaigns for founders and teams who want to look as good as their product is. Strategy, design and build under one roof.",
+    q: "Who are you?",
+    a: "I'm Joshua Hatfield, a developer and designer who loves the point where computing meets creativity. This site is where I keep my best work.",
   },
   {
-    q: "Who do you work with?",
-    a: "Mostly early-stage startups and independent businesses, plus the odd established brand that wants a fresh pair of eyes.",
+    q: "What do you build?",
+    a: "Websites and web apps, like Unit Pal, Artisan Catering and Leisure Vehicle Auto Repairs, plus posters, campaigns and social graphics.",
   },
   {
-    q: "How long does a project take?",
-    a: "A focused identity or landing page usually takes three to six weeks. Larger sites and campaigns are planned in phases so you can ship early.",
+    q: "What's in your stack?",
+    a: "HTML, CSS, TypeScript and React with Tailwind or Bootstrap on the front end; Python, MySQL and Git behind it; and AWS, Azure and Cloudflare for hosting.",
   },
   {
-    q: "Where are you based?",
-    a: "We work remotely across a few time zones, and travel for kick-offs and workshops when it helps.",
+    q: "What are you working on next?",
+    a: "An ecommerce website of my own, alongside more design and development projects.",
   },
   {
     q: "How can I get in touch?",
-    a: "Book a call from the bar at the top, or email hello@example.com. Tell us what you're building and when you'd like to launch.",
+    a: "Email hello@example.com, or find me on the socials at the bottom of the page.",
   },
 ];
 
-export const clocks = [
-  { city: "London, UK", zone: "Europe/London" },
-  { city: "New York, US", zone: "America/New_York" },
-  { city: "Tokyo, JP", zone: "Asia/Tokyo" },
-];
+export const clocks = [{ city: "Devon, UK", zone: "Europe/London" }];

@@ -11,6 +11,8 @@ export type CaseStudy = {
   tags: string[];
   href: string;
   image: string;
+  width: number;
+  height: number;
   alt: string;
   palette: string[];
   seed: number;
@@ -118,8 +120,8 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
           </div>
 
           {/* Stacked project frames: the next one slides up over the last. */}
-          <div className="relative min-h-0">
-            <div className="absolute inset-0 overflow-hidden rounded-[28px]">
+          <div className="relative flex min-h-0 items-center justify-center">
+            <div className="relative aspect-[16/10] w-full max-w-[720px] overflow-hidden rounded-[28px]">
               {items.map((c, i) => (
                 <a
                   key={c.title}
@@ -132,15 +134,15 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                   style={{ "--i": i, zIndex: i + 1 } as CSSProperties}
                 >
                   <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
-                  <div
-                    className={`absolute inset-0 top-[10%] left-[6%] overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${c.dark ? "bg-[#141414]" : "bg-white"}`}
-                  >
+                  {/* The whole screenshot, uncropped, framed by the pixel pattern. */}
+                  <div className="absolute inset-[7%] flex items-center justify-center">
                     <Image
                       src={c.image}
                       alt={c.alt}
-                      fill
-                      sizes="(min-width: 1024px) 860px, 92vw"
-                      className="fx-colour object-cover object-left-top transition-transform duration-700 group-hover:scale-[1.03]"
+                      width={c.width}
+                      height={c.height}
+                      sizes="(min-width: 1024px) 640px, 86vw"
+                      className="fx-colour h-auto max-h-full w-auto max-w-full rounded-lg shadow-[0_12px_40px_rgba(0,0,0,0.25)] transition-transform duration-700 group-hover:scale-[1.02]"
                     />
                   </div>
                   <span className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
