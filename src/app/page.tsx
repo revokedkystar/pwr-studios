@@ -26,23 +26,42 @@ import {
   stack,
 } from "@/content";
 
+/** Concave corner that flares the notch out into the top edge of the screen. */
+function NotchEar({ side }: { side: "left" | "right" }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      aria-hidden
+      className={`absolute top-0 size-5 ${side === "left" ? "-left-5" : "-right-5 -scale-x-100"}`}
+    >
+      <path d="M0 0H20V20A20 20 0 0 0 0 0Z" fill="#000" />
+    </svg>
+  );
+}
+
 function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="wrap flex items-center justify-between pt-4 sm:pt-[30px]">
-        <nav className="flex h-12 items-center gap-6 rounded-full bg-white px-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-          <a href="#top" aria-label="Joshua Hatfield, home" className="mr-1 sm:mr-4">
-            {/* websiteicon.png is a white mark; invert shows it black on the white bar. */}
-            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-6 invert" />
-          </a>
+    // A black notch hanging from the top edge of the screen, centred.
+    <header className="fixed top-0 left-1/2 z-50 -translate-x-1/2">
+      <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-8 rounded-b-[18px] bg-black pr-7 pl-3 text-white">
+        <NotchEar side="left" />
+        <NotchEar side="right" />
+        <a href="#top" aria-label="Joshua Hatfield, home" className="flex shrink-0 items-center gap-2.5">
+          <span className="grid size-[30px] place-items-center rounded-[8px] bg-white/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]">
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[18px]" />
+          </span>
+          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Joshua Hatfield</span>
+        </a>
+        <ul className="flex items-center gap-7 max-md:hidden">
           {nav.map((n) => (
-            <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-black/50 sm:inline">
-              {n.label}
-            </a>
+            <li key={n.label}>
+              <a href={n.href} className="text-sm font-medium whitespace-nowrap text-white/60 transition-colors hover:text-white">
+                {n.label}
+              </a>
+            </li>
           ))}
-        </nav>
-        <PillLink href={site.contact}>Get in touch</PillLink>
-      </div>
+        </ul>
+      </nav>
     </header>
   );
 }
