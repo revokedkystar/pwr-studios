@@ -13,13 +13,11 @@
  *   0.86 → 1.00  the sphere shrinks away; the next section blurs into view
  *
  * Libraries (npm, exact versions pinned in package.json):
- *   three 0.186.1, gsap 3.15.0 (incl. ScrollTrigger)
- *
- * Smooth scrolling (Lenis 1.3.26, synced with ScrollTrigger) is set up once
- * for the whole site in components/smooth-scroll.tsx.
+ *   three 0.186.1, gsap 3.15.0 (incl. ScrollTrigger), lenis 1.3.26
  */
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 import * as THREE from "three";
 
 const PIN_LENGTH = 2.6; // pinned scroll distance, in viewport heights
@@ -326,6 +324,12 @@ export function createLogoSphere(root: HTMLElement): () => void {
     root.dataset.lsHover = "false";
   };
 
+  // Smooth scrolling, kept in sync with ScrollTrigger on GSAP's ticker.
+  const lenis = new Lenis({ anchors: true, autoRaf: false });
+  lenis.on("scroll", ScrollTrigger.update);
+  const lenisRaf = (time: number) => lenis.raf(time * 1000);
+  gsap.ticker.add(lenisRaf);
+  gsap.ticker.lagSmoothing(0);
   gsap.ticker.add(frame);
 
   const ctx = gsap.context(() => {
@@ -421,7 +425,9 @@ export function createLogoSphere(root: HTMLElement): () => void {
   return () => {
     alive = false;
     gsap.ticker.remove(frame);
+    gsap.ticker.remove(lenisRaf);
     ctx.revert();
+    lenis.destroy();
     io.disconnect();
     ro.disconnect();
     canvas.removeEventListener("pointermove", onPointerMove);

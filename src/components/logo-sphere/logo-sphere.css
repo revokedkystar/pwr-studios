@@ -132,3 +132,8 @@
     grid-column: span 2;
   }
 }
+
+/* Lenis drives smooth scrolling; native smooth scrolling would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}

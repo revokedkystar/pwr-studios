@@ -24,11 +24,6 @@
 html {
   scroll-behavior: smooth;
 }
-/* Lenis (components/smooth-scroll.tsx) drives smooth scrolling; native
-   smooth scrolling would fight it, so it's switched off while Lenis runs. */
-html.lenis {
-  scroll-behavior: auto;
-}
 
 body {
   background: var(--background);
@@ -263,32 +258,16 @@ body {
  * each slide has --i, giving --t from -1 (next) through 0 (showing) to 1 (past).
  */
 .pin-card,
-.pin-text,
-.pin-bg {
+.pin-text {
   --t: clamp(-1, calc(var(--pos, 0) - var(--i)), 1);
   --a: max(var(--t), calc(var(--t) * -1));
 }
-/* The dark stage (and everything on it) fades in and out at the section's edges. */
-.pin-stage,
-.pin-content {
-  opacity: var(--vis, 1);
-}
-/* Backdrops: crossfade between projects with a slow, continuous zoom. */
-.pin-bg {
-  opacity: calc(1 - var(--a));
-  scale: calc(1.1 - var(--t) * 0.1);
-  filter: grayscale(1) blur(14px) brightness(0.55);
-}
-/* Cards: each new screenshot wipes up from the bottom inside the same frame. */
 .pin-card {
-  clip-path: inset(calc((1 - clamp(0, calc(1 + var(--t)), 1)) * 100%) 0 0 0 round 28px);
-  filter: brightness(calc(1 - max(0, var(--t)) * 0.35));
+  translate: 0 calc(max(0, calc(var(--t) * -1)) * 102%);
+  scale: calc(1 - max(0, var(--t)) * 0.08);
+  filter: brightness(calc(1 - max(0, var(--t)) * 0.4));
   /* The screenshot inside comes into colour as its card arrives. */
   --in: calc(1 - var(--a));
-}
-.pin-shot {
-  translate: 0 calc(max(0, calc(var(--t) * -1)) * 14%);
-  scale: calc(1 + max(0, calc(var(--t) * -1)) * 0.08);
 }
 .pin-text {
   opacity: calc(1 - var(--a) * 1.8);
