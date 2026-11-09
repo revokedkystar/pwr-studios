@@ -230,9 +230,9 @@ export const cv = {
     },
   ],
   education: [
-    { org: "South Devon UTC", period: "2026 – 2032", detail: "Electrical Engineering & MS, Level 3/4 (in progress)" },
+    { org: "South Devon College", period: "2026 – 2032", detail: "Electrical Engineering & MS, Level 3/4 (in progress)" },
     { org: "South Devon UTC", period: "2024 – 2026", detail: "Computer Science Level 3: DDM / ABB / 128 UCAS points" },
-    { org: "Newton Abbot College", period: "2019 – 2024", detail: "GCSEs: Maths 3, English 5/6" },
+    { org: "Newton Abbot College", period: "2019 – 2024", detail: "GCSE Computer Science" },
   ],
   skills: [
     { name: "Web development", level: 80 },
