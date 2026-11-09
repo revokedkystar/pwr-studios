@@ -68,8 +68,8 @@ export const caseStudies = [
 
 // Tags on the pixel wheel. On the globe each one slides onto its country.
 export const places = [
-  { label: "United Kingdom", color: "#0a0a0a", x: "8%", y: "30%", lat: 54, lon: -2, side: "left" as const },
-  { label: "United States", color: "#8f8f8f", x: "46%", y: "12%", lat: 39, lon: -98 },
+  { label: "United Kingdom", color: "#0a0a0a", x: "40%", y: "12%", lat: 54, lon: -2, side: "left" as const },
+  { label: "United States", color: "#8f8f8f", x: "8%", y: "30%", lat: 39, lon: -98 },
   { label: "Germany", color: "#d0d0d0", x: "62%", y: "68%", lat: 51, lon: 10 },
 ];
 

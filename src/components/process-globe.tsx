@@ -23,11 +23,11 @@ export type Place = {
  * Scrolling through the tall outer box keeps the wheel locked in the middle
  * of the screen and plays this through:
  *
- *   0.00 – 0.08  the wheel, as before
- *   0.08 – 0.40  the wheel turns into a 3D pixel globe that grows outwards,
+ *   0.00 – 0.04  the wheel, as before
+ *   0.04 – 0.44  the wheel turns into a 3D pixel globe that grows outwards,
  *                and each tag slides onto its country
- *   0.40 – 0.60  the full-size globe turns with the scroll
- *   0.60 – 0.92  it shrinks back down into the wheel, tags back in place
+ *   0.44 – 0.56  the full-size globe turns with the scroll
+ *   0.56 – 0.96  it shrinks back down into the wheel, tags back in place
  *
  * The globe is drawn with the wheel's own pixel style: the same three greys,
  * 14px cells and 2px checkerboard dithering between neighbouring greys. Land
@@ -134,6 +134,11 @@ const smoothstep = (a: number, b: number, n: number) => {
   const t = clamp((n - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
+/** Like smoothstep, but flatter at both ends, so motion eases in and out more gently. */
+const smootherstep = (a: number, b: number, n: number) => {
+  const t = clamp((n - a) / (b - a));
+  return t * t * t * (t * (t * 6 - 15) + 10);
+};
 
 /** A point on the globe, in screen units: x right, y down, z towards the viewer. */
 function project(lat: number, lon: number, spin: number) {
@@ -173,6 +178,10 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
     let dpr = 1;
     let raf = 0;
     let visible = false;
+    // Scroll progress as drawn: it glides after the real scroll position
+    // instead of jumping with it, which smooths out uneven scroll steps.
+    let shown = -1;
+    let last = 0;
     const patterns = new Map<string, CanvasPattern>();
 
     // The same 2px checkerboard the wheel uses between two greys.
@@ -238,29 +247,41 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       }
     };
 
-    const frame = () => {
+    const frame = (now: number) => {
       raf = visible ? requestAnimationFrame(frame) : 0;
       const vh = window.innerHeight;
       const box = outer.getBoundingClientRect();
-      const t = clamp(-box.top / Math.max(1, box.height - vh));
-      const morph = Math.min(smoothstep(0.08, 0.4, t), 1 - smoothstep(0.6, 0.92, t));
+      const target = clamp(-box.top / Math.max(1, box.height - vh));
+      const dt = Math.min(100, last ? now - last : 16);
+      last = now;
+      if (shown < 0) shown = target;
+      shown += (target - shown) * (1 - Math.exp(-dt / 140));
+      if (Math.abs(target - shown) < 0.0005) shown = target;
+      const t = shown;
+
+      // Longer, overlapping grow and shrink phases with gentle ends.
+      const morph = Math.min(smootherstep(0.04, 0.44, t), 1 - smootherstep(0.56, 0.96, t));
       const spin = centreLon(t);
-
-      disc.style.opacity = String(1 - smoothstep(0.05, 0.35, morph));
-      disc.style.rotate = `${t * 140}deg`;
-      logo.style.opacity = String(1 - smoothstep(0, 0.3, morph));
-      logo.style.rotate = `${-t * 360}deg`;
-
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const c = canvas.getBoundingClientRect();
       const r = wheel.getBoundingClientRect();
       const r0 = r.width / 2;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
       // Grows to most of the screen, but never taller than it.
       const rMax = Math.max(Math.min(w, h) * 0.44, Math.min(r0 * 1.55, h * 0.44));
       const radius = r0 + (rMax - r0) * morph;
+
+      // The wheel grows with the globe as it fades, so the two blend
+      // into each other rather than showing two edges.
+      disc.style.opacity = String(1 - smootherstep(0.05, 0.45, morph));
+      disc.style.scale = String(radius / r0);
+      disc.style.rotate = `${t * 140}deg`;
+      logo.style.opacity = String(1 - smootherstep(0, 0.35, morph));
+      logo.style.scale = String(1 - 0.35 * morph);
+      logo.style.rotate = `${-t * 360}deg`;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Tags: from their spot on the wheel to their country on the globe.
       places.forEach((p, i) => {
@@ -282,7 +303,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
         tag.style.setProperty("--face", String(1 - morph + morph * facing));
       });
 
-      const alpha = smoothstep(0.02, 0.3, morph);
+      const alpha = smootherstep(0, 0.35, morph);
       if (alpha <= 0) return;
       ctx.save();
       ctx.globalAlpha = alpha;
@@ -292,7 +313,12 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
 
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible && !raf) raf = requestAnimationFrame(frame);
+      if (visible && !raf) {
+        // Start from where the page is, not from an old position.
+        shown = -1;
+        last = 0;
+        raf = requestAnimationFrame(frame);
+      }
     });
 
     resize();
@@ -306,7 +332,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
   }, [places]);
 
   return (
-    <div ref={outerRef} className="relative h-[260svh] motion-reduce:h-auto">
+    <div ref={outerRef} className="relative h-[300svh] motion-reduce:h-auto">
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <div ref={wheelRef} className="relative aspect-square w-[min(520px,82vw,72svh)]">
           <div ref={discRef} className="absolute inset-0 overflow-hidden rounded-full">
