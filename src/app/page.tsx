@@ -28,20 +28,28 @@ import {
 
 function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="wrap flex items-center justify-between pt-4 sm:pt-[30px]">
-        <nav className="flex h-12 items-center gap-6 rounded-full bg-white px-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-          <a href="#top" aria-label="Joshua Hatfield, home" className="mr-1 sm:mr-4">
+    // The header spans the page width, so only its pill and button take clicks.
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <div className="wrap flex items-start justify-between pt-4 sm:pt-[30px]">
+        {/* Logo on top, links stacked underneath (phones show the logo only). */}
+        <nav className="pointer-events-auto flex flex-col items-start rounded-[24px] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] sm:p-2.5">
+          <a href="#top" aria-label="Joshua Hatfield, home" className="grid size-6 place-items-center sm:m-2 sm:mb-3">
             {/* websiteicon.png is a white mark; invert shows it black on the white bar. */}
             <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-6 invert" />
           </a>
           {nav.map((n) => (
-            <a key={n.label} href={n.href} className="hidden text-base text-black/90 transition-colors hover:text-black/50 sm:inline">
+            <a
+              key={n.label}
+              href={n.href}
+              className="hidden w-full rounded-xl px-2.5 py-1.5 text-base text-black/90 transition-colors hover:bg-black/5 hover:text-black sm:block"
+            >
               {n.label}
             </a>
           ))}
         </nav>
-        <PillLink href={site.contact}>Get in touch</PillLink>
+        <div className="pointer-events-auto">
+          <PillLink href={site.contact}>Get in touch</PillLink>
+        </div>
       </div>
     </header>
   );
