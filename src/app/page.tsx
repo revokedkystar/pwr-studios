@@ -5,7 +5,6 @@ import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
 import { ScrollFx } from "@/components/scroll-fx";
-import { SiteHeader } from "@/components/site-header";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
 import { ArrowIcon, PillLink, Tag } from "@/components/ui";
@@ -26,6 +25,46 @@ import {
   socials,
   stack,
 } from "@/content";
+
+/** Concave corner that flares the notch out into the top edge of the screen. */
+function NotchEar({ side }: { side: "left" | "right" }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      aria-hidden
+      className={`absolute top-0 size-5 ${side === "left" ? "-left-5" : "-right-5 -scale-x-100"}`}
+    >
+      <path d="M0 0H20V20A20 20 0 0 0 0 0Z" fill="#000" />
+    </svg>
+  );
+}
+
+function Header() {
+  return (
+    // A black notch hanging from the top edge of the screen, centred.
+    <header className="fixed top-0 left-1/2 z-50 -translate-x-1/2">
+      <nav aria-label="Sections" className="relative flex h-[53px] items-center gap-8 rounded-b-[18px] bg-black pr-7 pl-3 text-white">
+        <NotchEar side="left" />
+        <NotchEar side="right" />
+        <a href="#top" aria-label="Joshua Hatfield, home" className="flex shrink-0 items-center gap-2.5">
+          <span className="grid size-[30px] place-items-center rounded-[8px] bg-white/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]">
+            <Image src="/websiteicon.png" alt="" width={156} height={154} preload className="size-[18px]" />
+          </span>
+          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Joshua Hatfield</span>
+        </a>
+        <ul className="flex items-center gap-7 max-md:hidden">
+          {nav.map((n) => (
+            <li key={n.label}>
+              <a href={n.href} className="text-sm font-medium whitespace-nowrap text-white/60 transition-colors hover:text-white">
+                {n.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+  );
+}
 
 function Hero() {
   return (
@@ -358,7 +397,7 @@ function Footer() {
 export default function Home() {
   return (
     <>
-      <SiteHeader nav={nav} email={site.email} contact={site.contact} />
+      <Header />
       <main className="flex-1">
         <Hero />
         <PinnedWork items={caseStudies} />
