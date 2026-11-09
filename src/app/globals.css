@@ -112,3 +112,75 @@ details[open] .faq-plus {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Hide the browser's page scrollbar for a cleaner look (scrolling still works). */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Scroll-scrubbed effects. ScrollFx sets --in / --p / --out on [data-scroll]
+ * elements (children inherit them). Fallbacks are the finished state.
+ */
+.fx-rise {
+  opacity: var(--in, 1);
+  translate: 0 calc((1 - var(--in, 1)) * 70px);
+}
+.fx-scale {
+  scale: calc(0.88 + 0.12 * var(--in, 1));
+}
+.fx-slide {
+  translate: calc((1 - var(--in, 1)) * var(--dx, -120px)) 0;
+  opacity: calc(0.15 + 0.85 * var(--in, 1));
+}
+.fx-drop {
+  opacity: var(--in, 1);
+  translate: 0 calc((1 - var(--in, 1)) * 140px);
+  rotate: calc((1 - var(--in, 1)) * var(--tilt, -10deg));
+}
+.fx-spin {
+  rotate: calc((var(--p, 0.5) - 0.5) * var(--turn, 90deg));
+}
+.fx-grow {
+  scale: calc(0.7 + 0.3 * var(--in, 1));
+}
+.fx-parallax {
+  translate: 0 calc((var(--p, 0.5) - 0.5) * var(--speed, 120px));
+}
+@media (min-width: 1024px) {
+  .fx-parallax-lg {
+    translate: 0 calc((var(--p, 0.5) - 0.5) * var(--speed, 120px));
+  }
+}
+.fx-hero-out {
+  translate: 0 calc(var(--out, 0) * -140px);
+  scale: calc(1 - var(--out, 0) * 0.14);
+  opacity: calc(1 - var(--out, 0) * 1.3);
+  filter: blur(calc(var(--out, 0) * 10px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-rise,
+  .fx-scale,
+  .fx-slide,
+  .fx-drop,
+  .fx-spin,
+  .fx-grow,
+  .fx-parallax,
+  .fx-parallax-lg,
+  .fx-hero-out {
+    opacity: 1;
+    translate: none;
+    scale: none;
+    rotate: none;
+    filter: none;
+  }
+}
+
+/* Keep sideways slide-ins from ever causing horizontal scroll. */
+body {
+  overflow-x: clip;
+}

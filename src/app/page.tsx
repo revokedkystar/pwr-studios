@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { PixelField } from "@/components/pixel-field";
 import { RotatingHeadline } from "@/components/rotating-headline";
+import { ScrollFx } from "@/components/scroll-fx";
 import { WorldClocks } from "@/components/world-clocks";
 import { ArrowIcon, Asterisk, PillLink, Tag } from "@/components/ui";
 import {
@@ -41,8 +42,10 @@ function Header() {
 function Hero() {
   return (
     <section id="top" className="relative flex h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
-      <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} className="absolute inset-0 size-full" />
-      <div className="wrap relative pt-10">
+      <div data-scroll className="fx-parallax absolute inset-x-0 -top-40 bottom-0 [--speed:420px]">
+        <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} className="size-full" />
+      </div>
+      <div data-scroll className="fx-hero-out wrap relative pt-10">
         <RotatingHeadline />
         <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
       </div>
@@ -84,8 +87,8 @@ function Work() {
       <div className="wrap grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,530px)] lg:gap-4">
         <div className="flex flex-col gap-16 lg:gap-14">
           {caseStudies.map((c) => (
-            <a key={c.title} href={c.href} className="group block">
-              <div className="relative aspect-[2/1] overflow-hidden rounded-[28px] max-sm:aspect-[4/3]">
+            <a key={c.title} href={c.href} data-scroll className="fx-rise group block">
+              <div className="fx-scale relative aspect-[2/1] overflow-hidden rounded-[28px] max-sm:aspect-[4/3]">
                 <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
                 <BrowserMock dark={c.dark} />
                 <span className="absolute top-2 right-2 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
@@ -107,11 +110,13 @@ function Work() {
 
         <div id="play" className="grid grid-cols-2 content-start gap-3 sm:gap-4">
           <h3 className="sr-only">Play</h3>
-          {playTiles.map((t) => (
+          {playTiles.map((t, i) => (
             <a
               key={t.title}
               href="#"
-              className="group relative grid aspect-[3/2] place-items-center overflow-hidden rounded-[20px]"
+              data-scroll
+              data-lag={(i % 2) * 0.18}
+              className="fx-rise fx-scale group relative grid aspect-[3/2] place-items-center overflow-hidden rounded-[20px]"
               style={{ background: t.bg, color: t.fg }}
             >
               <span className="font-serif text-4xl italic transition-transform duration-500 group-hover:scale-110 sm:text-5xl">
@@ -130,11 +135,11 @@ function Work() {
 
 function Momentum() {
   return (
-    <section aria-labelledby="momentum" className="relative">
+    <section aria-labelledby="momentum" className="relative overflow-x-clip">
       <PixelField palette={ink} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
       <div className="bg-ink pt-10 pb-16 text-white sm:pb-20">
-        <div className="relative mx-auto aspect-square w-[min(520px,82vw)]">
-          <div className="absolute inset-0 overflow-hidden rounded-full">
+        <div data-scroll className="fx-grow relative mx-auto aspect-square w-[min(520px,82vw)]">
+          <div className="fx-spin absolute inset-0 overflow-hidden rounded-full [--turn:140deg]">
             <PixelField
               palette={["#0a0a0a", "#4a4a4a", "#d4d4d4"]}
               cell={14}
@@ -144,11 +149,13 @@ function Momentum() {
               className="size-full"
             />
           </div>
-          <Asterisk className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_2px_0_rgba(0,0,0,0.08)]" fill="#ffffff" />
-          {process.map((p) => (
+          <Asterisk className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 fx-spin [--turn:-360deg] drop-shadow-[0_2px_0_rgba(0,0,0,0.08)]" fill="#ffffff" />
+          {process.map((p, i) => (
             <span
               key={p.label}
-              className="absolute flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-sm whitespace-nowrap text-black shadow-sm"
+              data-scroll
+              data-lag={0.2 + i * 0.15}
+              className="fx-rise absolute flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-sm whitespace-nowrap text-black shadow-sm"
               style={{ left: p.x, top: p.y }}
             >
               <span className="size-3 rounded-sm" style={{ background: p.color }} />
@@ -158,10 +165,10 @@ function Momentum() {
         </div>
 
         <div className="wrap mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-4">
-          <h2 id="momentum" className="text-[44px] leading-none font-medium tracking-[-0.01em] sm:text-6xl">
+          <h2 id="momentum" data-scroll className="fx-slide text-[44px] leading-none font-medium tracking-[-0.01em] sm:text-6xl">
             Built for momentum
           </h2>
-          <div className="max-w-[480px]">
+          <div data-scroll data-lag={0.15} className="fx-rise max-w-[480px]">
             <p className="text-lg leading-[1.3] sm:text-xl">
               Good ideas lose energy in hand-offs. We keep strategy, design and build in one small team, so your project
               keeps moving from the first workshop to launch day. Here&apos;s how that works.
@@ -184,12 +191,12 @@ function About() {
     <section id="about" className="relative overflow-hidden bg-white py-24 lg:py-0">
       <div className="wrap relative lg:h-[820px]">
         <div className="relative z-10 mx-auto max-w-[480px] text-center lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
-          <h2 className="section-title">
+          <h2 data-scroll className="fx-rise fx-scale section-title">
             Beyond
             <br />
             the brief
           </h2>
-          <p className="mx-auto mt-6 max-w-[360px] text-[17px] leading-[1.42] text-black/65">
+          <p data-scroll data-lag={0.1} className="fx-rise mx-auto mt-6 max-w-[360px] text-[17px] leading-[1.42] text-black/65">
             Always making, rarely alone. Running workshops, hosting design nights, and sharing plenty of laughs in
             between.
           </p>
@@ -202,7 +209,9 @@ function About() {
           {moments.map((m, i) => (
             <li
               key={m.caption}
-              className={`${i >= 6 ? "max-lg:hidden" : ""} group relative h-40 overflow-hidden rounded-[22px] lg:absolute lg:top-(--y) lg:left-(--x) lg:h-(--h) lg:w-(--w) lg:rotate-(--r)`}
+              data-scroll
+              data-lag={(i % 3) * 0.12}
+              className={`${i >= 6 ? "max-lg:hidden" : ""} fx-rise fx-parallax-lg group relative h-40 overflow-hidden rounded-[22px] lg:absolute lg:top-(--y) lg:left-(--x) lg:h-(--h) lg:w-(--w) lg:rotate-(--r)`}
               style={
                 {
                   "--x": m.x,
@@ -210,6 +219,7 @@ function About() {
                   "--w": `${m.w}px`,
                   "--h": `${m.h}px`,
                   "--r": `${m.r}deg`,
+                  "--speed": `${[-260, 180, -120, 240, -200, 140][i % 6]}px`,
                   background: m.tint,
                 } as CSSProperties
               }
@@ -229,8 +239,8 @@ function Writing() {
   return (
     <section id="writing" className="bg-white pt-24 pb-24 sm:pt-28 sm:pb-32">
       <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-start">
-        <h2 className="section-title">Field notes</h2>
-        <div>
+        <h2 data-scroll className="fx-slide section-title">Field notes</h2>
+        <div data-scroll data-lag={0.1} className="fx-rise">
           <p className="text-[17px] leading-[1.42] text-black/65">
             Writing on design, brands, and what we learn shipping both.
           </p>
@@ -243,7 +253,13 @@ function Writing() {
       <div className="no-scrollbar mt-14 overflow-x-auto sm:mt-20">
         <ul className="wrap flex gap-8 pb-8 sm:gap-14">
           {notes.map((n, i) => (
-            <li key={n.title} className="shrink-0 pt-2">
+            <li
+              key={n.title}
+              data-scroll
+              data-lag={i * 0.12}
+              className="fx-drop shrink-0 pt-2"
+              style={{ "--tilt": `${i % 2 ? 12 : -12}deg` } as CSSProperties}
+            >
               <a
                 href={n.href}
                 className="stamp block w-[260px] sm:w-[300px]"
@@ -274,7 +290,7 @@ function SmallTalk() {
     <section aria-labelledby="small-talk" className="bg-white pt-16 pb-24 sm:pb-36">
       <div className="wrap grid gap-10 lg:grid-cols-2 lg:gap-4">
         <div>
-          <h2 id="small-talk" className="section-title">
+          <h2 id="small-talk" data-scroll className="fx-slide section-title">
             Small talk
           </h2>
           <p className="mt-6 max-w-[352px] text-[17px] leading-[1.42] text-black/62">
@@ -282,8 +298,8 @@ function SmallTalk() {
           </p>
         </div>
         <div className="flex flex-col gap-2">
-          {faqs.map((f) => (
-            <details key={f.q} className="group rounded-2xl bg-surface">
+          {faqs.map((f, i) => (
+            <details key={f.q} data-scroll data-lag={i * 0.08} className="fx-rise group rounded-2xl bg-surface">
               <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-5 text-[17px]">
                 {f.q}
                 <svg viewBox="0 0 16 16" className="faq-plus size-4 shrink-0 text-black/50 transition-[rotate] duration-300" aria-hidden>
@@ -295,7 +311,9 @@ function SmallTalk() {
           ))}
           <a
             href={`mailto:${site.email}`}
-            className="group flex items-center gap-3 rounded-2xl bg-surface py-3 pr-3 pl-5 text-[17px] text-black/35 transition-colors hover:text-black/60"
+            data-scroll
+            data-lag={0.4}
+            className="fx-rise group flex items-center gap-3 rounded-2xl bg-surface py-3 pr-3 pl-5 text-[17px] text-black/35 transition-colors hover:text-black/60"
           >
             <span className="size-7 overflow-hidden rounded-sm">
               <PixelField palette={ink} cell={4} dither={1} scale={0.4} seed={9} className="size-full" />
@@ -315,7 +333,7 @@ function Footer() {
   return (
     <footer className="overflow-hidden bg-white pt-10">
       <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-4">
-        <div>
+        <div data-scroll className="fx-rise">
           <p className="font-serif text-[52px] leading-none tracking-[-0.01em] italic sm:text-6xl">
             p*wr
             <br />
@@ -351,7 +369,7 @@ function Footer() {
       </div>
 
       <div className="wrap relative mt-16 h-[46vw] max-h-[620px] sm:mt-24" aria-hidden>
-        <svg viewBox="0 0 100 100" className="absolute top-0 left-1/2 w-[min(92vw,1100px)] -translate-x-1/2">
+        <svg viewBox="0 0 100 100" data-scroll className="fx-spin absolute top-0 [--turn:240deg] left-1/2 w-[min(92vw,1100px)] -translate-x-1/2">
           <defs>
             <pattern id="stripes" width="1.4" height="1.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <rect width="0.55" height="1.4" fill="#0a0a0a" />
@@ -382,6 +400,7 @@ export default function Home() {
         <SmallTalk />
       </main>
       <Footer />
+      <ScrollFx />
     </>
   );
 }
