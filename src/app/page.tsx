@@ -2,7 +2,8 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
-import { RotatingHeadline } from "@/components/rotating-headline";
+import { HERO_DISSOLVE } from "@/components/hero-events";
+import { HeroHeadline } from "@/components/hero-headline";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
@@ -50,10 +51,10 @@ function Hero() {
   return (
     <section id="top" className="relative z-10 flex bg-white h-[100svh] max-h-[880px] min-h-[600px] items-center overflow-hidden">
       <div data-scroll className="fx-parallax absolute inset-x-0 -top-40 bottom-0 [--speed:420px]">
-        <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} className="size-full" />
+        <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} dissolveOn={HERO_DISSOLVE} className="size-full" />
       </div>
       <div data-scroll className="fx-hero-out wrap relative pt-10">
-        <RotatingHeadline />
+        <HeroHeadline />
         <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
       </div>
     </section>
