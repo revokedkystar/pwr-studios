@@ -129,7 +129,7 @@ export function Loader() {
       <div className="ldr__inner">
         <div className="ldr__top">
           <span>xanti studios</span>
-          <span>Portfolio of Joshua Hatfield</span>
+          <span>by @h4tfi3ld</span>
         </div>
 
         <div className="ldr__mark" aria-hidden>

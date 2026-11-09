@@ -8,9 +8,9 @@ export function SiteFooter() {
       <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-4">
         <div data-scroll className="fx-rise">
           <p className="font-serif text-[52px] leading-none tracking-[-0.01em] italic sm:text-6xl">
-            Joshua
+            by
             <br />
-            Hatfield
+            @h4tfi3ld
           </p>
           <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-base">
             {socials.map((s) => (

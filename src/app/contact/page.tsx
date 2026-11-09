@@ -8,8 +8,8 @@ import { ArrowIcon } from "@/components/ui";
 import { faqs, ink, site, socials } from "@/content";
 
 export const metadata: Metadata = {
-  title: "Contact · Joshua Hatfield",
-  description: "Get in touch with Joshua Hatfield: send a message, or find quick answers to common questions.",
+  title: "Contact · xanti studios by @h4tfi3ld",
+  description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
 };
 
 function Contact() {
