@@ -15,7 +15,6 @@ import {
   logos,
   nav,
   notes,
-  playTiles,
   process,
   site,
   cloud,
@@ -58,7 +57,7 @@ function Hero() {
   );
 }
 
-function Screenshot({ src, alt, dark }: { src: string; alt: string; dark: boolean }) {
+function Screenshot({ src, alt, dark, wide = false }: { src: string; alt: string; dark: boolean; wide?: boolean }) {
   return (
     <div
       className={`absolute inset-0 top-[12%] left-[7%] overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${dark ? "bg-[#141414]" : "bg-white"}`}
@@ -67,7 +66,7 @@ function Screenshot({ src, alt, dark }: { src: string; alt: string; dark: boolea
         src={src}
         alt={alt}
         fill
-        sizes="(min-width: 1024px) 680px, 92vw"
+        sizes={wide ? "(min-width: 1024px) 1200px, 92vw" : "(min-width: 1024px) 600px, 92vw"}
         className="fx-colour object-cover object-left-top transition-transform duration-700 group-hover:scale-[1.03]"
       />
     </div>
@@ -78,56 +77,38 @@ function Work() {
   return (
     <section id="work" className="bg-white pt-6 pb-16 sm:pb-20">
       <h2 className="sr-only">Work</h2>
-      <div className="wrap grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,530px)] lg:gap-4">
-        <div className="flex flex-col gap-16 lg:gap-14">
-          {caseStudies.map((c) => (
-            <a key={c.title} href={c.href} target="_blank" rel="noreferrer" data-scroll className="fx-rise group block">
-              <div className="fx-scale relative aspect-[2/1] overflow-hidden rounded-[28px] max-sm:aspect-[4/3]">
-                <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
-                <Screenshot src={c.image} alt={c.alt} dark={c.dark} />
-                <span className="absolute top-2 right-2 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowIcon className="size-4" />
-                </span>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-1.5">
-                {c.tags.map((t) => (
-                  <Tag key={t}>{t}</Tag>
-                ))}
-              </div>
-              <h3 className="mt-2 max-w-[580px] text-[26px] leading-[1.15] font-medium tracking-[-0.01em] sm:text-[32px]">
-                {c.title}
-              </h3>
-              <p className="mt-2 text-base text-black/55">{c.client}</p>
-            </a>
-          ))}
-        </div>
-
-        <div id="play" className="grid grid-cols-2 content-start gap-3 self-start sm:gap-4 lg:sticky lg:top-28">
-          <h3 className="sr-only">Play</h3>
-          {playTiles.map((t, i) => (
-            <figure
-              key={t.title}
-              data-scroll
-              data-lag={(i % 2) * 0.18}
-              className="fx-rise fx-scale group relative aspect-[3/2] overflow-hidden rounded-[20px] bg-black"
+      {/* First project runs full width; the rest sit two to a row. */}
+      <div className="wrap grid gap-16 lg:grid-cols-2 lg:gap-x-4 lg:gap-y-20">
+        {caseStudies.map((c, i) => (
+          <a
+            key={c.title}
+            href={c.href}
+            target="_blank"
+            rel="noreferrer"
+            data-scroll
+            data-lag={i === 2 ? 0.15 : 0}
+            className={`fx-rise group block ${i === 0 ? "lg:col-span-2" : ""}`}
+          >
+            <div
+              className={`fx-scale relative overflow-hidden rounded-[28px] max-sm:aspect-[4/3] ${i === 0 ? "aspect-[2/1] lg:aspect-[21/9]" : "aspect-[2/1] lg:aspect-[3/2]"}`}
             >
-              <video
-                className="fx-colour size-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src={`${t.src}.mp4`}
-                poster={`${t.src}.jpg`}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label={t.title}
-              />
-              <figcaption className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-xs text-black opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                {t.title}
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+              <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
+              <Screenshot src={c.image} alt={c.alt} dark={c.dark} wide={i === 0} />
+              <span className="absolute top-2 right-2 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
+                <ArrowIcon className="size-4" />
+              </span>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-1.5">
+              {c.tags.map((t) => (
+                <Tag key={t}>{t}</Tag>
+              ))}
+            </div>
+            <h3 className="mt-2 max-w-[580px] text-[26px] leading-[1.15] font-medium tracking-[-0.01em] sm:text-[32px]">
+              {c.title}
+            </h3>
+            <p className="mt-2 text-base text-black/55">{c.client}</p>
+          </a>
+        ))}
       </div>
     </section>
   );
