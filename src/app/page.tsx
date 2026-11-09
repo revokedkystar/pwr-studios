@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { RotatingHeadline } from "@/components/rotating-headline";
 import { ScrollFx } from "@/components/scroll-fx";
@@ -52,63 +53,6 @@ function Hero() {
       <div data-scroll className="fx-hero-out wrap relative pt-10">
         <RotatingHeadline />
         <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
-      </div>
-    </section>
-  );
-}
-
-function Screenshot({ src, alt, dark, wide = false }: { src: string; alt: string; dark: boolean; wide?: boolean }) {
-  return (
-    <div
-      className={`absolute inset-0 top-[12%] left-[7%] overflow-hidden rounded-tl-xl shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${dark ? "bg-[#141414]" : "bg-white"}`}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes={wide ? "(min-width: 1024px) 1200px, 92vw" : "(min-width: 1024px) 600px, 92vw"}
-        className="fx-colour object-cover object-left-top transition-transform duration-700 group-hover:scale-[1.03]"
-      />
-    </div>
-  );
-}
-
-function Work() {
-  return (
-    <section id="work" className="bg-white pt-6 pb-16 sm:pb-20">
-      <h2 className="sr-only">Work</h2>
-      {/* First project runs full width; the rest sit two to a row. */}
-      <div className="wrap grid gap-16 lg:grid-cols-2 lg:gap-x-4 lg:gap-y-20">
-        {caseStudies.map((c, i) => (
-          <a
-            key={c.title}
-            href={c.href}
-            target="_blank"
-            rel="noreferrer"
-            data-scroll
-            data-lag={i === 2 ? 0.15 : 0}
-            className={`fx-rise group block ${i === 0 ? "lg:col-span-2" : ""}`}
-          >
-            <div
-              className={`fx-scale relative overflow-hidden rounded-[28px] max-sm:aspect-[4/3] ${i === 0 ? "aspect-[2/1] lg:aspect-[21/9]" : "aspect-[2/1] lg:aspect-[3/2]"}`}
-            >
-              <PixelField palette={c.palette} seed={c.seed} cell={22} mode="flat" className="absolute inset-0 size-full" />
-              <Screenshot src={c.image} alt={c.alt} dark={c.dark} wide={i === 0} />
-              <span className="absolute top-2 right-2 grid size-10 place-items-center rounded-full bg-black text-white transition-transform duration-300 group-hover:rotate-45">
-                <ArrowIcon className="size-4" />
-              </span>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-1.5">
-              {c.tags.map((t) => (
-                <Tag key={t}>{t}</Tag>
-              ))}
-            </div>
-            <h3 className="mt-2 max-w-[580px] text-[26px] leading-[1.15] font-medium tracking-[-0.01em] sm:text-[32px]">
-              {c.title}
-            </h3>
-            <p className="mt-2 text-base text-black/55">{c.client}</p>
-          </a>
-        ))}
       </div>
     </section>
   );
@@ -448,7 +392,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Work />
+        <PinnedWork items={caseStudies} />
         <Momentum />
         <Graphics />
         <Certificates />
