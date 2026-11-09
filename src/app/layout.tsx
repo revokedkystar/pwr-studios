@@ -49,9 +49,27 @@ const newsreader = Newsreader({
   axes: ["opsz"],
 });
 
+const TITLE = "xanti studios by @h4tfi3ld";
+const DESCRIPTION =
+  "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and certificates.";
+
 export const metadata: Metadata = {
-  title: "xanti studios by @h4tfi3ld",
-  description: "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and certificates.",
+  metadataBase: new URL("https://pwr-studios.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  // Link previews (Discord, iMessage, WhatsApp, Slack, X…) read these.
+  openGraph: {
+    type: "website",
+    siteName: "xanti studios",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

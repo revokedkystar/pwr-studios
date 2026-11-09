@@ -10,6 +10,19 @@ import { faqs, ink, site, socials } from "@/content";
 export const metadata: Metadata = {
   title: "Contact · xanti studios by @h4tfi3ld",
   description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+  // A page's openGraph replaces the layout's, so the shared fields are repeated.
+  openGraph: {
+    type: "website",
+    siteName: "xanti studios",
+    title: "Contact · xanti studios by @h4tfi3ld",
+    description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+    url: "/contact",
+  },
+  twitter: {
+    card: "summary",
+    title: "Contact · xanti studios by @h4tfi3ld",
+    description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+  },
 };
 
 function Contact() {
