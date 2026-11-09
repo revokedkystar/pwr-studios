@@ -10,6 +10,7 @@ export const nav = [
   { label: "Work", href: "/#work" },
   { label: "Graphics", href: "/#graphics" },
   { label: "Writing", href: "/#writing" },
+  { label: "CV", href: "/cv" },
 ];
 
 export const socials = [
@@ -187,5 +188,60 @@ export const faqs = [
     a: "Use the contact form on this page, or find me as @h4tfi3ld on Instagram, X and LinkedIn.",
   },
 ];
+
+// CV page. Kept free of personal details and business or building addresses.
+export const cv = {
+  intro:
+    "Test Technician Apprentice at Keysight Technologies with a strong academic foundation in Computer Science and electrical engineering. I bring hands-on technical assembly and systems testing experience, with a background in digital content creation, software and hardware development, and customer-focused roles.",
+  industry: [
+    {
+      org: "Keysight Technologies",
+      role: "Test Technician Apprentice",
+      period: "09/2026 – present",
+      points: [
+        "An apprenticeship in a new industry and new technologies, after deciding to change my career path.",
+        "Assembling and repairing machines and technologies to each customer's requirements and order, while learning the fundamentals of working in an engineering environment.",
+      ],
+    },
+    {
+      org: "NHS",
+      role: "Content Creator",
+      period: "03/2025 – 07/2026",
+      points: [
+        "My first real-world step into the computing industry, working in content creation.",
+        "Worked on graphic design projects, interviews, photoshoots and maintaining social platforms, alongside a network of peers with unique skills that helped better our work.",
+      ],
+    },
+  ],
+  work: [
+    {
+      org: "Offshore Bar & Restaurant",
+      role: "Waiter",
+      period: "07/2023 – 09/2026",
+      points: [
+        "Working to industry standards in a professional workplace: how to interact with customers and give great service that represents the company well.",
+      ],
+    },
+    {
+      org: "Riccas Restaurant",
+      role: "Waiter",
+      period: "01/2025 – 07/2025",
+      points: ["Furthered my social skills and hospitality experience working for a local company."],
+    },
+  ],
+  education: [
+    { org: "South Devon UTC", period: "2026 – 2032", detail: "Electrical Engineering & MS, Level 3/4 (in progress)" },
+    { org: "South Devon UTC", period: "2024 – 2026", detail: "Computer Science Level 3: DDM / ABB / 128 UCAS points" },
+    { org: "Newton Abbot College", period: "2019 – 2024", detail: "GCSEs: Maths 3, English 5/6" },
+  ],
+  skills: [
+    { name: "Web development", level: 80 },
+    { name: "Python", level: 65 },
+    { name: "Git", level: 45 },
+    { name: "Hardware & electronics", level: 35 },
+    { name: "Testing & debugging", level: 25 },
+    { name: "C#", level: 15 },
+  ],
+};
 
 export const clocks = [{ city: "Devon, UK", zone: "Europe/London" }];
