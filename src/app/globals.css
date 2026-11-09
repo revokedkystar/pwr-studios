@@ -226,7 +226,7 @@ body {
   line-height: 1.5;
 }
 .stack-tile {
-  --size: clamp(48px, 12.5cqmin, 100px);
+  --size: clamp(34px, 9cqmin, 72px);
   --radius: 39cqmin;
   --e0: clamp(0, calc((var(--tp, 1) - var(--d)) / var(--flight)), 1);
   --e: calc(var(--e0) * var(--e0) * (3 - 2 * var(--e0)));

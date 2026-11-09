@@ -7,8 +7,8 @@ import { PixelField } from "./pixel-field";
 const INK = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 
 
-/** How long after load the intro starts, in ms. */
-const START_MS = 1100;
+/** How far (px) the visitor must scroll before the intro plays. */
+const TRIGGER_PX = 4;
 
 function Tile() {
   return (
@@ -32,7 +32,8 @@ const centre = (el: Element) => {
 };
 
 /**
- * Hero headline with a one-time intro, played shortly after the page loads:
+ * Hero headline with a one-time intro, played the first time the visitor
+ * scrolls (or straight away if the page loads already scrolled):
  *
  * 1. the pixel sky behind the hero crumbles away (see PixelField dissolveOn)
  * 2. "Computing ▣ meets creativity" collapses into its pixel tile, which grows
@@ -100,10 +101,18 @@ export function HeroHeadline() {
       });
     };
 
-    const timer = setTimeout(run, START_MS);
+    let started = false;
+    const onScroll = () => {
+      if (started || window.scrollY < TRIGGER_PX) return;
+      started = true;
+      window.removeEventListener("scroll", onScroll);
+      run();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => {
       cancelled = true;
-      clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
