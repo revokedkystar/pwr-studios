@@ -4,7 +4,7 @@ import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HeroHeadline } from "@/components/hero-headline";
-import { LogoPixels } from "@/components/logo-pixels";
+import { LogoSphere } from "@/components/logo-sphere/logo-sphere";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
 import { WorldClocks } from "@/components/world-clocks";
@@ -250,9 +250,9 @@ function Certificates() {
         ))}
       </ul>
 
-      {/* Company logos assembled from pixels as you scroll. */}
+      {/* "Experience with": company logos lift onto a scroll-driven 3D sphere. */}
       <div className="mt-10 sm:mt-16">
-        <LogoPixels logos={logos} />
+        <LogoSphere companies={logos} />
       </div>
     </section>
   );
