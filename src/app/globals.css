@@ -305,6 +305,3 @@ body {
 .deck-logo {
   filter: grayscale(calc(1 - var(--e)));
 }
-.deck-name {
-  opacity: clamp(0, calc(var(--e) * 2 - 1), 1);
-}

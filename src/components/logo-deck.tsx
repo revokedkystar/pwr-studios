@@ -105,7 +105,6 @@ export function LogoDeck({ logos }: { logos: Logo[] }) {
                     <Image src="/websiteicon.png" alt="" width={156} height={154} className="h-[30%] w-auto opacity-90" />
                   </div>
                 </div>
-                <p className="deck-name mt-2 text-center text-sm text-black/60">{l.name}</p>
               </li>
               );
             })}
