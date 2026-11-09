@@ -156,8 +156,8 @@ export const stack = [
 export const notes = [
   {
     date: "2026-11",
-    title: "The quiet launch",
-    number: "04",
+    title: "Expo floor lights",
+    number: "01",
     color: "#0a0a0a",
     image: "/fieldnotes/note1.jpg",
     alt: "A busy tech expo hall lit by glowing screens and displays",
@@ -165,8 +165,8 @@ export const notes = [
   },
   {
     date: "2026-10",
-    title: "Nouns, then verbs",
-    number: "03",
+    title: "Inside the warehouse",
+    number: "02",
     color: "#5c5c5c",
     image: "/fieldnotes/note2.jpg",
     alt: "A warehouse floor stacked with boxes and production equipment",
@@ -174,8 +174,8 @@ export const notes = [
   },
   {
     date: "2026-09",
-    title: "Why taste scales",
-    number: "02",
+    title: "Around the design table",
+    number: "03",
     color: "#0a0a0a",
     image: "/fieldnotes/note3.jpg",
     alt: "A design team working around a table covered in trainers and samples",
@@ -183,8 +183,8 @@ export const notes = [
   },
   {
     date: "2026-08",
-    title: "Small brands, big rooms",
-    number: "01",
+    title: "The control room",
+    number: "04",
     color: "#7a7a7a",
     image: "/fieldnotes/note4.jpg",
     alt: "Silhouetted people in front of a wall of screens in a dark control room",
