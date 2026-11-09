@@ -249,15 +249,16 @@ function Certificates() {
         ))}
       </ul>
 
-      <div data-scroll className="fx-rise wrap mt-20 sm:mt-28">
-        <p className="text-sm text-black/50">Experience with</p>
-        <ul className="mt-6 flex flex-wrap items-center gap-x-14 gap-y-8">
-          {logos.map((l) => (
-            <li key={l.name}>
-              <Image src={l.src} alt={l.name} width={140} height={40} className="mono h-10 w-auto sm:h-12" />
-            </li>
-          ))}
-        </ul>
+      {/* Company logos fly into a ring, like the development stack. */}
+      <div className="mt-10 sm:mt-16">
+        <StackShowcase
+          areas={[{ area: "Experience", tools: logos }]}
+          title={["Experience", "with"]}
+          unit="companies"
+          id="experience"
+          theme="light"
+          wide
+        />
       </div>
     </section>
   );

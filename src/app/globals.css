@@ -241,10 +241,19 @@ body {
   scale: calc(0.5 + 0.5 * var(--e));
   opacity: calc(0.2 + 0.8 * var(--e));
 }
+/* Wide tiles for wordmark logos (used by the "Experience with" ring). */
+.stack-tile-wide {
+  --size: clamp(36px, 10cqmin, 76px);
+  --radius: 35cqmin;
+  width: calc(var(--size) * 2.6);
+}
 .stack-icon {
   /* No tile behind the icons, so a faint light edge keeps dark logos (AWS, MySQL) readable on black. */
   filter: grayscale(calc(1 - var(--e))) drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 10px rgba(255, 255, 255, 0.12));
+}
+.stack-light .stack-icon {
+  filter: grayscale(calc(1 - var(--e)));
 }
 .stack-label {
   opacity: clamp(0, calc((var(--tp, 1) - 0.6) / 0.2), 1);
