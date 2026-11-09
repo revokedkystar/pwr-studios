@@ -25,13 +25,13 @@ type Props = {
   scale?: number;
   mode?: PixelMode;
   speed?: number;
-  /** Name of a window event that makes the field crumble away (once). */
+  /**
+   * Name of a window CustomEvent whose `detail` (0 → 1) sets how far the
+   * field has crumbled away: 0 is the full field, 1 is completely gone.
+   */
   dissolveOn?: string;
   className?: string;
 };
-
-/** How long the dissolve takes, in ms. */
-const DISSOLVE_MS = 900;
 
 function hash(x: number, y: number, seed: number) {
   let h = (x * 374761393 + y * 668265263 + seed * 2147483647) | 0;
@@ -118,9 +118,8 @@ export function PixelField({
     let raf = 0;
     let last = 0;
     let visible = true;
-    // Dissolve: null until triggered, then the start time; `gone` once finished.
-    let dissolveStart: number | null = null;
-    let gone = false;
+    // Dissolve amount, 0 (full field) → 1 (gone), set from outside.
+    let dissolve = 0;
 
     const checker = (a: string, b: string) => {
       const key = `${a}|${b}|${dpr}`;
@@ -143,13 +142,9 @@ export function PixelField({
     const draw = () => {
       if (!width || !height) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (gone) return;
-      // Dissolve progress, 0 → 1 (or -1 when not dissolving).
-      const dp = dissolveStart === null ? -1 : (performance.now() - dissolveStart) / DISSOLVE_MS;
-      if (dp >= 1.1) {
-        gone = true;
-        return;
-      }
+      if (dissolve >= 1) return;
+      // Stretch slightly past 1 so the last stragglers shrink before vanishing.
+      const dp = dissolve > 0 ? dissolve * 1.12 : -1;
       const steps = palette.length * 2 - 1;
       const px = cell * dpr;
       const cols = Math.ceil(width / cell);
@@ -196,22 +191,19 @@ export function PixelField({
     };
 
     const loop = (now: number) => {
-      if (gone) return;
       raf = requestAnimationFrame(loop);
-      const dissolving = dissolveStart !== null;
-      // Drift redraws ~7 times a second; a dissolve redraws every frame.
-      if (!visible || (!dissolving && now - last < 140)) return;
-      if (now - last >= 140) {
-        last = now;
-        if (animate) t += speed;
-      }
+      // Drift redraws ~7 times a second (nothing to draw once fully dissolved).
+      if (!visible || dissolve >= 1 || now - last < 140) return;
+      last = now;
+      t += speed;
       draw();
     };
 
-    const onDissolve = () => {
-      if (dissolveStart !== null) return;
-      dissolveStart = performance.now();
-      if (!animate) raf = requestAnimationFrame(loop);
+    const onDissolve = (e: Event) => {
+      const next = Math.min(1, Math.max(0, Number((e as CustomEvent<number>).detail) || 0));
+      if (next === dissolve) return;
+      dissolve = next;
+      draw();
     };
     if (dissolveOn) window.addEventListener(dissolveOn, onDissolve);
 
