@@ -178,7 +178,9 @@ const STARS = Array.from({ length: 260 }, (_, i) => {
 });
 const wrap = (n: number) => n - Math.floor(n);
 
-export function ProcessGlobe({ places }: { places: Place[] }) {
+export type GlobeLine = { text: string; from: number; to: number };
+
+export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: GlobeLine[] }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
   const discRef = useRef<HTMLDivElement>(null);
@@ -186,6 +188,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
   const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const skyRef = useRef<HTMLCanvasElement>(null);
+  const linesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -195,6 +198,10 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
     const canvas = canvasRef.current;
     const sky = skyRef.current;
     const tags = tagRefs.current;
+    // Each caption's words, so they can rise in and out one after another.
+    const lineWords = Array.from(linesRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? []).map((el) =>
+      Array.from(el.querySelectorAll<HTMLElement>("[data-word]")),
+    );
     if (!outer || !wheel || !disc || !logo || !canvas || !sky) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
@@ -361,6 +368,20 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSky(now, t, morph, spin);
 
+      // Captions: words rise in one after another, then lift away.
+      lines.forEach((line, i) => {
+        const words = lineWords[i];
+        if (!words) return;
+        words.forEach((word, j) => {
+          const enter = smootherstep(line.from + j * 0.012, line.from + j * 0.012 + 0.06, t);
+          const leave = smootherstep(line.to - 0.06 + j * 0.008, line.to + j * 0.008, t);
+          const shown = enter * (1 - leave);
+          word.style.opacity = String(shown);
+          word.style.translate = `0 ${((1 - enter) * 0.7 - leave * 0.5).toFixed(3)}em`;
+          word.style.filter = shown > 0.99 ? "none" : `blur(${((1 - shown) * 8).toFixed(1)}px)`;
+        });
+      });
+
       // Tags: from their spot on the wheel to their country on the globe.
       places.forEach((p, i) => {
         const tag = tags[i];
@@ -407,7 +428,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [places]);
+  }, [places, lines]);
 
   return (
     <div ref={outerRef} className="relative h-[300svh] motion-reduce:h-auto">
@@ -455,6 +476,32 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
             ))}
           </div>
         </div>
+        {/* Captions over the globe; screen readers get them once, as plain text. */}
+        {lines.length > 0 && (
+          <>
+            <p className="sr-only">{lines.map((l) => l.text).join(". ")}.</p>
+            <div
+              ref={linesRef}
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-[7svh] z-20 grid place-items-center px-4 text-center motion-reduce:hidden"
+            >
+              {lines.map((l) => (
+                <p
+                  key={l.text}
+                  data-line
+                  className="col-start-1 row-start-1 max-w-[16ch] font-serif text-[44px] leading-[0.95] tracking-[-0.01em] text-white italic [text-shadow:0_2px_28px_#050505,0_0_10px_#050505] sm:max-w-none sm:text-7xl"
+                >
+                  {l.text.split(" ").map((w, j, all) => (
+                    <span key={j} data-word className="inline-block opacity-0">
+                      {w}
+                      {j < all.length - 1 ? "\u00a0" : ""}
+                    </span>
+                  ))}
+                </p>
+              ))}
+            </div>
+          </>
+        )}
         <canvas
           ref={canvasRef}
           aria-hidden
