@@ -135,15 +135,21 @@ function Graphics() {
 
 function Reel() {
   return (
-    // The motion reel (public/reel/motion-reel.html), edge to edge at 16:9 so
-    // the frame is filled with no bars or gaps around it.
-    <section id="reel" aria-label="Motion reel" className="bg-black">
-      <iframe
-        src="/reel/motion-reel.html"
-        title="xanti studios motion reel"
-        loading="lazy"
-        className="block aspect-video w-full border-0"
-      />
+    // The motion reel (public/reel/motion-reel.html), locked to the screen
+    // while it scrolls past: the tall outer box keeps the sticky panel pinned
+    // for a screen and a half of scrolling before the page moves on.
+    // The reel keeps its 16:9 shape, as large as fits the screen, so nothing
+    // is cropped; any strip left over is the same pure black as the reel's
+    // own background, so it blends in rather than showing as a gap.
+    <section id="reel" aria-label="Motion reel" className="relative h-[250svh] bg-black motion-reduce:h-auto">
+      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden bg-black motion-reduce:static motion-reduce:h-auto">
+        <iframe
+          src="/reel/motion-reel.html"
+          title="xanti studios motion reel"
+          loading="lazy"
+          className="block aspect-video w-[min(100%,calc(100svh*16/9))] border-0"
+        />
+      </div>
     </section>
   );
 }
