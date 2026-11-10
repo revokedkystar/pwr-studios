@@ -1,4 +1,4 @@
-// Content for the xanti studios portfolio, by @h4tfi3ld. The writing cards are still placeholders.
+// Content for the xanti studios portfolio, by @h4tfi3ld.
 
 export const site = {
   name: "@h4tfi3ld",
@@ -9,7 +9,7 @@ export const site = {
 export const nav = [
   { label: "Work", href: "/#work" },
   { label: "Graphics", href: "/#graphics" },
-  { label: "Writing", href: "/#writing" },
+  { label: "Industry", href: "/#industry" },
   { label: "CV", href: "/cv" },
 ];
 
@@ -139,43 +139,36 @@ export const stack = [
   },
 ];
 
-// Field notes stamps, in display order. Swap the photos in public/fieldnotes/.
-export const notes = [
+// "Seen in the industry": photos from around the tech industry, in display
+// order. Swap the photos in public/fieldnotes/ and edit the words here.
+export const industry = [
   {
-    date: "2026-11",
-    title: "Expo floor lights",
-    number: "01",
-    color: "#0a0a0a",
+    title: "On the expo floor",
+    tag: "Events",
+    caption: "Product demos, interactive screens and teams showing off what they've built.",
     image: "/fieldnotes/note1.jpg",
     alt: "A busy tech expo hall lit by glowing screens and displays",
-    href: "#",
   },
   {
-    date: "2026-10",
     title: "Inside the warehouse",
-    number: "02",
-    color: "#5c5c5c",
+    tag: "Operations",
+    caption: "Rows of kit being stocked, tested and shipped, and the systems that keep it all moving.",
     image: "/fieldnotes/note2.jpg",
     alt: "A warehouse floor stacked with boxes and production equipment",
-    href: "#",
   },
   {
-    date: "2026-09",
     title: "Around the design table",
-    number: "03",
-    color: "#0a0a0a",
+    tag: "Design",
+    caption: "A product team working through samples, colours and materials before anything gets made.",
     image: "/fieldnotes/note3.jpg",
     alt: "A design team working around a table covered in trainers and samples",
-    href: "#",
   },
   {
-    date: "2026-08",
-    title: "The control room",
-    number: "04",
-    color: "#7a7a7a",
+    title: "In the control room",
+    tag: "Monitoring",
+    caption: "A wall of live dashboards, and the people watching them, keeping everything running.",
     image: "/fieldnotes/note4.jpg",
     alt: "Silhouetted people in front of a wall of screens in a dark control room",
-    href: "#",
   },
 ];
 
