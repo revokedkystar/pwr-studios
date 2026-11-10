@@ -52,7 +52,7 @@ export const caseStudies = [
     summary: "Garage and vehicle repairs in Newton Abbot: a dark, bold site that turns local searches into booked jobs.",
     client: "Leisure Vehicle Auto Repairs, Newton Abbot",
     tags: ["Web design", "Local business", "Lead generation"],
-    live: "https://lvar-ecru.vercel.app",
+    live: "https://lvar.co.uk",
     repo: "https://github.com/revokedkystar/lvar",
     image: "/websitepreview/preview3.png",
     width: 2172,

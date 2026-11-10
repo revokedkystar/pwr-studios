@@ -32,11 +32,18 @@ export type CaseStudy = {
  *   - the background colour flows between the projects' `bg` colours, and the
  *     text flips between dark and light to stay readable on it
  *
+ * After the last project the background eases back to white, so the section
+ * blends into the white section after it.
+ *
  * Each project links to its live website and its GitHub repo, and the list of
  * projects (with a progress bar each) jumps straight to one.
  */
 
 const HOLD = 0.22; // share of each step spent holding on a project
+// Extra scroll after the last project, in steps, during which the background
+// eases back to EXIT_BG so the section blends into the white section after it.
+const EXIT = 0.45;
+const EXIT_BG: [number, number, number] = [255, 255, 255];
 
 function hexToRgb(hex: string): [number, number, number] {
   const n = parseInt(hex.slice(1), 16);
@@ -76,7 +83,8 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       const travel = rect.height - window.innerHeight;
       const progress = travel > 0 ? Math.min(1, Math.max(0, -rect.top / travel)) : 0;
       // Hold on each project for a moment, then ease to the next.
-      const raw = progress * (n - 1);
+      const total = progress * (n - 1 + EXIT);
+      const raw = Math.min(n - 1, total);
       const i = Math.min(n - 1, Math.floor(raw));
       const f = Math.min(1, Math.max(0, (raw - i - HOLD / 2) / (1 - HOLD)));
       const pos = i + f * f * (3 - 2 * f);
@@ -86,7 +94,13 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       const a = colours[Math.min(n - 1, Math.floor(pos))];
       const b = colours[Math.min(n - 1, Math.floor(pos) + 1)];
       const m = pos - Math.floor(pos);
-      const rgb = a.map((v, k) => Math.round(v + (b[k] - v) * m));
+      let rgb = a.map((v, k) => Math.round(v + (b[k] - v) * m));
+      // Past the last project, fade the background back to white.
+      const out = Math.min(1, Math.max(0, (total - (n - 1)) / EXIT));
+      if (out > 0) {
+        const e = out * out * (3 - 2 * out);
+        rgb = rgb.map((v, k) => Math.round(v + (EXIT_BG[k] - v) * e));
+      }
       panel.style.backgroundColor = `rgb(${rgb.join(",")})`;
       const light = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
       const dark = light < 0.5 ? 1 : 0;
@@ -132,7 +146,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
     const section = sectionRef.current;
     if (!section) return;
     const travel = section.offsetHeight - window.innerHeight;
-    const progress = items.length > 1 ? k / (items.length - 1) : 0;
+    const progress = items.length > 1 ? k / (items.length - 1 + EXIT) : 0;
     const top = section.getBoundingClientRect().top + window.scrollY + travel * progress;
     window.scrollTo({ top, behavior: "smooth" });
   };
@@ -145,7 +159,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
       ref={sectionRef}
       aria-label="Selected work"
       className="work relative z-0 -mt-20 sm:-mt-24"
-      style={{ height: `${items.length * 110}svh` }}
+      style={{ height: `${Math.round((items.length + EXIT) * 110)}svh` }}
     >
       <div
         ref={panelRef}
