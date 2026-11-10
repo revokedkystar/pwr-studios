@@ -30,45 +30,48 @@ export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];
 export const night = "#050505";
 export const nightFade = ["#ffffff", "#8f8f8f", night];
 
+// Website projects for the pinned "Selected work" section, in display order.
+// `live` is the website, `repo` the code on GitHub, `bg` the section colour
+// while the project is showing (it flows between projects as you scroll).
 export const caseStudies = [
   {
-    title: "OJR Trades FX: a transparent forex signals site built to convert",
+    title: "OJR Trades FX",
+    summary: "A transparent forex signals site built to convert: live trade evidence, a test account and a clear path to joining.",
     client: "OJR Trades FX, scalp trading signals",
     tags: ["Web design", "Finance", "Conversion"],
-    href: "https://github.com/revokedkystar/ojrfx",
+    live: "https://ojrfx.vercel.app",
+    repo: "https://github.com/revokedkystar/ojrfx",
     image: "/websitepreview/ojrfx.webp",
     width: 1691,
     height: 973,
     alt: "OJR Trades FX homepage: 'Grow your capital alongside an active, transparent signals trader', with test account and trade evidence buttons",
-    palette: cloud,
-    seed: 11,
-    dark: false,
+    bg: "#ffffff",
   },
   {
-    title: "Artisan Catering: a website for a Devon catering company",
-    client: "Artisan Catering, Devon",
-    tags: ["Web design", "Hospitality", "Gallery"],
-    href: "https://github.com/revokedkystar/artisan-web",
-    image: "/websitepreview/preview2.png",
-    width: 1857,
-    height: 919,
-    alt: "Artisan Catering homepage with a candlelit banquet hall image slider",
-    palette: ["#ffffff", "#c9c9c9", "#6b6b6b"],
-    seed: 31,
-    dark: false,
-  },
-  {
-    title: "Leisure Vehicle Auto Repairs: garage and vehicle repairs in Newton Abbot",
+    title: "Leisure Vehicle Auto Repairs",
+    summary: "Garage and vehicle repairs in Newton Abbot: a dark, bold site that turns local searches into booked jobs.",
     client: "Leisure Vehicle Auto Repairs, Newton Abbot",
     tags: ["Web design", "Local business", "Lead generation"],
-    href: "https://github.com/revokedkystar/lvar",
+    live: "https://lvar-ecru.vercel.app",
+    repo: "https://github.com/revokedkystar/lvar",
     image: "/websitepreview/preview3.png",
     width: 2172,
     height: 1230,
     alt: "Dark garage website hero reading 'Garage and vehicle repairs in Newton Abbot'",
-    palette: ["#0a0a0a", "#1c1c1c", "#3a3a3a"],
-    seed: 23,
-    dark: true,
+    bg: "#0b0b0b",
+  },
+  {
+    title: "Artisan Catering",
+    summary: "A website for a Devon catering company, with a candlelit gallery that lets the food and venues do the talking.",
+    client: "Artisan Catering, Devon",
+    tags: ["Web design", "Hospitality", "Gallery"],
+    live: "https://artisan-web-one.vercel.app",
+    repo: "https://github.com/revokedkystar/artisan-web",
+    image: "/websitepreview/preview2.png",
+    width: 1857,
+    height: 919,
+    alt: "Artisan Catering homepage with a candlelit banquet hall image slider",
+    bg: "#f1eee8",
   },
 ];
 
