@@ -7,8 +7,10 @@
  *   CSS            → ./logo-sphere.css (colour, font and sphere-size variables)
  *   JS             → ./scene.ts (Three.js + GSAP ScrollTrigger + Lenis)
  *
- * The section starts as a headline, a counter and a row of logos. Scrolling
- * pins it and lifts the logos onto a spinning sphere; see scene.ts.
+ * The section starts as a headline, a counter and a row of logos (each with
+ * its role underneath). Scrolling pins it and lifts the logos onto a spinning
+ * sphere, then features each company in turn with a short note on what was
+ * done there; see scene.ts.
  */
 import { useEffect, useRef } from "react";
 import { createLogoSphere } from "./scene";
@@ -20,6 +22,10 @@ export type Company = {
   name: string;
   /** Logo file, ideally an SVG or PNG with a transparent background. */
   src: string;
+  /** Short label for the work done there, e.g. "Cyber security". */
+  role?: string;
+  /** One sentence on what was done there, shown while the company is featured. */
+  note?: string;
 };
 
 /*
@@ -78,9 +84,30 @@ export function LogoSphere({
               {/* A plain <img> on purpose: scene.ts reads it to place each tile's start. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img data-ls-logo className="ls__logo" src={c.src} alt={c.name} decoding="async" />
+              {c.role && (
+                <p className="ls__role">
+                  {c.role}
+                  {c.note && <span className="sr-only">: {c.note}</span>}
+                </p>
+              )}
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* The featured company's note, swapped by scene.ts as the sphere is scrolled. */}
+      <div aria-hidden className="ls__notes wrap">
+        {companies.map((c, i) =>
+          c.note ? (
+            <div key={c.name} data-ls-note={i} className="ls__note">
+              <p className="ls__note-eyebrow">
+                {String(i + 1).padStart(2, "0")} · {c.name}
+              </p>
+              {c.role && <p className="ls__note-role">{c.role}</p>}
+              <p className="ls__note-text">{c.note}</p>
+            </div>
+          ) : null,
+        )}
       </div>
     </div>
   );

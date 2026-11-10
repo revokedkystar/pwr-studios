@@ -8,8 +8,10 @@
  *   0.00 → 0.32  the five row logos lift off and fly into the middle, then
  *                spread onto a Fibonacci sphere (each repeated ~6 times)
  *   0.15 → 0.45  the sphere grows and the headline lines slide apart
- *   0.45 → 0.86  the sphere spins on its own, faster with scroll velocity,
- *                with mouse parallax and hover-to-highlight
+ *   0.40 → 0.86  the sphere spins on its own, faster with scroll velocity,
+ *                with mouse parallax; each company is featured in turn
+ *                (its tiles stay bright, the rest dim, and its note shows),
+ *                and hovering a tile features that company instead
  *   0.86 → 1.00  the sphere shrinks away; the next section blurs into view
  *
  * Libraries (npm, exact versions pinned in package.json):
@@ -20,7 +22,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import * as THREE from "three";
 
-const PIN_LENGTH = 2.6; // pinned scroll distance, in viewport heights
+const PIN_LENGTH = 4; // pinned scroll distance, in viewport heights
+// The stretch of the timeline that steps through the companies one by one.
+const FEATURE_START = 0.4;
+const FEATURE_END = 0.86;
 const TILES_DESKTOP = 30;
 const TILES_MOBILE = 15;
 
@@ -136,6 +141,7 @@ export function createLogoSphere(root: HTMLElement): () => void {
   const counter = root.querySelector<HTMLElement>("[data-ls-count]");
   const lines = Array.from(root.querySelectorAll<HTMLElement>("[data-ls-line]"));
   const logoEls = Array.from(root.querySelectorAll<HTMLImageElement>("[data-ls-logo]"));
+  const notes = Array.from(root.querySelectorAll<HTMLElement>("[data-ls-note]"));
   if (!canvas || !head || !row || !counter || !logoEls.length) return () => {};
 
   let renderer: THREE.WebGLRenderer;
@@ -177,6 +183,8 @@ export function createLogoSphere(root: HTMLElement): () => void {
   let parY = 0;
   let hovered = -1; // company index under the pointer
   let hoverAmount = 0;
+  let focus = -1; // company being featured: the hovered one, else the scroll's
+  let lastFocus = -2;
   let visible = true;
   let alive = true;
   let lastCount = "";
@@ -213,9 +221,19 @@ export function createLogoSphere(root: HTMLElement): () => void {
     spin += dt * (0.22 + THREE.MathUtils.clamp(velocity * 0.0005, -1.6, 1.6));
     parX += (mouseX - parX) * Math.min(1, dt * 4);
     parY += (mouseY - parY) * Math.min(1, dt * 4);
-    hoverAmount += ((hovered >= 0 ? 1 : 0) - hoverAmount) * Math.min(1, dt * 10);
-
     const p = progress;
+    // Scrolling through the feature stretch steps through the companies.
+    const featured =
+      p >= FEATURE_START && p < FEATURE_END
+        ? Math.min(total - 1, Math.floor(((p - FEATURE_START) / (FEATURE_END - FEATURE_START)) * total))
+        : -1;
+    focus = hovered >= 0 ? hovered : featured;
+    hoverAmount += ((focus >= 0 ? 1 : 0) - hoverAmount) * Math.min(1, dt * 6);
+    if (focus !== lastFocus) {
+      lastFocus = focus;
+      notes.forEach((n) => (n.dataset.active = String(Number(n.dataset.lsNote) === focus)));
+    }
+
     const flying = p > 0.002;
     root.dataset.lsFlying = flying ? "true" : "false";
 
@@ -228,8 +246,8 @@ export function createLogoSphere(root: HTMLElement): () => void {
     lines[0]?.style.setProperty("transform", `translate3d(${(-split * 3).toFixed(2)}vw,0,0)`);
     lines[1]?.style.setProperty("transform", `translate3d(${(split * 12).toFixed(2)}vw,0,0)`);
 
-    // Counter: the hovered company, otherwise the total.
-    const now = hovered >= 0 ? hovered + 1 : total;
+    // Counter: the featured company, otherwise the total.
+    const now = focus >= 0 ? focus + 1 : total;
     const label = String(now).padStart(2, "0");
     if (label !== lastCount) {
       counter.textContent = label;
@@ -273,7 +291,7 @@ export function createLogoSphere(root: HTMLElement): () => void {
         th = tileWidth * 0.55;
         tw = th * logo.aspect;
       }
-      const isHovered = hovered === logo.index;
+      const isHovered = focus === logo.index;
       const lift = 1 + (isHovered ? 0.15 * hoverAmount : 0);
       mesh.scale.set(lerp(r.w, tw, f) * lift, lerp(r.h, th, f) * lift, 1);
 
@@ -282,7 +300,7 @@ export function createLogoSphere(root: HTMLElement): () => void {
       const depthAlpha = 0.06 + 0.94 * Math.pow(clamp01((depth + 1) / 2), 1.6);
       let alpha = t.order < total ? 1 : clamp01(f * 1.6);
       alpha *= lerp(1, depthAlpha, f);
-      if (hovered >= 0 && !isHovered) alpha *= 1 - 0.65 * hoverAmount;
+      if (focus >= 0 && !isHovered) alpha *= 1 - 0.65 * hoverAmount;
       alpha *= 1 - out;
       mesh.material.opacity = alpha;
       mesh.visible = flying && alpha > 0.01;
@@ -442,6 +460,7 @@ export function createLogoSphere(root: HTMLElement): () => void {
     lines.forEach((l) => l.style.removeProperty("transform"));
     delete root.dataset.lsFlying;
     delete root.dataset.lsHover;
+    notes.forEach((n) => delete n.dataset.active);
     counter.textContent = String(total).padStart(2, "0");
   };
 }

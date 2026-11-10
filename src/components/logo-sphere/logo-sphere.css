@@ -48,7 +48,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding-top: 104px;
-  padding-bottom: 48px;
+  padding-bottom: 72px;
   pointer-events: none;
 }
 .ls__head,
@@ -101,9 +101,72 @@
   object-fit: contain;
 }
 
+/* Each logo's role, under it in the row. */
+.ls__role {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ls-muted);
+  transition: opacity 0.3s;
+}
+
 /* While the sphere is active the canvas draws the logos, so the row steps aside. */
-.ls[data-ls-flying="true"] .ls__logo {
+.ls[data-ls-flying="true"] .ls__logo,
+.ls[data-ls-flying="true"] .ls__role {
   opacity: 0;
+}
+
+/* The featured company's note, over the (empty) row while the sphere spins. */
+.ls__notes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 48px;
+  z-index: 2;
+  display: grid;
+  pointer-events: none;
+}
+.ls__note {
+  grid-area: 1 / 1;
+  align-self: end;
+  max-width: 440px;
+  opacity: 0;
+  translate: 0 14px;
+  filter: blur(6px);
+  transition:
+    opacity 0.45s ease,
+    translate 0.45s ease,
+    filter 0.45s ease;
+}
+.ls__note[data-active="true"] {
+  opacity: 1;
+  translate: 0 0;
+  filter: none;
+}
+.ls__note-eyebrow {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ls-muted);
+  font-variant-numeric: tabular-nums;
+}
+.ls__note-role {
+  margin: 6px 0 0;
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.ls__note-text {
+  margin: 10px 0 0;
+  max-width: 38ch;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ls-muted);
 }
 .ls__row,
 .ls__item {
@@ -121,11 +184,14 @@
   }
   .ls__inner {
     padding-top: 88px;
-    padding-bottom: 32px;
+    padding-bottom: 52px;
   }
   .ls__row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 24px;
+    gap: 44px 24px;
+  }
+  .ls__notes {
+    bottom: 32px;
   }
   /* An odd last logo spans both columns. */
   .ls__item:last-child:nth-child(odd) {
