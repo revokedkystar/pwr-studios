@@ -17,7 +17,8 @@ export type Company = {
  * and blurred and pass behind the text, cards at the front pass below it.
  * Whichever company's card is at the front is the one described in the
  * middle. Hovering a card slows the ring. With reduced motion the ring holds
- * still. Each company appears twice, on opposite sides of the ring.
+ * still. With only a few companies, each appears twice (on opposite sides)
+ * so the ring doesn't look sparse.
  */
 
 const TURN_SECONDS = 60; // one full turn
@@ -35,8 +36,9 @@ export function ExperienceRing({ companies, titleId = "experience" }: { companie
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [front, setFront] = useState(0);
 
-  // Two of each company; the second set sits half a turn round.
-  const cards = [...companies, ...companies].map((c, i) => ({
+  // A short list is shown twice, the second set half a turn round.
+  const repeat = companies.length < 8 ? 2 : 1;
+  const cards = Array.from({ length: repeat }, () => companies).flat().map((c, i) => ({
     company: c,
     index: i % companies.length,
     size: SIZES[i % SIZES.length],
