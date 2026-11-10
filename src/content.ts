@@ -100,8 +100,8 @@ export const graphics = [
   { src: "/graphics/gd9.png", alt: "'Broken Planet' streetwear drop poster", w: 128, h: 228, x: "87%", y: "62%", r: -3 },
 ];
 
-// Companies on the "Experience with" sphere. `role` and `note` are the short
-// line shown for each company as the sphere is scrolled through.
+// Companies on the "Experience with" ring. `role` and `note` are shown in the
+// middle while that company's card is at the front of the ring.
 export const logos = [
   {
     name: "Barclays",

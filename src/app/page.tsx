@@ -7,8 +7,9 @@ import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
 import { IndustryGallery } from "@/components/industry-gallery";
-import { LogoSphere } from "@/components/logo-sphere/logo-sphere";
+import { ExperienceRing } from "@/components/experience-ring";
 import { ScrollFx } from "@/components/scroll-fx";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { StackShowcase } from "@/components/stack-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -158,9 +159,9 @@ function Reel() {
 
 function Experience() {
   return (
-    // "Experience with": company logos lift onto a scroll-driven 3D sphere.
-    <section id="experience" className="bg-white pt-24 pb-10 sm:pt-28">
-      <LogoSphere companies={logos} />
+    // "Experience with": company cards on a 3D ring that spins on its own.
+    <section id="experience" aria-labelledby="experience-title" className="bg-white">
+      <ExperienceRing companies={logos} titleId="experience-title" />
     </section>
   );
 }
@@ -200,6 +201,7 @@ export default function Home() {
       <SiteFooter />
       <HashScroll />
       <ScrollFx />
+      <SmoothScroll />
     </>
   );
 }

@@ -258,3 +258,25 @@ body {
   background: repeating-linear-gradient(45deg, #0a0a0a 0 6px, #0000 6px 15px);
   mask: url("/websiteicon.png") center / contain no-repeat;
 }
+
+/* The featured company's note in the middle of the experience ring. */
+.ring-note {
+  animation: ring-note-in 0.6s ease both;
+}
+@keyframes ring-note-in {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+    filter: blur(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring-note {
+    animation: none;
+  }
+}
+
+/* Lenis drives smooth scrolling; native smooth scrolling would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}
