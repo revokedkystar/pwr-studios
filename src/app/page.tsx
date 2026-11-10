@@ -67,6 +67,10 @@ function Momentum() {
         </div>
 
         <div className="mt-16 sm:mt-24">
+          <Reel />
+        </div>
+
+        <div className="mt-16 sm:mt-24">
           <StackShowcase areas={stack} />
         </div>
       </div>
@@ -213,7 +217,6 @@ export default function Home() {
         <PinnedWork items={caseStudies} />
         <Momentum />
         <Graphics />
-        <Reel />
         <Experience />
         <Writing />
       </main>
