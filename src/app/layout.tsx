@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { Loader } from "@/components/loader/loader";
 import { InlineScript } from "@/components/inline-script";
 import "./globals.css";
+import { siteUrl } from "@/content";
 
 /*
  * On a refresh, always start at the very top of the page: stop the browser
@@ -62,7 +63,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pwr-studios.vercel.app"),
+  metadataBase: new URL(siteUrl),
   title: TITLE,
   description: DESCRIPTION,
   // Link previews (Discord, iMessage, WhatsApp, Slack, X…) read these.
