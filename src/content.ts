@@ -1,5 +1,8 @@
 // Content for the xanti studios portfolio, by @h4tfi3ld.
 
+// The live web address, used for the sitemap, robots.txt and link previews.
+export const siteUrl = "https://xanti.dev";
+
 export const site = {
   name: "@h4tfi3ld",
   intro:
