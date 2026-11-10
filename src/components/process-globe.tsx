@@ -156,6 +156,28 @@ function project(lat: number, lon: number, spin: number) {
   };
 }
 
+/*
+ * Background: a pixel starfield behind the wheel and globe. Stars are square
+ * pixels in the site's greys on three depth layers. They twinkle, drift, slide
+ * with the scroll and sweep sideways as the globe turns (nearer layers move
+ * more), and brighten and push outwards while the globe is open. Now and then
+ * a pixel shooting star streaks across.
+ */
+const STAR_GREYS = ["#4a4a4a", "#8f8f8f", "#d4d4d4"];
+const STARS = Array.from({ length: 260 }, (_, i) => {
+  const layer = i % 3; // 0 far, 1 middle, 2 near
+  return {
+    x: hash(i, 11),
+    y: hash(i, 29),
+    layer,
+    depth: [0.35, 0.65, 1][layer],
+    size: [2, 3, 4][layer],
+    rate: 0.6 + hash(i, 47) * 1.8,
+    phase: hash(i, 53) * Math.PI * 2,
+  };
+});
+const wrap = (n: number) => n - Math.floor(n);
+
 export function ProcessGlobe({ places }: { places: Place[] }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -163,6 +185,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
   const logoRef = useRef<HTMLDivElement>(null);
   const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const skyRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -170,11 +193,13 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
     const disc = discRef.current;
     const logo = logoRef.current;
     const canvas = canvasRef.current;
+    const sky = skyRef.current;
     const tags = tagRefs.current;
-    if (!outer || !wheel || !disc || !logo || !canvas) return;
+    if (!outer || !wheel || !disc || !logo || !canvas || !sky) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const skyCtx = sky.getContext("2d");
+    if (!ctx || !skyCtx) return;
 
     let dpr = 1;
     let raf = 0;
@@ -208,6 +233,8 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
+      sky.width = Math.round(sky.clientWidth * dpr);
+      sky.height = Math.round(sky.clientHeight * dpr);
       patterns.clear();
     };
 
@@ -248,6 +275,55 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       }
     };
 
+    const drawSky = (now: number, t: number, morph: number, spin: number) => {
+      const w = sky.width;
+      const h = sky.height;
+      skyCtx.clearRect(0, 0, w, h);
+      const cx = w / 2;
+      const cy = h / 2;
+      const unit = Math.max(w, h);
+      // Brighter and pushed outwards while the globe is open.
+      const glow = 0.45 + 0.55 * morph;
+      const push = 1 + 0.18 * morph;
+      for (const st of STARS) {
+        // Drift, scroll and globe turn, scaled by depth (nearer moves more).
+        const sx = wrap(st.x + now * 0.000004 * st.depth - spin * 0.06 * st.depth);
+        const sy = wrap(st.y - t * 0.45 * st.depth);
+        let x = sx * w;
+        let y = sy * h;
+        x = cx + (x - cx) * push;
+        y = cy + (y - cy) * push;
+        const twinkle = 0.5 + 0.5 * Math.sin(now * 0.0015 * st.rate + st.phase);
+        // Stepped brightness, so stars flicker between greys like pixels do.
+        const level = Math.min(2, Math.floor(twinkle * (st.layer + 1.4)));
+        if (level < 0) continue;
+        skyCtx.globalAlpha = glow * (0.35 + 0.65 * twinkle);
+        skyCtx.fillStyle = STAR_GREYS[level];
+        const size = Math.round(st.size * dpr);
+        // Snap to whole pixels so stars stay crisp squares.
+        skyCtx.fillRect(Math.round(x), Math.round(y), size, size);
+      }
+      // A shooting star every few seconds, at a seeded spot and angle.
+      const period = 4200;
+      const n = Math.floor(now / period);
+      const life = (now % period) / 900;
+      if (life < 1 && hash(n, 71) > 0.35) {
+        const x0 = (0.15 + hash(n, 73) * 0.7) * w;
+        const y0 = (0.05 + hash(n, 79) * 0.4) * h;
+        const ang = 0.35 + hash(n, 83) * 0.5;
+        const travel = unit * 0.35 * life;
+        const cell = Math.round(3 * dpr);
+        for (let k = 0; k < 10; k++) {
+          const d = travel - k * cell * 2.2;
+          if (d < 0) break;
+          skyCtx.globalAlpha = (1 - life) * (1 - k / 10) * glow;
+          skyCtx.fillStyle = STAR_GREYS[k < 2 ? 2 : k < 5 ? 1 : 0];
+          skyCtx.fillRect(Math.round(x0 + Math.cos(ang) * d), Math.round(y0 + Math.sin(ang) * d), cell, cell);
+        }
+      }
+      skyCtx.globalAlpha = 1;
+    };
+
     const frame = (now: number) => {
       raf = visible ? requestAnimationFrame(frame) : 0;
       const vh = window.innerHeight;
@@ -283,6 +359,7 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
       logo.style.rotate = `${-t * 360}deg`;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawSky(now, t, morph, spin);
 
       // Tags: from their spot on the wheel to their country on the globe.
       places.forEach((p, i) => {
@@ -335,6 +412,13 @@ export function ProcessGlobe({ places }: { places: Place[] }) {
   return (
     <div ref={outerRef} className="relative h-[300svh] motion-reduce:h-auto">
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden motion-reduce:static motion-reduce:h-auto">
+        {/* Starfield, behind the wheel and globe. */}
+        <canvas
+          ref={skyRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 size-full"
+          style={{ imageRendering: "pixelated" }}
+        />
         <div ref={wheelRef} className="relative aspect-square w-[min(520px,82vw,72svh)]">
           <div ref={discRef} className="absolute inset-0 overflow-hidden rounded-full">
             <PixelField palette={PALETTE} cell={CELL} scale={0.13} seed={5} speed={0.01} className="size-full" />
