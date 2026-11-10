@@ -100,12 +100,39 @@ export const graphics = [
   { src: "/graphics/gd9.png", alt: "'Broken Planet' streetwear drop poster", w: 128, h: 228, x: "87%", y: "62%", r: -3 },
 ];
 
+// Companies on the "Experience with" sphere. `role` and `note` are the short
+// line shown for each company as the sphere is scrolled through.
 export const logos = [
-  { name: "Barclays", src: "/svg/barclays.svg" },
-  { name: "Amazon Web Services", src: "/svg/aws.svg" },
-  { name: "Drax", src: "/svg/drax.svg" },
-  { name: "Google", src: "/svg/google.svg" },
-  { name: "NHS", src: "/svg/nhs.svg" },
+  {
+    name: "Barclays",
+    src: "/svg/barclays.svg",
+    role: "Software development",
+    note: "Worked through real developer briefs, building and testing code with Barclays.",
+  },
+  {
+    name: "Amazon Web Services",
+    src: "/svg/aws.svg",
+    role: "Cloud services",
+    note: "Learned how the cloud runs modern apps on the AWS Career Tour: Cloud Computing.",
+  },
+  {
+    name: "Drax",
+    src: "/svg/drax.svg",
+    role: "Cyber security",
+    note: "Helped prevent a data breach in a cyber security sprint set by Drax.",
+  },
+  {
+    name: "Google",
+    src: "/svg/google.svg",
+    role: "Data analytics",
+    note: "Dug into data and turned it into clear insights with Google.",
+  },
+  {
+    name: "NHS",
+    src: "/svg/nhs.svg",
+    role: "Graphic design",
+    note: "Designed posters and social content as an NHS content creator.",
+  },
 ];
 
 // Development stack, grouped for the sticky "Development stack" section.
