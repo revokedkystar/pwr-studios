@@ -18,6 +18,7 @@ import {
   logos,
   notes,
   places,
+  globeLines,
   site,
   cloud,
   nightFade,
@@ -47,7 +48,7 @@ function Momentum() {
     <section aria-labelledby="momentum" className="relative overflow-x-clip">
       <PixelField palette={nightFade} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
       <div className="bg-[#050505] pb-16 text-white sm:pb-20">
-        <ProcessGlobe places={places} />
+        <ProcessGlobe places={places} lines={globeLines} />
 
         <div className="wrap mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-4">
           <h2 id="momentum" data-scroll className="fx-slide text-[44px] leading-none font-medium tracking-[-0.01em] sm:text-6xl">

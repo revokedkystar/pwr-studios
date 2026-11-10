@@ -76,6 +76,15 @@ export const places = [
   { label: "Germany", color: "#d0d0d0", x: "62%", y: "68%", lat: 51, lon: 10 },
 ];
 
+// Lines that animate in and out while the globe is pinned. `from` and `to`
+// are the share of the pinned scroll each line is on screen for (0 to 1).
+export const globeLines = [
+  { text: "International clients", from: 0.06, to: 0.29 },
+  { text: "Things are getting bigger", from: 0.29, to: 0.52 },
+  { text: "But we're still growing", from: 0.52, to: 0.75 },
+  { text: "Let's build what's next", from: 0.75, to: 0.97 },
+];
+
 // Poster and social graphics, scattered around the "Graphic design" heading.
 // w/h are the card size on wide screens; x/y place it inside the section.
 export const graphics = [
