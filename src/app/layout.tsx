@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { Loader } from "@/components/loader/loader";
 import { InlineScript } from "@/components/inline-script";
@@ -52,6 +52,14 @@ const newsreader = Newsreader({
 const TITLE = "xanti studios by @h4tfi3ld";
 const DESCRIPTION =
   "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and more.";
+
+// The site is designed light-only. "only light" stops browsers' forced dark
+// modes (Brave's Night mode, Chrome's auto dark theme) from recolouring the
+// text: they can't recolour the pixel art drawn on canvases, so the dark
+// headline turned white on the white pixel sky.
+export const viewport: Viewport = {
+  colorScheme: "only light",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pwr-studios.vercel.app"),
