@@ -139,10 +139,10 @@ function Reel() {
     // while it scrolls past: the tall outer box keeps the sticky panel pinned
     // for a screen and a half of scrolling before the page moves on.
     // The reel keeps its 16:9 shape, as large as fits the screen, so nothing
-    // is cropped; any strip left over is the same pure black as the reel's
-    // own background, so it blends in rather than showing as a gap.
-    <section id="reel" aria-label="Motion reel" className="relative h-[250svh] bg-black motion-reduce:h-auto">
-      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden bg-black motion-reduce:static motion-reduce:h-auto">
+    // is cropped; any strip left over is the same #050505 as the reel's own
+    // background, so it blends in rather than showing as a gap.
+    <section id="reel" aria-label="Motion reel" className="relative h-[250svh] bg-[#050505] motion-reduce:h-auto">
+      <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden bg-[#050505] motion-reduce:static motion-reduce:h-auto">
         <iframe
           src="/reel/motion-reel.html"
           title="xanti studios motion reel"
