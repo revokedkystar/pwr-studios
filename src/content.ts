@@ -23,6 +23,9 @@ export const socials = [
 // Monochrome pixel palettes, from "empty" to "full".
 export const cloud = ["#ffffff", "#dcdcdc", "#a3a3a3"];
 export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];
+// The "How I work" section and the motion reel share this darker black.
+export const night = "#050505";
+export const nightFade = ["#ffffff", "#8f8f8f", night];
 
 export const caseStudies = [
   {
