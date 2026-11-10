@@ -104,6 +104,12 @@ export const graphics = [
 // middle while that company's card is at the front of the ring.
 export const logos = [
   {
+    name: "Keysight Technologies",
+    src: "/svg/keysight.svg",
+    role: "Test engineering",
+    note: "Test Technician Apprentice: assembling, testing and repairing equipment to each customer's requirements.",
+  },
+  {
     name: "Barclays",
     src: "/svg/barclays.svg",
     role: "Software development",
@@ -116,6 +122,12 @@ export const logos = [
     note: "Learned how the cloud runs modern apps on the AWS Career Tour: Cloud Computing.",
   },
   {
+    name: "Microsoft",
+    src: "/svg/microsoft.svg",
+    role: "Cloud with Azure",
+    note: "Working with Microsoft Azure to host and run cloud services.",
+  },
+  {
     name: "Drax",
     src: "/svg/drax.svg",
     role: "Cyber security",
@@ -126,6 +138,13 @@ export const logos = [
     src: "/svg/google.svg",
     role: "Data analytics",
     note: "Dug into data and turned it into clear insights with Google.",
+  },
+  { name: ".NET", src: "/svg/dotnet.svg" },
+  {
+    name: "LinkedIn",
+    src: "/svg/linkedin.svg",
+    role: "LinkedIn Learning",
+    note: "Completed courses on LinkedIn Learning to keep levelling up my skills.",
   },
   {
     name: "NHS",
