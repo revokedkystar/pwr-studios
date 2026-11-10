@@ -18,21 +18,23 @@ export type Place = {
 };
 
 /*
- * The pixel wheel, pinned while it scrolls past.
+ * The pixel globe, pinned while it scrolls past.
  *
- * Scrolling through the tall outer box keeps the wheel locked in the middle
- * of the screen and plays this through:
+ * Scrolling through the tall outer box keeps the globe locked in the middle
+ * of the screen, spinning with the scroll, and plays this through:
  *
- *   0.00 – 0.04  the wheel, as before
- *   0.04 – 0.44  the wheel turns into a 3D pixel globe that grows outwards,
- *                and each tag slides onto its country
+ *   0.00 – 0.04  a smaller globe, the size of the old wheel
+ *   0.04 – 0.44  it grows to fill most of the screen
  *   0.44 – 0.56  the full-size globe turns with the scroll
- *   0.56 – 0.96  it shrinks back down into the wheel, tags back in place
+ *   0.56 – 0.96  it shrinks back down to the smaller globe
+ *
+ * The tags stay on their countries throughout, turning with the globe.
  *
  * The globe is drawn with the wheel's own pixel style: the same three greys,
  * 14px cells and 2px checkerboard dithering between neighbouring greys. Land
  * comes from rough continent outlines, so the tags sit on the right countries.
- * With reduced motion on, nothing is pinned and the plain wheel is shown.
+ * With reduced motion on, nothing is pinned and the plain pixel wheel (with
+ * the tags in their wheel positions) is shown instead.
  */
 
 // Darkest grey matches the section background (#050505).
@@ -183,8 +185,6 @@ export type GlobeLine = { text: string; from: number; to: number };
 export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: GlobeLine[] }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
-  const discRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLDivElement>(null);
   const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const skyRef = useRef<HTMLCanvasElement>(null);
@@ -193,8 +193,6 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
   useEffect(() => {
     const outer = outerRef.current;
     const wheel = wheelRef.current;
-    const disc = discRef.current;
-    const logo = logoRef.current;
     const canvas = canvasRef.current;
     const sky = skyRef.current;
     const tags = tagRefs.current;
@@ -248,7 +246,7 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
         }
       });
     };
-    if (!outer || !wheel || !disc || !logo || !canvas || !sky) return;
+    if (!outer || !wheel || !canvas || !sky) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
     const skyCtx = sky.getContext("2d");
@@ -402,15 +400,6 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
       const rMax = Math.max(Math.min(w, h) * 0.44, Math.min(r0 * 1.55, h * 0.44));
       const radius = r0 + (rMax - r0) * morph;
 
-      // The wheel grows with the globe as it fades, so the two blend
-      // into each other rather than showing two edges.
-      disc.style.opacity = String(1 - smootherstep(0.05, 0.45, morph));
-      disc.style.scale = String(radius / r0);
-      disc.style.rotate = `${t * 140}deg`;
-      logo.style.opacity = String(1 - smootherstep(0, 0.35, morph));
-      logo.style.scale = String(1 - 0.35 * morph);
-      logo.style.rotate = `${-t * 360}deg`;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSky(now, t, morph, spin);
 
@@ -430,32 +419,21 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
         });
       });
 
-      // Tags: from their spot on the wheel to their country on the globe.
+      // Tags sit on their countries and turn with the globe.
       places.forEach((p, i) => {
         const tag = tags[i];
         if (!tag) return;
         const at = project(p.lat * DEG, p.lon * DEG, spin);
-        const fromX = (parseFloat(p.x) / 100) * r.width;
-        const fromY = (parseFloat(p.y) / 100) * r.height;
-        const toX = r0 + at.x * radius;
-        const toY = r.height / 2 + at.y * radius;
-        tag.style.left = `${fromX + (toX - fromX) * morph}px`;
-        tag.style.top = `${fromY + (toY - fromY) * morph}px`;
-        // On the globe, the tag's coloured square marks the spot, with the
-        // label running off to one side so neighbouring tags don't collide.
-        const shift = p.side === "left" ? `calc(${-100 * morph}% + ${14 * morph}px)` : `${-14 * morph}px`;
-        tag.style.translate = `${shift} ${-50 * morph}%`;
+        tag.style.left = `${r0 + at.x * radius}px`;
+        tag.style.top = `${r.height / 2 + at.y * radius}px`;
+        // The tag's coloured square marks the spot, with the label running
+        // off to one side so neighbouring tags don't collide.
+        tag.style.translate = p.side === "left" ? "calc(-100% + 14px) -50%" : "-14px -50%";
         // Fade out round the back of the globe.
-        const facing = smoothstep(-0.05, 0.2, at.z);
-        tag.style.setProperty("--face", String(1 - morph + morph * facing));
+        tag.style.setProperty("--face", String(smoothstep(-0.05, 0.2, at.z)));
       });
 
-      const alpha = smootherstep(0, 0.35, morph);
-      if (alpha <= 0) return;
-      ctx.save();
-      ctx.globalAlpha = alpha;
       drawGlobe(r.left + r0 - c.left, r.top + r.height / 2 - c.top, radius, spin);
-      ctx.restore();
     };
 
     const io = new IntersectionObserver(([entry]) => {
@@ -489,10 +467,11 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
           style={{ imageRendering: "pixelated" }}
         />
         <div ref={wheelRef} className="relative aspect-square w-[min(520px,82vw,72svh)]">
-          <div ref={discRef} className="absolute inset-0 overflow-hidden rounded-full">
+          {/* The flat pixel wheel and logo: only shown with reduced motion. */}
+          <div className="absolute inset-0 overflow-hidden rounded-full motion-safe:hidden">
             <PixelField palette={PALETTE} cell={CELL} scale={0.13} seed={5} speed={0.01} className="size-full" />
           </div>
-          <div ref={logoRef} className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute top-1/2 left-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 motion-safe:hidden">
             <Image
               src="/websiteicon.png"
               alt=""
