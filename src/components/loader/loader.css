@@ -1,18 +1,19 @@
 /*
- * Loading screen: the motion reel. States (set on .ldr by loader.tsx):
- *   "loading"  → the reel plays (data-playing once it has started)
- *   "out"      → the reel fades and the black panel sweeps up
- *   "gone"     → removed from view
+ * Typographic loading screen. States (set on .ldr by loader.tsx):
+ *   (none)  → letters rise in, words cycle, counter climbs
+ *   "out"   → everything lifts away and the panel sweeps up
+ *   "gone"  → removed from view
  * The page underneath rises into place during "out" (html[data-ldr="out"]).
  */
 .ldr {
-  --ldr-bg: #000000;
+  --ldr-bg: #0a0a0a;
+  --ldr-ink: #ffffff;
   --ldr-ease: cubic-bezier(0.76, 0, 0.24, 1);
 
   position: fixed;
   inset: 0;
   z-index: 100;
-  color: #ffffff;
+  color: var(--ldr-ink);
   pointer-events: auto;
   /* Failsafe: if JavaScript never runs, get out of the way after a few seconds. */
   animation: ldr-failsafe 0.6s ease 6s forwards;
@@ -22,9 +23,6 @@
 }
 .ldr[data-state="gone"] {
   display: none;
-}
-.ldr[data-state="out"] {
-  pointer-events: none;
 }
 
 /* The black panel. Its curved bottom edge shows as it sweeps up. */
@@ -39,80 +37,143 @@
   translate: 0 calc(-100% - 2vh);
 }
 
-/* The 1920×1080 reel, scaled to fit the screen by loader.tsx. */
-.ldr__vp {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  transition:
-    opacity 0.4s ease,
-    translate 1s var(--ldr-ease) 0.35s;
+.ldr__inner {
+  position: relative;
+  display: grid;
+  height: 100svh;
+  grid-template-rows: auto 1fr auto;
+  padding: 28px clamp(16px, 4vw, 56px);
+  transition: opacity 0.3s ease;
 }
-.ldr[data-state="out"] .ldr__vp {
+.ldr[data-state="out"] .ldr__inner > :not(.ldr__mark) {
   opacity: 0;
-  translate: 0 -8vh;
-}
-.ldr__stage {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1920px;
-  height: 1080px;
-  transform-origin: 0 0;
-  background: #000;
-}
-.ldr__canvas,
-.ldr__logo {
-  position: absolute;
-  inset: 0;
-  width: 1920px;
-  height: 1080px;
-  display: block;
-}
-.ldr__logo {
-  pointer-events: none;
-  overflow: visible;
+  transition: opacity 0.25s ease;
 }
 
-/* Skip button, top centre (the reel keeps that spot clear). Only shown
-   while the reel plays. */
-.ldr__skip {
-  position: absolute;
-  left: 50%;
-  top: calc(clamp(12px, 2.2vw, 28px) + env(safe-area-inset-top, 0px));
-  translate: -50% 0;
-  padding: 10px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  color: #ffffff;
+/* Corner labels */
+.ldr__top,
+.ldr__bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.3s ease,
-    background-color 0.2s ease;
+  color: rgba(255, 255, 255, 0.55);
 }
-.ldr[data-playing] .ldr__skip {
-  opacity: 1;
-  pointer-events: auto;
+.ldr__top {
+  align-items: flex-start;
 }
-.ldr[data-state="out"] .ldr__skip,
-.ldr[data-skipped] .ldr__skip {
-  opacity: 0;
-  pointer-events: none;
+
+/* Wordmark: each letter rises out of a mask. */
+.ldr__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.06em;
+  font-size: clamp(88px, 24vw, 360px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
 }
-.ldr__skip:hover {
-  background: #ffffff;
-  color: #000000;
+.ldr__mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
-.ldr__skip:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 3px;
+.ldr__char {
+  display: inline-block;
+  translate: 0 105%;
+  animation: ldr-rise 0.9s var(--ldr-ease) forwards;
+  animation-delay: calc(0.08s * var(--i) + 0.1s);
+}
+.ldr[data-state="out"] .ldr__char {
+  animation: none;
+  translate: 0 -110%;
+  transition: translate 0.7s var(--ldr-ease);
+  transition-delay: calc(0.04s * var(--i));
+}
+.ldr__tile {
+  position: relative;
+  display: inline-block;
+  width: 0.34em;
+  height: 0.34em;
+  margin-left: 0.08em;
+  /* Centred on the word, then lifted to sit level with the tops of the letters. */
+  align-self: center;
+  translate: 0 -0.26em;
+  overflow: hidden;
+  scale: 0;
+  animation: ldr-pop 0.6s var(--ldr-ease) 0.6s forwards;
+}
+.ldr[data-state="out"] .ldr__tile {
+  animation: none;
+  scale: 0;
+  transition: scale 0.4s var(--ldr-ease);
+}
+
+/* Cycling serif word, bottom left */
+.ldr__words {
+  position: relative;
+  display: block;
+  width: 7.5em; /* the words are stacked absolutely, so the box needs a width */
+  height: 1.2em;
+  overflow: hidden;
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-style: italic;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ldr-ink);
+}
+.ldr__word {
+  position: absolute;
+  inset: 0 auto auto 0;
+  white-space: nowrap;
+  translate: 0 110%;
+  transition: translate 0.55s var(--ldr-ease);
+}
+.ldr__word[data-on="true"] {
+  translate: 0 0;
+}
+.ldr__word[data-on="past"] {
+  translate: 0 -110%;
+}
+
+/* Counter, bottom right */
+.ldr__count {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: clamp(48px, 7vw, 104px);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--ldr-ink);
+  font-variant-numeric: tabular-nums;
+}
+.ldr__count sup {
+  font-size: 0.3em;
+  vertical-align: top;
+  margin-left: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Progress line along the bottom edge */
+.ldr__line {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.ldr__line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ldr-ink);
+  transform-origin: 0 50%;
+  scale: var(--p, 0) 1;
 }
 
 /* The page rises into place as the panel sweeps away. */
@@ -135,6 +196,16 @@ html[data-ldr="loading"] body {
   overflow: hidden;
 }
 
+@keyframes ldr-rise {
+  to {
+    translate: 0 0;
+  }
+}
+@keyframes ldr-pop {
+  to {
+    scale: 1;
+  }
+}
 @keyframes ldr-failsafe {
   to {
     opacity: 0;

@@ -1,26 +1,99 @@
-/*
- * xanti studios motion reel: a 15-second, 1920×1080 animation drawn on a
- * canvas plus an SVG overlay for the final logo lockup. Used as the site's
- * loading screen (see loader.tsx), which owns playback.
- *
- * createReel(canvas, svg, fonts) returns:
- *   prepare()  measure text and lay out the logo; call once fonts are ready
- *   render(t)  draw the frame at t seconds (0 – DURATION)
- *
- * The drawing code is the reel as designed; only the font names (which come
- * from next/font), the element lookups and the top-left label were changed.
- */
-/* eslint-disable */
-export const DURATION = 15;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>xanti studios — motion reel</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#dcdcdc; --ink:#000000; --muted:#4a4a4a; --line:#b4b4b4; --btn:#ffffff; --btn-ink:#000000;
+  color-scheme:light;
+  box-sizing:border-box;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#000000; --ink:#ffffff; --muted:#888888; --line:#2a2a2a; --btn:#111111; --btn-ink:#ffffff;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#000000; --ink:#ffffff; --muted:#888888; --line:#2a2a2a; --btn:#111111; --btn-ink:#ffffff;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  height:100%;margin:0;background:var(--page);color:var(--ink);
+  font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#vp{position:relative;flex:1;min-height:0;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:#000;
+  box-shadow:0 0 0 1px var(--line)}
+#cv{position:absolute;inset:0;width:1920px;height:1080px;display:block}
+#logo{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+/* Embedded in the website: the controls are hidden so the reel fills the frame. */
+.bar{display:none!important}
+html,body{background:#000!important}
+.bar{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;
+  border-top:1px solid var(--line);font-size:13px;color:var(--muted);
+}
+.bar button{
+  font:inherit;color:var(--btn-ink);background:var(--btn);border:1px solid var(--line);
+  height:34px;min-width:34px;padding:0 12px;border-radius:2px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+}
+.bar button[aria-pressed="true"]{background:var(--ink);color:var(--page);border-color:var(--ink)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.bar svg{width:14px;height:14px;fill:currentColor}
+#scrub{flex:1;min-width:60px;accent-color:var(--ink);height:34px}
+#time{font-variant-numeric:tabular-nums;color:var(--ink);min-width:118px;text-align:right}
+@media (max-width:560px){ #time{min-width:0} .hide-sm{display:none} }
+</style>
+</head>
+<body>
+<div id="vp">
+  <div id="stage">
+    <canvas id="cv" width="1920" height="1080" aria-label="xanti studios motion reel"></canvas>
+    <svg id="logo" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="xanti logo">
+      <defs>
+        <clipPath id="gclipA"><rect x="0" y="0" width="1920" height="0"/><rect x="0" y="0" width="1920" height="0"/><rect x="0" y="0" width="1920" height="0"/></clipPath>
+        <clipPath id="gclipB"><rect x="0" y="0" width="1920" height="0"/><rect x="0" y="0" width="1920" height="0"/><rect x="0" y="0" width="1920" height="0"/></clipPath>
+      </defs>
+      <g id="logoRoot" style="display:none">
+        <g id="ghostA" clip-path="url(#gclipA)"></g>
+        <g id="ghostB" clip-path="url(#gclipB)"></g>
+        <g id="mainLockup"></g>
+        <text id="subLeft" x="0" y="0" fill="#888888" font-family="JetBrains Mono, ui-monospace, Menlo, monospace" font-size="24" letter-spacing="3"></text>
+        <text id="subRight" x="0" y="0" fill="#ffffff" font-family="JetBrains Mono, ui-monospace, Menlo, monospace" font-size="24" letter-spacing="3" text-anchor="end"></text>
+      </g>
+    </svg>
+  </div>
+</div>
+<div class="bar">
+  <button id="play" aria-label="Pause"><svg viewBox="0 0 14 14" id="playIcon"><rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/></svg></button>
+  <button id="restart" aria-label="Restart"><svg viewBox="0 0 14 14"><path d="M7 1.5a5.5 5.5 0 1 1-5.2 3.7l1.6.5A3.8 3.8 0 1 0 7 3.2V5L3.8 2.4 7 0z"/></svg></button>
+  <input id="scrub" type="range" min="0" max="15" step="0.0166667" value="0" aria-label="Timeline">
+  <span id="time">00:00:00:00</span>
+  <button id="loop" aria-pressed="false" class="hide-sm">Loop</button>
+  <button id="fs" aria-label="Fullscreen" class="hide-sm"><svg viewBox="0 0 14 14"><path d="M1 1h4v1.6H2.6V5H1zm8 0h4v4h-1.6V2.6H9zM1 9h1.6v2.4H5V13H1zm10.4 0H13v4H9v-1.6h2.4z"/></svg></button>
+</div>
 
-export function createReel(cv, svg, fonts) {
+<script>
+(() => {
 "use strict";
 /* ------------------------------------------------------------------ setup */
 const W = 1920, H = 1080, FPS = 60, DUR = 15, BEAT = 0.5;
+const cv = document.getElementById("cv");
 const ctx = cv.getContext("2d");
-const FD = `${fonts.display}, "Helvetica Neue", Arial, sans-serif`;
-const FS = `${fonts.serif}, Georgia, "Times New Roman", serif`;
-const FM = `${fonts.mono}, ui-monospace, Menlo, Consolas, monospace`;
+const FD = 'Archivo, "Helvetica Neue", Arial, sans-serif';
+const FS = '"Instrument Serif", Georgia, "Times New Roman", serif';
+const FM = '"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace';
 const HAS_LS = "letterSpacing" in ctx;
 const HAS_FST = "fontStretch" in ctx;
 const HAS_FILTER = "filter" in ctx;
@@ -653,7 +726,7 @@ function drawHUD(t) {
   c.textBaseline = "alphabetic";
   // top-left
   let [x, y] = P(72, 74);
-  c.font = `600 18px ${FM}`; ls(c, 3); c.fillStyle = "#fff"; c.textAlign = "left"; c.fillText("XANTI — MOTION REEL", x, y);
+  c.font = `600 18px ${FM}`; ls(c, 3); c.fillStyle = "#fff"; c.textAlign = "left"; c.fillText("CLAUDE — MOTION REEL", x, y);
   [x, y] = P(72, 98); c.font = `400 13px ${FM}`; ls(c, 2); c.fillStyle = "#888"; c.fillText("XANTI STUDIOS / XANTI.DEV", x, y);
   // top-right
   [x, y] = P(W - 72, 74); c.font = `600 18px ${FM}`; ls(c, 3); c.fillStyle = "#fff"; c.textAlign = "right"; c.fillText("120 BPM | 60 FPS | 1920x1080", x, y);
@@ -699,11 +772,10 @@ function drawGrain(t) {
 
 /* ------------------------------------------------------------- SVG logo */
 const SVGNS = "http://www.w3.org/2000/svg";
-const svgRoot = svg.querySelector("#logoRoot");
-const mainG = svg.querySelector("#mainLockup"), ghostA = svg.querySelector("#ghostA"), ghostB = svg.querySelector("#ghostB");
-const subL = svg.querySelector("#subLeft"), subR = svg.querySelector("#subRight");
-[subL, subR].forEach(el => el.setAttribute("font-family", FM));
-const clipRects = [...svg.querySelectorAll("#gclipA rect, #gclipB rect")];
+const svgRoot = document.getElementById("logoRoot");
+const mainG = document.getElementById("mainLockup"), ghostA = document.getElementById("ghostA"), ghostB = document.getElementById("ghostB");
+const subL = document.getElementById("subLeft"), subR = document.getElementById("subRight");
+const clipRects = [...document.querySelectorAll("#gclipA rect, #gclipB rect")];
 function makeLockup(parent, fill, strokeCol) {
   const g = document.createElementNS(SVGNS, "g");
   const p = document.createElementNS(SVGNS, "path");
@@ -712,7 +784,7 @@ function makeLockup(parent, fill, strokeCol) {
   const tx = document.createElementNS(SVGNS, "text");
   tx.textContent = "xanti";
   tx.setAttribute("fill", fill); tx.setAttribute("stroke", strokeCol); tx.setAttribute("stroke-width", "2.5");
-  tx.setAttribute("font-family", FD);
+  tx.setAttribute("font-family", "Archivo, Helvetica Neue, Arial, sans-serif");
   tx.setAttribute("font-weight", "900"); tx.setAttribute("letter-spacing", "-6");
   g.appendChild(p); g.appendChild(tx); parent.appendChild(g);
   return { g, p, tx };
@@ -791,8 +863,75 @@ function render(t) {
   drawGrain(t);
   updateSVG(t);
 }
-return {
-  prepare() { computeBoxes(); layoutLogo(); },
-  render,
-};
+
+/* -------------------------------------------------------------- playback */
+const stage = document.getElementById("stage"), vp = document.getElementById("vp");
+const btnPlay = document.getElementById("play"), btnRestart = document.getElementById("restart");
+const scrub = document.getElementById("scrub"), timeEl = document.getElementById("time");
+const btnLoop = document.getElementById("loop"), btnFs = document.getElementById("fs");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let T = 0, playing = false, loop = true, last = 0;
+
+function fit() {
+  const r = vp.getBoundingClientRect(), s = Math.max(r.width / W, r.height / H);
+  stage.style.transform = `translate(${(r.width - W * s) / 2}px, ${(r.height - H * s) / 2}px) scale(${s})`;
 }
+function setPlaying(p) {
+  playing = p; last = performance.now();
+  btnPlay.setAttribute("aria-label", p ? "Pause" : "Play");
+  document.getElementById("playIcon").innerHTML = p
+    ? '<rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/>'
+    : '<path d="M3 1l10 6-10 6z"/>';
+}
+function show(t) { T = clamp(t, 0, DUR); render(T); scrub.value = T; timeEl.textContent = timecode(T); }
+function tick(now) {
+  if (playing) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now; let t = T + dt;
+    if (t >= DUR) { if (loop) t = t - DUR; else { t = DUR; setPlaying(false); } }
+    show(t);
+  }
+  requestAnimationFrame(tick);
+}
+btnPlay.addEventListener("click", () => { if (!playing && T >= DUR) T = 0; setPlaying(!playing); });
+btnRestart.addEventListener("click", () => { show(0); setPlaying(true); });
+scrub.addEventListener("input", () => { setPlaying(false); show(parseFloat(scrub.value)); });
+btnLoop.addEventListener("click", () => { loop = !loop; btnLoop.setAttribute("aria-pressed", String(loop)); });
+if (!document.fullscreenEnabled) btnFs.style.display = "none";
+btnFs.addEventListener("click", () => { try { document.fullscreenElement ? document.exitFullscreen() : vp.requestFullscreen(); } catch (e) {} });
+document.addEventListener("keydown", e => {
+  if (e.target === scrub && (e.key === "ArrowLeft" || e.key === "ArrowRight")) return;
+  if (e.key === " ") { e.preventDefault(); btnPlay.click(); }
+  else if (e.key === "r" || e.key === "R") btnRestart.click();
+  else if (e.key === "l" || e.key === "L") btnLoop.click();
+  else if (e.key === "f" || e.key === "F") btnFs.click();
+  else if (e.key === "ArrowRight") { setPlaying(false); show(T + 1 / FPS); }
+  else if (e.key === "ArrowLeft") { setPlaying(false); show(T - 1 / FPS); }
+});
+addEventListener("resize", fit);
+document.addEventListener("visibilitychange", () => { if (!reduce) setPlaying(!document.hidden); });
+document.addEventListener("fullscreenchange", fit);
+
+async function start() {
+  fit();
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+  try {
+    await Promise.race([
+      Promise.all([
+        document.fonts.load(`900 100px Archivo`), document.fonts.load(`100 100px Archivo`),
+        document.fonts.load(`900 ultra-condensed 100px Archivo`), document.fonts.load(`900 ultra-expanded 100px Archivo`),
+        document.fonts.load(`italic 400 100px "Instrument Serif"`), document.fonts.load(`600 100px "JetBrains Mono"`),
+        document.fonts.load(`400 100px "JetBrains Mono"`)
+      ]),
+      new Promise(r => setTimeout(r, 3000))
+    ]);
+  } catch (e) {}
+  computeBoxes(); layoutLogo();
+  if (reduce) { show(DUR); setPlaying(false); }
+  else { show(0); setPlaying(true); }
+  requestAnimationFrame(tick);
+}
+start();
+})();
+</script>
+</body>
+</html>
