@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>xanti studios — motion reel</title>
 <meta name="robots" content="noindex">
+<title>xanti studios — motion reel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -78,9 +78,9 @@ html,body{background:#000!important}
 <div class="bar">
   <button id="play" aria-label="Pause"><svg viewBox="0 0 14 14" id="playIcon"><rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/></svg></button>
   <button id="restart" aria-label="Restart"><svg viewBox="0 0 14 14"><path d="M7 1.5a5.5 5.5 0 1 1-5.2 3.7l1.6.5A3.8 3.8 0 1 0 7 3.2V5L3.8 2.4 7 0z"/></svg></button>
-  <input id="scrub" type="range" min="0" max="15" step="0.0166667" value="0" aria-label="Timeline">
+  <input id="scrub" type="range" min="0" max="20" step="0.0166667" value="0" aria-label="Timeline">
   <span id="time">00:00:00:00</span>
-  <button id="loop" aria-pressed="false" class="hide-sm">Loop</button>
+  <button id="loop" aria-pressed="true" class="hide-sm">Loop</button>
   <button id="fs" aria-label="Fullscreen" class="hide-sm"><svg viewBox="0 0 14 14"><path d="M1 1h4v1.6H2.6V5H1zm8 0h4v4h-1.6V2.6H9zM1 9h1.6v2.4H5V13H1zm10.4 0H13v4H9v-1.6h2.4z"/></svg></button>
 </div>
 
@@ -88,7 +88,7 @@ html,body{background:#000!important}
 (() => {
 "use strict";
 /* ------------------------------------------------------------------ setup */
-const W = 1920, H = 1080, FPS = 60, DUR = 15, BEAT = 0.5;
+const W = 1920, H = 1080, FPS = 60, DUR = 20, BEAT = 0.5; // 20s = 10 bars at 120 BPM, loops seamlessly
 const cv = document.getElementById("cv");
 const ctx = cv.getContext("2d");
 const FD = 'Archivo, "Helvetica Neue", Arial, sans-serif';
@@ -208,14 +208,14 @@ function sceneSquash(c, lt) {
   // velocity vector
   const vx = 640, vy = -b.v, vl = Math.hypot(vx, vy), sc = Math.min(160, vl * 0.06) / vl;
   const ex = b.x + vx * sc, ey = b.y + vy * sc;
-  A(c, 0.85); c.strokeStyle = "#888"; c.lineWidth = 1.5 * LW;
+  A(c, 0.85 * grow); c.strokeStyle = "#888"; c.lineWidth = 1.5 * LW;
   c.beginPath(); c.moveTo(b.x, b.y); c.lineTo(ex, ey); c.stroke();
   const an = Math.atan2(vy, vx);
   c.beginPath(); c.moveTo(ex, ey); c.lineTo(ex - 12 * Math.cos(an - .4), ey - 12 * Math.sin(an - .4));
   c.moveTo(ex, ey); c.lineTo(ex - 12 * Math.cos(an + .4), ey - 12 * Math.sin(an + .4)); c.stroke();
   // readout
   const rx0 = b.x + BR * 1.6, ry0 = b.y - BR * 1.5;
-  A(c, 1); c.strokeStyle = "#555"; c.lineWidth = 1 * LW;
+  A(c, grow); c.strokeStyle = "#555"; c.lineWidth = 1 * LW;
   c.beginPath(); c.moveTo(b.x + BR * 0.75, b.y - BR * 0.75); c.lineTo(rx0 - 6, ry0 + 6); c.lineTo(rx0 + 120, ry0 + 6); c.stroke();
   c.font = `600 15px ${FM}`; c.textAlign = "left"; c.fillStyle = "#fff"; ls(c, 1);
   c.fillText("sx " + b.sx.toFixed(2), rx0, ry0 - 22); c.fillStyle = "#888"; c.fillText("sy " + b.sy.toFixed(2), rx0, ry0 - 2); ls(c, 0);
@@ -658,20 +658,87 @@ function sceneLogo(c, lt) {
     c.fillText("R " + Math.round(LOGO.L * RMAXK), LOGO.mx + rr * 0.72 + 8, LOGO.my - rr * 0.72);
     c.fillText("BASELINE", LOGO.tx + LOGO.tw + 90, LOGO.base + 5); ls(c, 0);
   }
-  // pulse aura after snap
+  // pulse aura after snap, with a softer ring on each bar during the hold
   if (lt >= 1.42) {
-    const a = lt - 1.42;
-    const glow = 0.16 * Math.exp(-a * 2.5) + 0.06 + 0.04 * Math.sin(a * Math.PI * 4);
-    const grd = c.createRadialGradient(LOGO.mx, LOGO.my, 0, LOGO.mx, LOGO.my, 420);
-    grd.addColorStop(0, `rgba(255,255,255,${glow})`); grd.addColorStop(1, "rgba(255,255,255,0)");
-    A(c, 1); c.fillStyle = grd; c.fillRect(LOGO.mx - 420, LOGO.my - 420, 840, 840);
-    for (let k = 0; k < 3; k++) {
-      const pk = (a - k * 0.12) / 0.6; if (pk <= 0 || pk >= 1) continue;
-      A(c, (1 - pk) * 0.7); c.strokeStyle = "#fff"; c.lineWidth = 2;
-      c.beginPath(); c.arc(LOGO.mx, LOGO.my, LOGO.L * RMAXK + eOutCubic(pk) * 260, 0, 7); c.stroke();
+    const a = lt - 1.42, fade = 1 - ss((lt - 5.6) / 0.45);
+    const glow = (0.16 * Math.exp(-a * 2.5) + 0.06 + 0.04 * Math.sin(a * Math.PI * 4)) * fade;
+    if (glow > 0.001) {
+      const grd = c.createRadialGradient(LOGO.mx, LOGO.my, 0, LOGO.mx, LOGO.my, 420);
+      grd.addColorStop(0, `rgba(255,255,255,${glow})`); grd.addColorStop(1, "rgba(255,255,255,0)");
+      A(c, 1); c.fillStyle = grd; c.fillRect(LOGO.mx - 420, LOGO.my - 420, 840, 840);
     }
+    [[1.42, 0.7, 3], [3.0, 0.35, 1], [5.0, 0.35, 1]].forEach(([t0, amp, n]) => {
+      for (let k = 0; k < n; k++) {
+        const pk = (lt - t0 - k * 0.12) / 0.6; if (pk <= 0 || pk >= 1) continue;
+        A(c, (1 - pk) * amp); c.strokeStyle = "#fff"; c.lineWidth = 2;
+        c.beginPath(); c.arc(LOGO.mx, LOGO.my, LOGO.L * RMAXK + eOutCubic(pk) * 260, 0, 7); c.stroke();
+      }
+    });
     A(c, 1);
   }
+  if (lt >= 5.6) drawReturn(c, lt - 5.6);
+}
+
+/* ------------------------------------- 08 · loop: logo morphs back into the ball */
+const STAR_R = (() => { // radial outline of the mark (L = 1), sampled clockwise from straight up
+  const pts = logoPts(0, 0, 1, 0), n = 360, out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const th = i / n * Math.PI * 2, dx = Math.sin(th), dy = -Math.cos(th);
+    let best = 0;
+    for (let k = 0; k < pts.length; k++) {
+      const [x1, y1] = pts[k], [x2, y2] = pts[(k + 1) % pts.length];
+      const ex = x2 - x1, ey = y2 - y1, den = dx * ey - dy * ex;
+      if (Math.abs(den) < 1e-9) continue;
+      const t = (x1 * ey - ex * y1) / den, s = (x1 * dy - y1 * dx) / den;
+      if (t > 0 && s >= -1e-6 && s <= 1 + 1e-6) best = Math.max(best, t);
+    }
+    out[i] = best;
+  }
+  return out;
+})();
+function returnState(r) {
+  const em = eInOutCubic((r - 0.4) / 0.9);
+  return {
+    cx: lerp(LOGO.mx, ballX(0), em), cy: lerp(LOGO.my, FLOOR - 560 - BR, em),
+    sc: lerp(LOGO.L, BR, em), morph: eInOutCubic((r - 0.45) / 0.6),
+    rot: lerp(0, -144, eInOutCubic((r - 0.35) / 0.95))
+  };
+}
+function drawReturn(c, r) {
+  const st = returnState(r);
+  // wordmark slides back behind the mark
+  const te = clamp(r / 0.42), ease = te * te * te;
+  if (te < 1) {
+    const clipX = st.cx + st.sc * RMAXK + 6;
+    c.save(); c.beginPath(); c.rect(clipX, 0, W - clipX, H); c.clip();
+    c.font = `900 ${LOGO.size}px ${FD}`; ls(c, -6); c.textAlign = "left"; c.textBaseline = "alphabetic";
+    const x = LOGO.tx - (LOGO.tx + LOGO.tw - clipX + 12) * ease;
+    A(c, 1); c.fillStyle = "#fff"; c.strokeStyle = "#fff"; c.lineWidth = 2.5; c.lineJoin = "miter";
+    c.fillText("xanti", x, LOGO.base); c.strokeText("xanti", x, LOGO.base);
+    ls(c, 0); c.restore();
+  }
+  // dotted trail while travelling (echoes the ball trail it becomes)
+  c.fillStyle = "#fff";
+  for (let k = 1; k <= 14; k++) {
+    const rk = r - k * 0.025; if (rk < 0.4) break;
+    const p = returnState(rk), f = 1 - k / 15;
+    A(c, f * 0.8); c.beginPath(); c.arc(p.cx, p.cy, 1 + 3 * f, 0, 7); c.fill();
+  }
+  // the mark: exact polygon, then a radial morph into the ball
+  let path;
+  if (st.morph <= 0) path = logoPath2D(st.cx, st.cy, st.sc, st.rot);
+  else {
+    path = new Path2D(); const rr = st.rot * Math.PI / 180;
+    for (let i = 0; i < 360; i++) {
+      const th = i / 360 * Math.PI * 2, rad = st.sc * lerp(STAR_R[i], 1, st.morph);
+      const x = st.cx + Math.sin(th + rr) * rad, y = st.cy - Math.cos(th + rr) * rad;
+      i ? path.lineTo(x, y) : path.moveTo(x, y);
+    }
+    path.closePath();
+  }
+  A(c, 1); c.fillStyle = "#fff"; c.fill(path);
+  const sw = 3 * (1 - st.morph);
+  if (sw > 0.05) { c.strokeStyle = "#fff"; c.lineWidth = sw; c.lineJoin = "miter"; c.stroke(path); }
 }
 
 /* -------------------------------------------------------------- sections */
@@ -682,7 +749,8 @@ const S = [
   { id: "04", name: "3D / DEPTH", t0: 7, t1: 9, draw: (c, lt) => sceneDepth(c, lt, 1) },
   { id: "05", name: "PARTICLES", t0: 9, t1: 11, draw: (c, lt) => sceneParticles(c, lt) },
   { id: "06", name: "GRID MONTAGE", t0: 11, t1: 13, draw: (c, lt) => sceneMontage(c, lt) },
-  { id: "07", name: "LOGO ANIMATION", t0: 13, t1: 15, draw: (c, lt) => sceneLogo(c, lt) }
+  { id: "07", name: "LOGO ANIMATION", t0: 13, t1: 18.6, draw: (c, lt) => sceneLogo(c, lt) },
+  { id: "08", name: "LOOP", t0: 18.6, t1: 20, draw: (c, lt) => sceneLogo(c, lt + 5.6) }
 ];
 const WIPES = [{ t: 2, v: true }, { t: 5, v: false }, { t: 7, v: true }, { t: 9, v: false }];
 const secIdx = t => { for (let i = S.length - 1; i >= 0; i--) if (t >= S[i].t0) return i; return 0; };
@@ -713,7 +781,7 @@ function timecode(t) {
   return "00:" + p(Math.floor(f / 3600) % 60) + ":" + p(Math.floor(f / 60) % 60) + ":" + p(f % 60);
 }
 function drawHUD(t) {
-  const k = t >= 13 ? eInOutCubic((t - 13) / 0.5) : 0;
+  const k = t >= 13 ? Math.min(eInOutCubic((t - 13) / 0.5), 1 - eInOutCubic((t - 19.0) / 0.6)) : 0;
   if (k >= 1) return;
   const P = (x, y) => [lerp(x, W / 2, k), lerp(y, H / 2, k)];
   const c = ctx; c.save(); c.globalAlpha = Math.pow(1 - k, 2.5);
@@ -808,14 +876,15 @@ function layoutLogo() {
 }
 function updateSVG(t) {
   const lt = t - 13;
-  if (lt < 0.58) { svgRoot.style.display = "none"; return; }
+  if (lt < 0.58 || lt >= 5.6) { svgRoot.style.display = "none"; return; }
   svgRoot.style.display = "";
   const dMark = eInOutCubic((lt - 0.6) / 0.65), dText = eInOutCubic((lt - 0.74) / 0.6);
   const fo = eOutCubic((lt - 1.12) / 0.3);
   const rot = lerp(-72, 0, eOutExpo((lt - 0.6) / 0.9));
   let s = lt < 1.42 ? lerp(1.14, 1.06, eOutCubic((lt - 0.6) / 0.82)) : 1 + 0.06 * (1 - eOutBack((lt - 1.42) / 0.26));
   const fr = Math.floor(t * FPS);
-  const glitch = lt >= 1.42 && lt < 1.66 && hash(fr * 1.3) > 0.3;
+  const glitch = (lt >= 1.42 && lt < 1.66 && hash(fr * 1.3) > 0.3) ||
+    (lt > 2.5 && lt < 5.5 && (t % 2) < 0.075 && hash(fr * 1.3) > 0.2);
   const jitter = glitch ? (hash(fr * 2.1) - 0.5) * 16 : 0;
   const cx = W / 2, cy = 540;
   const tr = `translate(${cx + jitter} ${cy}) scale(${s.toFixed(4)}) translate(${-cx} ${-cy})`;
@@ -840,7 +909,8 @@ function updateSVG(t) {
   const sp = clamp((lt - 1.5) / 0.35), seed = Math.floor(t * 30);
   subL.textContent = sp > 0 ? scramble("studios by @h4tfi3ld", sp, seed) : "";
   subR.textContent = sp > 0 ? scramble("xanti.dev", clamp((lt - 1.6) / 0.3), seed + 9) : "";
-  subL.setAttribute("opacity", ss(sp * 3)); subR.setAttribute("opacity", ss(clamp((lt - 1.6) / 0.1)));
+  const subOut = 1 - ss((lt - 5.3) / 0.25);
+  subL.setAttribute("opacity", ss(sp * 3) * subOut); subR.setAttribute("opacity", ss(clamp((lt - 1.6) / 0.1)) * subOut);
 }
 
 /* ---------------------------------------------------------------- render */
@@ -926,7 +996,7 @@ async function start() {
     ]);
   } catch (e) {}
   computeBoxes(); layoutLogo();
-  if (reduce) { show(DUR); setPlaying(false); }
+  if (reduce) { show(16); setPlaying(false); }
   else { show(0); setPlaying(true); }
   requestAnimationFrame(tick);
 }
