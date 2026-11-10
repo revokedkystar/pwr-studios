@@ -10,6 +10,8 @@ type Area = { area: string; tools: Tool[] };
 const FLIGHT = 0.42;
 /** Delay between one tile starting and the next. */
 const STAGGER = 0.028;
+/** Seconds for one full turn of the finished circle. */
+const TURN_SECONDS = 40;
 
 /**
  * Sticky "Development stack" showcase.
@@ -21,8 +23,10 @@ const STAGGER = 0.028;
  * --k position on the ring), turning from grey to colour as it lands. The
  * whole ring turns as it forms, so the tools sweep round into a circle, with
  * each area taking its own arc. The title and a counter of how many tools
- * have landed sit in the middle. The last stretch holds the finished circle
- * before the page scrolls on.
+ * have landed sit in the middle. Once the circle has formed it keeps turning
+ * on its own (`--spin`), slowly and continuously, for as long as it is on
+ * screen; it slows right down while a tool is hovered so its label is easy
+ * to read.
  *
  * Without JavaScript or with reduced motion, --tp is never set and the CSS
  * fallback (1) shows the finished circle.
@@ -39,6 +43,42 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
     const counter = el.querySelector<HTMLElement>("[data-count]");
     let raf = 0;
     let shown = -1;
+    let tp = 0;
+
+    // Continuous turn once the circle has formed.
+    let spin = 0;
+    let speed = 0;
+    let hovering = false;
+    let spinRaf = 0;
+    let last = 0;
+    let visible = false;
+    const turn = (now: number) => {
+      spinRaf = visible ? requestAnimationFrame(turn) : 0;
+      const dt = Math.min(0.05, last ? (now - last) / 1000 : 0);
+      last = now;
+      // Eases in as the last tools land, and slows to a crawl on hover.
+      const formed = Math.min(1, Math.max(0, (tp - 0.92) / 0.08));
+      const goal = formed * formed * (3 - 2 * formed) * (hovering ? 0.12 : 1);
+      speed += (goal - speed) * Math.min(1, dt * 3);
+      spin = (spin + (360 / TURN_SECONDS) * speed * dt) % 360;
+      el.style.setProperty("--spin", `${spin.toFixed(2)}deg`);
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !spinRaf) {
+        last = 0;
+        spinRaf = requestAnimationFrame(turn);
+      }
+    });
+    io.observe(el);
+    const onOver = (e: PointerEvent) => {
+      hovering = !!(e.target as HTMLElement).closest(".stack-tile");
+    };
+    const onLeave = () => {
+      hovering = false;
+    };
+    el.addEventListener("pointerover", onOver);
+    el.addEventListener("pointerleave", onLeave);
 
     const update = () => {
       raf = 0;
@@ -46,7 +86,7 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
       const travel = rect.height - window.innerHeight;
       const progress = travel > 0 ? Math.min(1, Math.max(0, -rect.top / travel)) : 1;
       // Finish forming the circle at 80% of the way through, then hold.
-      const tp = Math.min(1, progress / 0.8);
+      tp = Math.min(1, progress / 0.8);
       el.style.setProperty("--tp", tp.toFixed(4));
       let landed = 0;
       for (let i = 0; i < total; i++) if (tp >= i * STAGGER + FLIGHT) landed++;
@@ -64,6 +104,10 @@ export function StackShowcase({ areas }: { areas: Area[] }) {
     window.addEventListener("resize", schedule);
     return () => {
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(spinRaf);
+      io.disconnect();
+      el.removeEventListener("pointerover", onOver);
+      el.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };

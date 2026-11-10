@@ -209,8 +209,9 @@ body {
   --radius: 39cqmin;
   --e0: clamp(0, calc((var(--tp, 1) - var(--d)) / var(--flight)), 1);
   --e: calc(var(--e0) * var(--e0) * (3 - 2 * var(--e0)));
-  /* The ring sweeps round by 120deg as it forms, ending with the first tool at the top. */
-  --ang: calc(var(--k) * var(--step) - 90deg - (1 - var(--tp, 1)) * 120deg);
+  /* The ring sweeps round by 120deg as it forms, ending with the first tool at
+     the top, then keeps turning by --spin (set by StackShowcase once formed). */
+  --ang: calc(var(--k) * var(--step) - 90deg - (1 - var(--tp, 1)) * 120deg + var(--spin, 0deg));
   width: var(--size);
   height: var(--size);
   translate:
