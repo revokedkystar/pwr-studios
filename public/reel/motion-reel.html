@@ -39,6 +39,12 @@ body{
 /* Embedded in the website: the controls are hidden so the reel fills the frame. */
 .bar{display:none!important}
 html,body{background:#050505!important}
+/* The reel is fitted inside the frame; the space around it gets the same
+   black base and moving grain as the reel (about #050505 on average), so
+   the two blend into one surface. */
+#vp{background:#050505}
+#stage{box-shadow:none!important}
+#grainAll{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bar{
   flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;
   border-top:1px solid var(--line);font-size:13px;color:var(--muted);
@@ -58,6 +64,7 @@ html,body{background:#050505!important}
 </head>
 <body>
 <div id="vp">
+  <canvas id="grainAll" aria-hidden="true"></canvas>
   <div id="stage">
     <canvas id="cv" width="1920" height="1080" aria-label="xanti studios motion reel"></canvas>
     <svg id="logo" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="xanti logo">
@@ -320,7 +327,7 @@ function sceneType(c, lt) {
   A(c, 1); c.strokeStyle = "#fff"; c.lineWidth = 1.2 * LW; c.strokeRect(bx, by, bw, bh);
   const hs = 10;
   [[bx, by], [bx + bw / 2, by], [bx + bw, by], [bx, by + bh / 2], [bx + bw, by + bh / 2], [bx, by + bh], [bx + bw / 2, by + bh], [bx + bw, by + bh]].forEach(([x, y]) => {
-    c.fillStyle = "#050505"; c.fillRect(x - hs / 2, y - hs / 2, hs, hs); c.strokeRect(x - hs / 2, y - hs / 2, hs, hs);
+    c.fillStyle = "#000"; c.fillRect(x - hs / 2, y - hs / 2, hs, hs); c.strokeRect(x - hs / 2, y - hs / 2, hs, hs);
   });
   // dimensions
   const dy = by - 40;
@@ -331,7 +338,7 @@ function sceneType(c, lt) {
   c.stroke();
   c.font = `600 15px ${FM}`; ls(c, 1); c.textAlign = "center";
   const wl = "W " + Math.round(bw), tw = c.measureText(wl).width + 20;
-  c.fillStyle = "#050505"; c.fillRect(bx + bw / 2 - tw / 2, dy - 12, tw, 24); c.fillStyle = "#fff"; c.fillText(wl, bx + bw / 2, dy + 5);
+  c.fillStyle = "#000"; c.fillRect(bx + bw / 2 - tw / 2, dy - 12, tw, 24); c.fillStyle = "#fff"; c.fillText(wl, bx + bw / 2, dy + 5);
   c.textAlign = "left"; c.fillText("H " + Math.round(bh), dx2 + 16, by + bh / 2 + 5);
   c.font = `400 14px ${FM}`; c.fillStyle = "#888";
   c.fillText(wd.lab, bx, by + bh + 52);
@@ -372,7 +379,7 @@ function sceneGrid(c, lt) {
     c.beginPath(); c.arc(o[0], o[1], rad, 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
     const ang = o === oA ? -Math.PI / 4 : Math.PI * 0.75;
     const lx = o[0] + Math.cos(ang) * rad, ly = o[1] + Math.sin(ang) * rad;
-    A(c, 1); c.fillStyle = "#050505"; c.fillRect(lx - 6, ly - 22, 190, 30);
+    A(c, 1); c.fillStyle = "#000"; c.fillRect(lx - 6, ly - 22, 190, 30);
     c.fillStyle = "#fff"; c.font = `600 14px ${FM}`; c.textAlign = "left"; ls(c, 2);
     c.fillText(lab + "  r=" + Math.round(rad), lx + 2, ly - 2); ls(c, 0);
   });
@@ -610,7 +617,7 @@ function drawMontage(c, mt, collapse) {
     if (alpha <= 0.01 || r.w < 2) continue;
     c.save(); GA = alpha;
     c.beginPath(); c.rect(r.x, r.y, r.w, r.h); c.clip();
-    A(c, 1); c.fillStyle = "#050505"; c.fillRect(r.x, r.y, r.w, r.h);
+    A(c, 1); c.fillStyle = "#000"; c.fillRect(r.x, r.y, r.w, r.h);
     c.translate(r.x, r.y); c.scale(r.w / W, r.h / H);
     LW = clamp(W / r.w * 0.85, 1, 4);
     PANELS[i].f(c, mt);
@@ -765,7 +772,7 @@ function bandWipe(p, vertical, drawNew) {
     if (vertical) { const bw = W / n, x = i * bw; ctx.rect(x, 0, bw + 1, H * f); if (f < 1) edges.push([x, H * f, bw, 3]); }
     else { const bh = H / n, y = i * bh; ctx.rect(0, y, W * f, bh + 1); if (f < 1) edges.push([W * f, y, 3, bh]); }
   }
-  ctx.clip(); ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, W, H); drawNew(); ctx.restore();
+  ctx.clip(); ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H); drawNew(); ctx.restore();
   ctx.globalAlpha = 1; ctx.fillStyle = "#fff"; edges.forEach(e => ctx.fillRect(e[0], e[1], e[2], e[3]));
 }
 
@@ -831,11 +838,23 @@ const ncan = document.createElement("canvas"); ncan.width = ncan.height = 256;
   for (let i = 0; i < id.data.length; i += 4) { const v = r() * 255; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; }
   nc.putImageData(id, 0, 0); })();
 const grainPat = ctx.createPattern(ncan, "repeat");
+// Grain for the space around the fitted reel: the same black base, grain
+// and grain size as the reel itself, so the two are indistinguishable.
+const gAll = document.getElementById("grainAll"), gAllCtx = gAll.getContext("2d");
+const gAllPat = gAllCtx.createPattern(ncan, "repeat");
+// The canvas base is pure black; this grain lifts it to about #050505 on
+// average, matching the website section around the embedded reel.
 function drawGrain(t) {
   const f = Math.floor(t * FPS);
   ctx.save(); ctx.globalAlpha = 0.045; ctx.globalCompositeOperation = "screen";
   ctx.translate(-Math.floor(hash(f) * 256), -Math.floor(hash(f + 0.5) * 256));
   ctx.fillStyle = grainPat; ctx.fillRect(0, 0, W + 256, H + 256); ctx.restore();
+  const gw = gAll.width, gh = gAll.height;
+  gAllCtx.setTransform(1, 0, 0, 1, 0, 0); gAllCtx.globalAlpha = 1; gAllCtx.globalCompositeOperation = "source-over";
+  gAllCtx.fillStyle = "#000"; gAllCtx.fillRect(0, 0, gw, gh);
+  gAllCtx.globalAlpha = 0.045; gAllCtx.globalCompositeOperation = "screen";
+  gAllCtx.translate(-Math.floor(hash(f) * 256), -Math.floor(hash(f + 0.5) * 256));
+  gAllCtx.fillStyle = gAllPat; gAllCtx.fillRect(0, 0, gw + 256, gh + 256);
 }
 
 /* ------------------------------------------------------------- SVG logo */
@@ -916,7 +935,7 @@ function updateSVG(t) {
 /* ---------------------------------------------------------------- render */
 function render(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
   const TW = 0.28; let done = false;
   for (let k = 0; k < WIPES.length; k++) {
     const w = WIPES[k];
@@ -943,8 +962,11 @@ const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let T = 0, playing = false, loop = true, last = 0;
 
 function fit() {
-  const r = vp.getBoundingClientRect(), s = Math.max(r.width / W, r.height / H);
+  const r = vp.getBoundingClientRect(), s = Math.min(r.width / W, r.height / H);
   stage.style.transform = `translate(${(r.width - W * s) / 2}px, ${(r.height - H * s) / 2}px) scale(${s})`;
+  // The grain canvas works in reel pixels too, so its grain is the same size.
+  gAll.width = Math.max(1, Math.ceil(r.width / s)); gAll.height = Math.max(1, Math.ceil(r.height / s));
+  if (T > 0) render(T);
 }
 function setPlaying(p) {
   playing = p; last = performance.now();
@@ -983,7 +1005,7 @@ document.addEventListener("fullscreenchange", fit);
 
 async function start() {
   fit();
-  ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
   try {
     await Promise.race([
       Promise.all([

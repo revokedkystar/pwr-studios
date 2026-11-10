@@ -20,7 +20,7 @@ import {
   places,
   site,
   cloud,
-  ink,
+  nightFade,
   stack,
 } from "@/content";
 
@@ -45,8 +45,8 @@ function Hero() {
 function Momentum() {
   return (
     <section aria-labelledby="momentum" className="relative overflow-x-clip">
-      <PixelField palette={ink} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
-      <div className="bg-ink pb-16 text-white sm:pb-20">
+      <PixelField palette={nightFade} mode="fade-up" seed={41} className="h-[220px] w-full sm:h-[300px]" />
+      <div className="bg-[#050505] pb-16 text-white sm:pb-20">
         <ProcessGlobe places={places} />
 
         <div className="wrap mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-4">
@@ -74,7 +74,7 @@ function Momentum() {
           <StackShowcase areas={stack} />
         </div>
       </div>
-      <PixelField palette={ink} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
+      <PixelField palette={nightFade} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
     </section>
   );
 }
@@ -138,16 +138,16 @@ function Reel() {
     // The motion reel (public/reel/motion-reel.html), locked to the screen
     // while it scrolls past: the tall outer box keeps the sticky panel pinned
     // for a screen and a half of scrolling before the page moves on.
-    // The reel keeps its 16:9 shape, as large as fits the screen, so nothing
-    // is cropped; any strip left over is the same #050505 as the reel's own
-    // background, so it blends in rather than showing as a gap.
+    // The frame fills the screen. Inside it the reel keeps its 16:9 shape, as
+    // large as fits, so nothing is cropped; the space around it gets the same
+    // grained black as the reel (about #050505 on average), so the two blend.
     <section id="reel" aria-label="Motion reel" className="relative h-[250svh] bg-[#050505] motion-reduce:h-auto">
       <div className="sticky top-0 flex h-svh items-center justify-center overflow-hidden bg-[#050505] motion-reduce:static motion-reduce:h-auto">
         <iframe
           src="/reel/motion-reel.html"
           title="xanti studios motion reel"
           loading="lazy"
-          className="block aspect-video w-[min(100%,calc(100svh*16/9))] border-0"
+          className="block size-full border-0"
         />
       </div>
     </section>

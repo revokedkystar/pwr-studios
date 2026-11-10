@@ -35,7 +35,8 @@ export type Place = {
  * With reduced motion on, nothing is pinned and the plain wheel is shown.
  */
 
-const PALETTE = ["#0a0a0a", "#4a4a4a", "#d4d4d4"];
+// Darkest grey matches the section background (#050505).
+const PALETTE = ["#050505", "#4a4a4a", "#d4d4d4"];
 const CELL = 14;
 const DITHER = 2;
 const TILT = 0.42; // tips the north pole towards the viewer
