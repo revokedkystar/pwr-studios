@@ -6,6 +6,7 @@ import { ProcessGlobe } from "@/components/process-globe";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
+import { IndustryGallery } from "@/components/industry-gallery";
 import { LogoSphere } from "@/components/logo-sphere/logo-sphere";
 import { ScrollFx } from "@/components/scroll-fx";
 import { StackShowcase } from "@/components/stack-showcase";
@@ -16,7 +17,7 @@ import {
   caseStudies,
   graphics,
   logos,
-  notes,
+  industry,
   places,
   globeLines,
   site,
@@ -164,53 +165,22 @@ function Experience() {
   );
 }
 
-function Writing() {
+function Industry() {
   return (
-    <section id="writing" className="bg-white pt-24 pb-24 sm:pt-28 sm:pb-32">
-      <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-start">
-        <h2 data-scroll className="fx-slide section-title">Field notes</h2>
-        <div data-scroll data-lag={0.1} className="fx-rise">
-          <p className="text-[17px] leading-[1.42] text-black/65">
-            Writing on design, code, and what I learn building both.
-          </p>
-          <div className="mt-6">
-            <PillLink href="#">More writing</PillLink>
-          </div>
-        </div>
+    <section id="industry" className="bg-white pt-24 pb-24 sm:pt-28 sm:pb-32">
+      <header className="wrap grid gap-8 lg:grid-cols-[1fr_352px] lg:items-end">
+        <h2 data-scroll className="fx-slide section-title">
+          Seen in the
+          <br />
+          industry
+        </h2>
+        <p data-scroll data-lag={0.1} className="fx-rise text-[17px] leading-[1.42] text-black/65">
+          Places I&apos;ve been and things I&apos;ve seen around the tech industry: expos, warehouses, design studios
+          and control rooms. Tap a photo to see it bigger.
+        </p>
       </header>
 
-      <div className="no-scrollbar mt-14 overflow-x-auto sm:mt-20">
-        <ul className="wrap flex gap-8 pb-8 sm:gap-14">
-          {notes.map((n, i) => (
-            <li
-              key={n.title}
-              data-scroll
-              data-lag={i * 0.12}
-              className="fx-drop shrink-0 pt-2"
-              style={{ "--tilt": `${i % 2 ? 12 : -12}deg` } as CSSProperties}
-            >
-              <a
-                href={n.href}
-                className="stamp block w-[260px] sm:w-[300px]"
-                style={{ rotate: `${[-1.5, 1, -0.8, 1.4][i % 4]}deg` }}
-              >
-                <div className="relative aspect-square overflow-hidden">
-                  {/* Comes into colour as the stamp drops into view (fx-colour). */}
-                  <Image src={n.image} alt={n.alt} fill sizes="300px" className="fx-colour object-cover" />
-                </div>
-                <div className="perforation -mx-1 my-2" />
-                <div className="flex items-end justify-between px-1 pb-1" style={{ color: n.color }}>
-                  <div>
-                    <p className="text-[10px] tabular-nums">{n.date}</p>
-                    <p className="mt-0.5 max-w-[150px] font-serif text-[26px] leading-[0.9] italic">{n.title}</p>
-                  </div>
-                  <span className="text-4xl leading-none tabular-nums">{n.number}</span>
-                </div>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <IndustryGallery items={industry} />
     </section>
   );
 }
@@ -225,7 +195,7 @@ export default function Home() {
         <Momentum />
         <Graphics />
         <Experience />
-        <Writing />
+        <Industry />
       </main>
       <SiteFooter />
       <HashScroll />

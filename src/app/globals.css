@@ -66,33 +66,12 @@ body {
   letter-spacing: -0.04em;
 }
 
-/* Big sans section headings ("Field notes", "Small talk"…). */
+/* Big sans section headings ("Seen in the industry", "Small talk"…). */
 .section-title {
   font-weight: 500;
   font-size: clamp(3.25rem, 7.3vw, 6.55rem);
   line-height: 0.9;
   letter-spacing: -0.01em;
-}
-
-/* Postage stamp: perforated edge cut out of the paper colour. */
-.stamp {
-  --r: 7px;
-  padding: calc(2.4 * var(--r));
-  background:
-    radial-gradient(var(--r), #0000 97%, var(--paper) 100%) round calc(-1.5 * var(--r))
-      calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)),
-    linear-gradient(var(--paper) 0 0) no-repeat 50% / calc(100% - 3 * var(--r))
-      calc(100% - 3 * var(--r));
-  transition: rotate 400ms ease, translate 400ms ease;
-}
-.stamp:hover {
-  rotate: 0deg !important;
-  translate: 0 -6px;
-}
-
-.perforation {
-  height: 16px;
-  background: radial-gradient(circle 5px, #fff 95%, #0000) repeat-x center / 18px 16px;
 }
 
 /* Native <details> accordion: hide the default marker. */
