@@ -199,9 +199,55 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
     const sky = skyRef.current;
     const tags = tagRefs.current;
     // Each caption's words, so they can rise in and out one after another.
-    const lineWords = Array.from(linesRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? []).map((el) =>
-      Array.from(el.querySelectorAll<HTMLElement>("[data-word]")),
-    );
+    const lineEls = Array.from(linesRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? []);
+    const lineWords = lineEls.map((el) => Array.from(el.querySelectorAll<HTMLElement>("[data-word]")));
+    let layoutKey = "";
+
+    /*
+     * Place the captions beside the globe at its full size, alternating left
+     * and right, sized to the space there. When there's no room beside it
+     * (a phone held upright), left-hand lines go above the globe and
+     * right-hand lines below it.
+     */
+    const layoutLines = (w: number, h: number, cx: number, cy: number, rMax: number) => {
+      const key = `${w}|${h}|${Math.round(cx)}|${Math.round(cy)}|${Math.round(rMax)}`;
+      if (key === layoutKey) return;
+      layoutKey = key;
+      const edge = Math.max(16, w * 0.03);
+      const gap = Math.max(20, w * 0.02);
+      const leftRoom = cx - rMax - gap - edge;
+      const rightRoom = w - (cx + rMax) - gap - edge;
+      const room = Math.min(leftRoom, rightRoom);
+      lineEls.forEach((el, i) => {
+        const left = i % 2 === 0;
+        const st = el.style;
+        st.left = st.right = st.top = st.bottom = "";
+        if (room >= 170) {
+          st.width = `${room}px`;
+          st.fontSize = `${Math.round(Math.min(72, Math.max(28, room / 4.4)))}px`;
+          st.top = "50%";
+          st.translate = "0 -50%";
+          st.textAlign = left ? "left" : "right";
+          if (left) st.left = `${edge}px`;
+          else st.right = `${edge}px`;
+        } else {
+          const header = 64;
+          const top = header;
+          const above = Math.max(0, cy - rMax - top);
+          const below = Math.max(0, h - (cy + rMax));
+          const size = Math.round(Math.min(48, Math.max(30, w / 10)));
+          st.width = `${w - edge * 2}px`;
+          st.left = `${edge}px`;
+          st.fontSize = `${size}px`;
+          st.textAlign = "center";
+          st.translate = "0 -50%";
+          // Centred in the space above or below the globe, but always clear
+          // of the menu bar and the bottom edge, even when that space is thin.
+          const clear = size * 0.75 + 8;
+          st.top = left ? `${Math.max(top + clear, top + above / 2)}px` : `${Math.min(h - clear, h - below / 2)}px`;
+        }
+      });
+    };
     if (!outer || !wheel || !disc || !logo || !canvas || !sky) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = canvas.getContext("2d");
@@ -368,6 +414,8 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSky(now, t, morph, spin);
 
+      layoutLines(w, h, r.left + r0 - c.left, r.top + r.height / 2 - c.top, rMax);
+
       // Captions: words rise in one after another, then lift away.
       lines.forEach((line, i) => {
         const words = lineWords[i];
@@ -476,20 +524,20 @@ export function ProcessGlobe({ places, lines = [] }: { places: Place[]; lines?: 
             ))}
           </div>
         </div>
-        {/* Captions over the globe; screen readers get them once, as plain text. */}
+        {/* Captions beside the globe; screen readers get them once, as plain text. */}
         {lines.length > 0 && (
           <>
             <p className="sr-only">{lines.map((l) => l.text).join(". ")}.</p>
             <div
               ref={linesRef}
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-[7svh] z-20 grid place-items-center px-4 text-center motion-reduce:hidden"
+              className="pointer-events-none absolute inset-0 z-20 motion-reduce:hidden"
             >
               {lines.map((l) => (
                 <p
                   key={l.text}
                   data-line
-                  className="col-start-1 row-start-1 max-w-[16ch] font-serif text-[44px] leading-[0.95] tracking-[-0.01em] text-white italic [text-shadow:0_2px_28px_#050505,0_0_10px_#050505] sm:max-w-none sm:text-7xl"
+                  className="absolute font-serif text-[44px] leading-[0.95] tracking-[-0.01em] text-white italic [text-shadow:0_2px_28px_#050505,0_0_10px_#050505]"
                 >
                   {l.text.split(" ").map((w, j, all) => (
                     <span key={j} data-word className="inline-block opacity-0">
