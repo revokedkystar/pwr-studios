@@ -129,6 +129,21 @@ function Graphics() {
   );
 }
 
+function Reel() {
+  return (
+    // The motion reel (public/reel/motion-reel.html), edge to edge at 16:9 so
+    // the frame is filled with no bars or gaps around it.
+    <section id="reel" aria-label="Motion reel" className="bg-black">
+      <iframe
+        src="/reel/motion-reel.html"
+        title="xanti studios motion reel"
+        loading="lazy"
+        className="block aspect-video w-full border-0"
+      />
+    </section>
+  );
+}
+
 function Experience() {
   return (
     // "Experience with": company logos lift onto a scroll-driven 3D sphere.
@@ -198,6 +213,7 @@ export default function Home() {
         <PinnedWork items={caseStudies} />
         <Momentum />
         <Graphics />
+        <Reel />
         <Experience />
         <Writing />
       </main>
