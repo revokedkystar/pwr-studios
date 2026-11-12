@@ -5,7 +5,9 @@ import { ProcessGlobe } from "@/components/process-globe";
 import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
+import { AboutSection } from "@/components/about-section";
 import { ContactSection } from "@/components/contact-section";
+import { ProcessSection } from "@/components/process-section";
 import { JsonLd } from "@/components/json-ld";
 import { ScrollFx } from "@/components/scroll-fx";
 import { ScrollPrompt } from "@/components/scroll-prompt";
@@ -114,8 +116,10 @@ export default function Home() {
       <SiteHeader />
       <main className="flex-1">
         <Hero />
+        <AboutSection />
         <PinnedWork items={caseStudies} />
         <Momentum />
+        <ProcessSection />
         <ContactSection />
       </main>
       <JsonLd data={homeJsonLd} />
