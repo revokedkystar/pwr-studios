@@ -171,6 +171,50 @@ html::-webkit-scrollbar {
   filter: blur(calc(var(--out, 0) * 10px));
 }
 
+/* Hero "Please scroll to continue" cue: a gently bobbing arrow, faded out once scrolling starts. */
+.scroll-prompt {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 28px;
+  transition: opacity 400ms ease, translate 400ms ease;
+}
+/* Short screens: sit just under the button instead, so the two never overlap. */
+@media (max-height: 760px) {
+  .scroll-prompt {
+    position: relative;
+    bottom: auto;
+    margin-top: 18px;
+    gap: 4px;
+  }
+}
+.scroll-prompt[data-hidden="true"] {
+  opacity: 0;
+  translate: 0 8px;
+}
+.scroll-prompt__arrow {
+  animation: scroll-prompt-bob 1.6s ease-in-out infinite;
+}
+@keyframes scroll-prompt-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 4px;
+  }
+}
+/* Very short screens (iPhone SE size): the text fits, the arrow doesn't. */
+@media (max-height: 600px) {
+  .scroll-prompt__arrow {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-prompt__arrow {
+    animation: none;
+  }
+}
+
 /* Images start greyscale and come into colour as they scroll into view. */
 .fx-colour {
   filter: grayscale(calc(1 - var(--in, 1)));
