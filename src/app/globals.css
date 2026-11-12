@@ -56,6 +56,36 @@ body {
   }
 }
 
+/*
+ * Tap targets. Links and buttons should give a finger at least 48x48px
+ * (Google's mobile guidance; WCAG 2.5.8 asks for 24px at minimum).
+ *
+ * tap-target: the element's own box is at least 48x48, content centred.
+ *   Use it where the extra size can show (list links, icon buttons).
+ * tap-area: the box keeps its look, and an invisible ::after grows the
+ *   clickable area to at least 48x48 around it. Use it on small pills and
+ *   inline links where a bigger box would change the design. Neighbours
+ *   need enough gap that the grown areas don't overlap.
+ */
+@utility tap-target {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  min-width: 48px;
+}
+@utility tap-area {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 48px);
+    height: max(100%, 48px);
+    translate: -50% -50%;
+  }
+}
+
 /* Huge italic serif used for the hero line. */
 .display {
   font-family: var(--font-newsreader), Georgia, serif;

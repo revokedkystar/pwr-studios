@@ -23,6 +23,15 @@ export const socials = [
   { label: "Instagram", href: "https://www.instagram.com/h4tfi3ld" },
 ];
 
+// Direct contact links (mailto: / tel:) on the contact page and the homepage
+// contact section, and in the structured data. Each one only shows when set,
+// so leave it empty to keep it off the site. Phone in international form,
+// e.g. "+44 7700 900123".
+export const contact = {
+  email: "",
+  phone: "",
+};
+
 // Monochrome pixel palettes, from "empty" to "full".
 export const cloud = ["#ffffff", "#dcdcdc", "#a3a3a3"];
 export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];

@@ -20,7 +20,7 @@ export function PillLink({
 }) {
   const tone = invert ? "bg-white text-black" : "bg-black text-white";
   return (
-    <a href={href} className="group inline-flex items-center gap-2">
+    <a href={href} className="group inline-flex min-h-12 items-center gap-2">
       <span className={`${tone} rounded-full px-6 py-3 text-base leading-5 transition-transform duration-300 group-hover:-translate-y-0.5`}>
         {children}
       </span>

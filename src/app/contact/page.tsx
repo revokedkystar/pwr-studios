@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { ContactDetails } from "@/components/contact-details";
 import { ContactForm } from "@/components/contact-form";
 import { PixelField } from "@/components/pixel-field";
 import { ScrollFx } from "@/components/scroll-fx";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ArrowIcon } from "@/components/ui";
-import { faqs, ink, socials } from "@/content";
+import { faqs, ink } from "@/content";
 
 export const metadata: Metadata = {
   title: "Contact · xanti studios by @h4tfi3ld",
   description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+  alternates: { canonical: "/contact" },
   // A page's openGraph replaces the layout's, so the shared fields are repeated.
   openGraph: {
     type: "website",
@@ -37,18 +39,9 @@ function Contact() {
             Got a project, an opportunity or just a question? Send me a message and it&apos;ll land straight in my
             inbox.
           </p>
-          <dl data-scroll data-lag={0.2} className="fx-rise mt-10 grid max-w-[380px] gap-5 text-base">
-            <div>
-              <dt className="text-sm text-black/45">Elsewhere</dt>
-              <dd className="mt-1 flex flex-wrap gap-x-5 gap-y-1">
-                {socials.map((s) => (
-                  <a key={s.label} href={s.href} className="underline-offset-4 hover:underline">
-                    {s.label}
-                  </a>
-                ))}
-              </dd>
-            </div>
-          </dl>
+          <div data-scroll data-lag={0.2} className="fx-rise mt-10 max-w-[380px]">
+            <ContactDetails />
+          </div>
         </div>
         <div data-scroll data-lag={0.15} className="fx-rise">
           <ContactForm />

@@ -58,7 +58,13 @@ const DESCRIPTION =
 // modes (Brave's Night mode, Chrome's auto dark theme) from recolouring the
 // text: they can't recolour the pixel art drawn on canvases, so the dark
 // headline turned white on the white pixel sky.
+// width=device-width, initial-scale=1 sizes the page to the phone's screen
+// (Next.js adds these by default; they're spelt out here so nobody drops
+// them). Zoom is left on: maximumScale/userScalable would block it, which
+// fails accessibility audits.
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
   colorScheme: "only light",
 };
 
