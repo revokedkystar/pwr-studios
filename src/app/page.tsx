@@ -12,6 +12,7 @@ import { ContactSection } from "@/components/contact-section";
 import { JsonLd } from "@/components/json-ld";
 import { ExperienceRing } from "@/components/experience-ring";
 import { ScrollFx } from "@/components/scroll-fx";
+import { ScrollPrompt } from "@/components/scroll-prompt";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { StackShowcase } from "@/components/stack-showcase";
 import { SiteFooter } from "@/components/site-footer";
@@ -43,14 +44,18 @@ function Hero() {
     // Tall section with a sticky panel: the hero stays pinned while scrolling
     // through it, and HeroHeadline scrubs the intro from that scroll.
     <section id="top" data-hero className="relative z-10 h-[220svh] bg-white">
-      <div className="sticky top-0 flex h-svh min-h-[600px] items-center overflow-hidden">
+      <div className="sticky top-0 flex h-svh min-h-[600px] flex-col justify-center overflow-hidden">
         <div className="absolute inset-x-0 -top-40 bottom-0">
           <PixelField palette={cloud} mode="clouds" speed={0.012} seed={7} dissolveOn={HERO_DISSOLVE} className="size-full" />
         </div>
         <div className="wrap relative pt-10">
           <HeroHeadline />
           <p className="mx-auto mt-6 max-w-[680px] text-center text-lg leading-[1.45] sm:mt-8 sm:text-xl">{site.intro}</p>
+          <div className="mt-6 flex justify-center sm:mt-9">
+            <PillLink href="/contact">Build your site</PillLink>
+          </div>
         </div>
+        <ScrollPrompt />
       </div>
     </section>
   );
