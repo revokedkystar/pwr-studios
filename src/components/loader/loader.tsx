@@ -12,6 +12,13 @@ const INK = ["#3a3a3a", "#9a9a9a", "#ffffff"];
 const MIN_MS = 1800;
 /** On a repeat visit in the same session, a much quicker version. */
 const MIN_MS_REPEAT = 350;
+/**
+ * Longest the loader waits for the page to finish loading. In-app browsers
+ * (Instagram, Facebook, TikTok) can hold back the window load event, or a
+ * slow image can, and the loader blocks touch scrolling while it's up, so
+ * without a cap the page could stay stuck behind it.
+ */
+const MAX_WAIT_MS = 4000;
 /** How long the exit takes before the loader is removed. */
 const EXIT_MS = 1500;
 const SEEN_KEY = "xanti-loader-seen";
@@ -57,13 +64,15 @@ export function Loader() {
 
     // Real progress: images on the page plus fonts, then the window load event.
     const imgs = Array.from(document.images);
-    let fontsReady = false;
+    // No Font Loading API: don't wait for it.
+    let fontsReady = !document.fonts;
     let windowLoaded = document.readyState === "complete";
     document.fonts?.ready.then(() => (fontsReady = true));
     const onLoad = () => (windowLoaded = true);
     window.addEventListener("load", onLoad);
     const real = () => {
       if (windowLoaded && fontsReady) return 1;
+      if (performance.now() - start > MAX_WAIT_MS) return 1;
       const done = imgs.filter((i) => i.complete).length;
       return 0.9 * ((done + (fontsReady ? 1 : 0)) / (imgs.length + 1));
     };
