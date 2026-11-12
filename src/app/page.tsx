@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { PinnedWork } from "@/components/pinned-work";
 import { PixelField } from "@/components/pixel-field";
@@ -7,6 +8,8 @@ import { HERO_DISSOLVE } from "@/components/hero-events";
 import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
 import { IndustryGallery } from "@/components/industry-gallery";
+import { ContactSection } from "@/components/contact-section";
+import { JsonLd } from "@/components/json-ld";
 import { ExperienceRing } from "@/components/experience-ring";
 import { ScrollFx } from "@/components/scroll-fx";
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -26,6 +29,14 @@ import {
   nightFade,
   stack,
 } from "@/content";
+import { homeJsonLd } from "@/structured-data";
+
+// <link rel="canonical" href="https://xanti.dev/">, resolved against the
+// layout's metadataBase. Each page sets its own: a canonical in the layout
+// would be inherited by every page and point them all at the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 function Hero() {
   return (
@@ -197,7 +208,9 @@ export default function Home() {
         <Graphics />
         <Experience />
         <Industry />
+        <ContactSection />
       </main>
+      <JsonLd data={homeJsonLd} />
       <SiteFooter />
       <HashScroll />
       <ScrollFx />

@@ -12,7 +12,8 @@ type Status = "idle" | "sending" | "sent" | "error";
  */
 const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
 
-export function ContactForm() {
+/** `compact` gives a shorter message box, for the homepage. */
+export function ContactForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<Status>("idle");
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -55,7 +56,7 @@ export function ContactForm() {
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="mt-6 text-sm text-black/60 underline underline-offset-4 hover:text-black"
+          className="tap-target mt-4 text-sm text-black/60 underline underline-offset-4 hover:text-black"
         >
           Send another message
         </button>
@@ -91,7 +92,7 @@ export function ContactForm() {
         <textarea
           name="message"
           required
-          rows={6}
+          rows={compact ? 4 : 6}
           maxLength={5000}
           placeholder="What would you like to talk about?"
           className={`${field} resize-y`}
@@ -104,7 +105,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="rounded-full bg-black px-7 py-3.5 text-base text-white transition-[opacity,translate] hover:-translate-y-0.5 disabled:opacity-60"
+          className="min-h-12 rounded-full bg-black px-7 py-3.5 text-base text-white transition-[opacity,translate] hover:-translate-y-0.5 disabled:opacity-60"
         >
           {status === "sending" ? "Sending…" : "Send message"}
         </button>

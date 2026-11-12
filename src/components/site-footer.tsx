@@ -12,10 +12,10 @@ export function SiteFooter() {
             <br />
             @h4tfi3ld
           </p>
-          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-base">
+          <ul className="mt-5 flex flex-wrap gap-x-3 text-base">
             {socials.map((s) => (
               <li key={s.label}>
-                <a href={s.href} className="hover:text-black/50">
+                <a href={s.href} className="tap-target justify-center hover:text-black/50">
                   {s.label}
                 </a>
               </li>
@@ -23,9 +23,9 @@ export function SiteFooter() {
           </ul>
         </div>
         <div className="flex flex-wrap justify-between gap-10">
-          <nav className="flex flex-col gap-1.5 text-base">
+          <nav className="-mt-3 flex flex-col text-base">
             {nav.map((n) => (
-              <Link key={n.label} href={n.href} className="hover:text-black/50">
+              <Link key={n.label} href={n.href} className="tap-target hover:text-black/50">
                 {n.label}
               </Link>
             ))}

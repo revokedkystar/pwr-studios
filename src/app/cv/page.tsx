@@ -12,6 +12,7 @@ const DESCRIPTION = "The CV of @h4tfi3ld: industry experience, work experience, 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  alternates: { canonical: "/cv" },
   // A page's openGraph replaces the layout's, so the shared fields are repeated.
   openGraph: { type: "website", siteName: "xanti studios", title: TITLE, description: DESCRIPTION, url: "/cv" },
   twitter: { card: "summary", title: TITLE, description: DESCRIPTION },

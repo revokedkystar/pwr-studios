@@ -196,7 +196,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                       href={c.live}
                       target="_blank"
                       rel="noreferrer"
-                      className="work-btn-primary group inline-flex h-11 items-center gap-2 rounded-full pr-1.5 pl-5 text-[15px] font-medium transition-transform hover:-translate-y-0.5"
+                      className="work-btn-primary group inline-flex h-12 items-center gap-2 rounded-full pr-1.5 pl-5 text-[15px] font-medium transition-transform hover:-translate-y-0.5"
                     >
                       Visit website
                       <span className="work-btn-dot grid size-8 place-items-center rounded-full transition-transform duration-300 group-hover:rotate-45">
@@ -207,7 +207,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                       href={c.repo}
                       target="_blank"
                       rel="noreferrer"
-                      className="work-btn-ghost inline-flex h-11 items-center gap-2 rounded-full px-5 text-[15px] font-medium transition-transform hover:-translate-y-0.5"
+                      className="work-btn-ghost inline-flex h-12 items-center gap-2 rounded-full px-5 text-[15px] font-medium transition-transform hover:-translate-y-0.5"
                     >
                       <GitHubMark className="size-4" />
                       View code
@@ -282,7 +282,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                   type="button"
                   data-nav
                   onClick={() => jumpTo(i)}
-                  className="work-nav group w-full text-left"
+                  className="work-nav tap-area group w-full text-left"
                 >
                   <span className="work-track block h-[3px] overflow-hidden rounded-full">
                     <span data-bar className="work-bar block h-full origin-left rounded-full" style={{ scale: i === 0 ? "1 1" : "0 1" }} />
