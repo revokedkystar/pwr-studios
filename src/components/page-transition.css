@@ -1,0 +1,39 @@
+/*
+ * Page transition curtain (page-transition.tsx). The panel is a screen and
+ * a bit tall, with curved top and bottom edges, so it shows a curve as it
+ * rises in from below and again as it lifts away off the top.
+ */
+.ptx {
+  position: fixed;
+  inset: 0;
+  z-index: 90; /* above the header (50), below the loading screen (100) */
+  pointer-events: none;
+  visibility: hidden;
+  overflow: hidden;
+}
+.ptx[data-state="on"] {
+  visibility: visible;
+  pointer-events: auto; /* no clicks on the old page mid-transition */
+}
+.ptx__panel {
+  position: absolute;
+  top: -14vh;
+  left: -10vw;
+  width: 120vw;
+  height: calc(100% + 28vh);
+  display: grid;
+  place-items: center;
+  background: #0a0a0a;
+  border-radius: 50% / 14vh;
+  transform: translateY(100%);
+  will-change: transform;
+}
+.ptx__label {
+  font-family: var(--font-newsreader), serif;
+  font-style: italic;
+  font-size: clamp(56px, 11vw, 168px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  opacity: 0;
+}

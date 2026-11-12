@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { Loader } from "@/components/loader/loader";
 import { InlineScript } from "@/components/inline-script";
+import { PageTransition } from "@/components/page-transition";
 import "./globals.css";
 import { siteUrl } from "@/content";
 
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <Loader />
+        <PageTransition />
         {children}
       </body>
     </html>
