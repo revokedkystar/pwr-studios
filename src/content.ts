@@ -6,13 +6,13 @@ export const siteUrl = "https://xanti.dev";
 export const site = {
   name: "@h4tfi3ld",
   intro:
-    "Welcome to Xanti Studios by @h4tfi3ld, the place where local businesses can access quality services like websites, branding and graphic design by an engineer who actually cares. Curious to see what I have? Have a scroll!",
+    "Welcome to xanti studios by @h4tfi3ld, the place where local businesses can access quality services like websites, branding and graphic design by an engineer who actually cares. Curious to see what I have? Have a scroll!",
 };
 
 export const nav = [
   { label: "Work", href: "/#work" },
-  { label: "Graphics", href: "/#graphics" },
-  { label: "Industry", href: "/#industry" },
+  { label: "Graphics", href: "/graphics" },
+  { label: "Industry", href: "/graphics#industry" },
   { label: "CV", href: "/cv" },
 ];
 
