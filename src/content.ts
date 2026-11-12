@@ -42,6 +42,37 @@ export const certificates = [
 ];
 export const certificateMeta = { issuer: "Springpod", issued: "02/04/2026" };
 
+// "About me" on the homepage, above the selected work. Education and the
+// current role come from `cv` below, so they stay in step with the CV page.
+export const about = {
+  paragraphs: [
+    "I'm @h4tfi3ld, the engineer behind xanti studios. I'm based in Devon and I design and build websites, branding and graphics for local businesses, alongside an engineering apprenticeship.",
+    "By day I'm a Test Technician Apprentice at Keysight Technologies, assembling, testing and repairing equipment to each customer's exact requirements. The same habit goes into every site I build: check everything, then check it again.",
+    "Before that I spent over a year creating content for the NHS: graphic design, interviews, photoshoots and running social channels. Years working in restaurants taught me the rest: listen to the customer, and look after them.",
+  ],
+  industry: ["Barclays", "Amazon Web Services", "Drax", "NHS", "Keysight Technologies"],
+};
+
+// "How it works" on the homepage: the four steps of a website project.
+export const process = [
+  {
+    title: "Send me your idea",
+    text: "Tell me about your business and what you need through the contact form. A rough idea is all it takes to start.",
+  },
+  {
+    title: "Plan, design and quote",
+    text: "We agree what the site needs to do. I plan the pages, design how it looks and feels, and send you a clear quote before any building starts.",
+  },
+  {
+    title: "Build and test",
+    text: "I build the site in code, fast and mobile-first, and test it on phones, tablets and desktops. You review it and ask for any changes.",
+  },
+  {
+    title: "Deploy and grow",
+    text: "Your site goes live on your own domain, set up for Google from day one. After launch I can keep it updated as your business grows.",
+  },
+];
+
 // Monochrome pixel palettes, from "empty" to "full".
 export const cloud = ["#ffffff", "#dcdcdc", "#a3a3a3"];
 export const ink = ["#ffffff", "#8f8f8f", "#0a0a0a"];

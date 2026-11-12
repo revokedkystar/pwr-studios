@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { WorldClocks } from "@/components/world-clocks";
 import { clocks, nav, socials } from "@/content";
+import { legalLinks } from "@/legal";
 
 export function SiteFooter() {
   return (
@@ -34,6 +35,21 @@ export function SiteFooter() {
             <WorldClocks clocks={clocks} />
           </div>
         </div>
+      </div>
+
+      <div className="wrap mt-14 flex flex-col gap-4 border-t border-black/8 pt-6 lg:flex-row lg:items-start lg:justify-between">
+        <nav aria-label="Legal">
+          <ul className="flex flex-wrap gap-x-5 text-sm text-black/65">
+            {legalLinks.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="tap-target hover:text-black">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <p className="shrink-0 text-sm text-black/65 lg:leading-12">© 2026 xanti studios</p>
       </div>
 
       <div className="wrap relative mt-16 h-[46vw] max-h-[620px] sm:mt-24" aria-hidden>
