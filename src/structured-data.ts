@@ -29,7 +29,7 @@ export const homeJsonLd = {
         height: 154,
       },
       description:
-        "A web development and graphic design studio by @h4tfi3ld: websites, web apps, posters and social graphics.",
+        "A web design, web development and graphic design studio in Devon, UK, by @h4tfi3ld: websites, web apps, posters and social graphics.",
       founder: { "@type": "Person", name: "@h4tfi3ld" },
       sameAs: socials.map((s) => s.href),
       ...(contact.email || telephone

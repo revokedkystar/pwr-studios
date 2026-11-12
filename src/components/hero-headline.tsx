@@ -163,7 +163,7 @@ export function HeroHeadline() {
 
   return (
     <h1 ref={ref} className="display grid text-center">
-      <span className="sr-only">xanti studios by @h4tfi3ld: computing meets creativity. Developer and designer.</span>
+      <span className="sr-only">xanti studios: web designer and developer in Devon, UK. Computing meets creativity.</span>
       <span data-phase="a" aria-hidden className="[grid-area:1/1]">
         <Word>Computing</Word> <Tile /> <Word>meets</Word>
         <br />

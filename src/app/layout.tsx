@@ -50,9 +50,12 @@ const newsreader = Newsreader({
   axes: ["opsz"],
 });
 
-const TITLE = "xanti studios by @h4tfi3ld";
+// Search results show about 50–60 characters of a title and 120–160 of a
+// description. Both lead with what the studio does and where, the phrases
+// people search for, and the headings and intro on the page repeat them.
+const TITLE = "Web Designer & Developer in Devon, UK | xanti studios";
 const DESCRIPTION =
-  "The portfolio of @h4tfi3ld, developer and designer: websites, web apps, graphic design and more.";
+  "xanti studios is @h4tfi3ld, a web designer and developer in Devon, UK, building fast websites, web apps and graphic design for brands and small businesses.";
 
 // The site is designed light-only. "only light" stops browsers' forced dark
 // modes (Brave's Night mode, Chrome's auto dark theme) from recolouring the

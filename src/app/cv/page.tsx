@@ -6,8 +6,9 @@ import { SiteHeader } from "@/components/site-header";
 import { PillLink, Tag } from "@/components/ui";
 import { cv, socials } from "@/content";
 
-const TITLE = "CV · xanti studios by @h4tfi3ld";
-const DESCRIPTION = "The CV of @h4tfi3ld: industry experience, work experience, education and technical skills.";
+const TITLE = "CV: @h4tfi3ld, Web Developer & Designer | xanti studios";
+const DESCRIPTION =
+  "The CV of @h4tfi3ld, a web developer and designer in Devon, UK: industry experience with Barclays, AWS and Drax, work history, education and skills.";
 
 export const metadata: Metadata = {
   title: TITLE,
