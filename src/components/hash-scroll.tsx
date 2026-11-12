@@ -9,7 +9,12 @@ import { useEffect } from "react";
  * setting up, which then leaves the page at the top.
  */
 /** Sections that moved to another page, so old shared links still land on them. */
-const MOVED: Record<string, string> = { graphics: "/graphics", industry: "/graphics" };
+const MOVED: Record<string, string> = {
+  graphics: "/graphics",
+  industry: "/graphics",
+  stack: "/experience",
+  experience: "/experience",
+};
 
 export function HashScroll() {
   useEffect(() => {

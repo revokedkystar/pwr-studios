@@ -172,11 +172,11 @@ export function ExperienceRing({ companies, titleId = "experience" }: { companie
 
       {/* Heading and the front company's note, in the middle of the ring. */}
       <div className="pointer-events-none absolute inset-0 z-[50] flex flex-col items-center justify-start px-6 pt-[12svh] text-center sm:justify-center sm:pt-0 sm:pb-[10svh]">
-        <h3 id={titleId} className="section-title">
+        <h2 id={titleId} className="section-title">
           Experience
           <br />
           with
-        </h3>
+        </h2>
         <div key={front} className="ring-note mt-6 max-w-[440px]">
           <p className="text-[13px] text-black/45 tabular-nums">
             {String(front + 1).padStart(2, "0")} / {total} · {current?.name}
