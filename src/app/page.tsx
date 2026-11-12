@@ -7,23 +7,19 @@ import { HashScroll } from "@/components/hash-scroll";
 import { HeroHeadline } from "@/components/hero-headline";
 import { ContactSection } from "@/components/contact-section";
 import { JsonLd } from "@/components/json-ld";
-import { ExperienceRing } from "@/components/experience-ring";
 import { ScrollFx } from "@/components/scroll-fx";
 import { ScrollPrompt } from "@/components/scroll-prompt";
 import { SmoothScroll } from "@/components/smooth-scroll";
-import { StackShowcase } from "@/components/stack-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { PillLink } from "@/components/ui";
 import {
   caseStudies,
-  logos,
   places,
   globeLines,
   site,
   cloud,
   nightFade,
-  stack,
 } from "@/content";
 import { homeJsonLd } from "@/structured-data";
 
@@ -70,11 +66,12 @@ function Momentum() {
           <div data-scroll data-lag={0.15} className="fx-rise max-w-[480px]">
             <p className="text-lg leading-[1.3] sm:text-xl">
               I like taking an idea from the first sketch to something real: planning it out, designing how it should
-              look and feel, then building it in code. Here&apos;s the stack I use to get there.
+              look and feel, then building it in code. See the stack I use, the companies I&apos;ve worked with and my
+              certificates.
             </p>
             <div className="mt-7">
-              <PillLink href="#stack" invert>
-                See my stack
+              <PillLink href="/experience" invert>
+                See my experience
               </PillLink>
             </div>
           </div>
@@ -84,9 +81,6 @@ function Momentum() {
           <Reel />
         </div>
 
-        <div className="mt-16 sm:mt-24">
-          <StackShowcase areas={stack} />
-        </div>
       </div>
       <PixelField palette={nightFade} mode="fade-down" seed={58} className="h-[220px] w-full sm:h-[300px]" />
     </section>
@@ -114,15 +108,6 @@ function Reel() {
   );
 }
 
-function Experience() {
-  return (
-    // "Experience with": company cards on a 3D ring that spins on its own.
-    <section id="experience" aria-labelledby="experience-title" className="bg-white">
-      <ExperienceRing companies={logos} titleId="experience-title" />
-    </section>
-  );
-}
-
 export default function Home() {
   return (
     <>
@@ -131,7 +116,6 @@ export default function Home() {
         <Hero />
         <PinnedWork items={caseStudies} />
         <Momentum />
-        <Experience />
         <ContactSection />
       </main>
       <JsonLd data={homeJsonLd} />

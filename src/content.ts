@@ -12,7 +12,7 @@ export const site = {
 export const nav = [
   { label: "Work", href: "/#work" },
   { label: "Graphics", href: "/graphics" },
-  { label: "Industry", href: "/graphics#industry" },
+  { label: "Experience", href: "/experience" },
   { label: "CV", href: "/cv" },
 ];
 
@@ -31,6 +31,16 @@ export const contact = {
   email: "",
   phone: "",
 };
+
+// Certificates and awards for the Experience page, all industry experiences
+// run by Springpod with each partner company.
+export const certificates = [
+  { title: "Data Analytics", partner: "Barclays", image: "/certificates/analytics_award.jpg" },
+  { title: "Developer", partner: "Barclays", image: "/certificates/dev_award.png" },
+  { title: "AWS Career Tour: Cloud Computing", partner: "Amazon Web Services", image: "/certificates/cloud_award.png" },
+  { title: "Prevent a Data Breach: Cyber Security Sprint", partner: "Drax", image: "/certificates/drax_award.png" },
+];
+export const certificateMeta = { issuer: "Springpod", issued: "02/04/2026" };
 
 // Monochrome pixel palettes, from "empty" to "full".
 export const cloud = ["#ffffff", "#dcdcdc", "#a3a3a3"];
