@@ -8,22 +8,26 @@ import { SiteHeader } from "@/components/site-header";
 import { ArrowIcon } from "@/components/ui";
 import { faqs, ink } from "@/content";
 
+const TITLE = "Contact a Web Designer in Devon, UK | xanti studios";
+const DESCRIPTION =
+  "Get in touch with xanti studios, a web designer and developer in Devon, UK. Send a message about a website, web app or graphic design project.";
+
 export const metadata: Metadata = {
-  title: "Contact · xanti studios by @h4tfi3ld",
-  description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: "/contact" },
   // A page's openGraph replaces the layout's, so the shared fields are repeated.
   openGraph: {
     type: "website",
     siteName: "xanti studios",
-    title: "Contact · xanti studios by @h4tfi3ld",
-    description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/contact",
   },
   twitter: {
     card: "summary",
-    title: "Contact · xanti studios by @h4tfi3ld",
-    description: "Get in touch with @h4tfi3ld: send a message, or find quick answers to common questions.",
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 

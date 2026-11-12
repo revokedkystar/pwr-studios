@@ -157,7 +157,7 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
     <section
       id="work"
       ref={sectionRef}
-      aria-label="Selected work"
+      aria-labelledby="work-title"
       className="work relative z-0 -mt-20 sm:-mt-24"
       style={{ height: `${Math.round((items.length + EXIT) * 110)}svh` }}
     >
@@ -169,6 +169,9 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
         <div className="wrap grid h-full grid-rows-[auto_minmax(0,1fr)_auto] gap-5 pt-24 pb-6 sm:pt-28 sm:pb-8 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)_auto] lg:gap-x-14">
           {/* Project text, cross-fading in step with the windows. */}
           <div className="relative lg:self-center">
+            <h2 id="work-title" className="sr-only">
+              Selected web design and development work
+            </h2>
             <p className="flex items-baseline gap-3 text-sm opacity-60">
               Selected work
               <span className="tabular-nums">
@@ -185,9 +188,9 @@ export function PinnedWork({ items }: { items: CaseStudy[] }) {
                       </span>
                     ))}
                   </div>
-                  <h2 className="mt-3 text-[30px] leading-[1.05] font-medium tracking-[-0.02em] sm:text-[44px] lg:text-[52px]">
+                  <h3 className="mt-3 text-[30px] leading-[1.05] font-medium tracking-[-0.02em] sm:text-[44px] lg:text-[52px]">
                     {c.title}
-                  </h2>
+                  </h3>
                   <p className="mt-3 max-w-[38ch] text-[15px] leading-snug opacity-65 sm:text-base max-lg:line-clamp-2">
                     {c.summary}
                   </p>
