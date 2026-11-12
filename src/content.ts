@@ -6,7 +6,7 @@ export const siteUrl = "https://xanti.dev";
 export const site = {
   name: "@h4tfi3ld",
   intro:
-    "I'm @h4tfi3ld, a web designer and developer in Devon, UK. I build websites and web apps, design posters and social graphics, and keep levelling up through industry experiences with companies like Barclays, AWS and Drax.",
+    "Welcome to Xanti Studios by @h4tfi3ld, the place where local businesses can access quality services like websites, branding and graphic design by an engineer who actually cares. Curious to see what I have? Have a scroll!",
 };
 
 export const nav = [
