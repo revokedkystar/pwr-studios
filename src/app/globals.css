@@ -326,9 +326,20 @@ body {
   transform-origin: 50% 100%;
   transform: translateY(calc(var(--up) * 118%)) rotateX(calc(var(--up) * 22deg))
     scale(calc(1 - var(--past) * 0.14)) translateY(calc(var(--past) * -6%));
-  filter: blur(calc(var(--past) * 8px)) brightness(calc(1 - var(--past) * 0.3));
   /* Upcoming windows stay hidden until they're on their way up. */
   opacity: calc((1 - var(--past) * 0.85) * clamp(0, (1 - var(--up)) * 3, 1));
+}
+/* Past windows darken as they sink back. A black overlay rather than a CSS
+   filter: a blur or brightness filter on these large cards re-renders them on
+   every scroll frame and roughly halved the frame rate through this section. */
+.work-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #000;
+  opacity: calc(var(--past) * 0.3);
+  pointer-events: none;
 }
 /* Text swaps quickly in the middle of the move, so two never overlap. */
 .work-text {
@@ -365,7 +376,6 @@ body {
   background: var(--ink, #0a0a0a);
 }
 @media (prefers-reduced-motion: reduce) {
-  .work-card,
   .work-text {
     filter: none;
   }
