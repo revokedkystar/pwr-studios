@@ -960,6 +960,14 @@ const scrub = document.getElementById("scrub"), timeEl = document.getElementById
 const btnLoop = document.getElementById("loop"), btnFs = document.getElementById("fs");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let T = 0, playing = false, loop = true, last = 0;
+// Only draw while the reel is on screen. On the homepage it sits in an
+// iframe, which keeps running after it scrolls away; rendering a 1920×1080
+// frame 60 times a second off screen made the rest of the page stutter.
+let inView = true;
+new IntersectionObserver(([e]) => {
+  if (e.isIntersecting && !inView) last = performance.now();
+  inView = e.isIntersecting;
+}).observe(document.getElementById("vp"));
 
 function fit() {
   const r = vp.getBoundingClientRect(), s = Math.min(r.width / W, r.height / H);
@@ -977,7 +985,7 @@ function setPlaying(p) {
 }
 function show(t) { T = clamp(t, 0, DUR); render(T); scrub.value = T; timeEl.textContent = timecode(T); }
 function tick(now) {
-  if (playing) {
+  if (playing && inView) {
     const dt = Math.min(0.1, (now - last) / 1000); last = now; let t = T + dt;
     if (t >= DUR) { if (loop) t = t - DUR; else { t = DUR; setPlaying(false); } }
     show(t);
